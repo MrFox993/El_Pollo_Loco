@@ -4,8 +4,8 @@
     box-sizing: border-box;
 }
 
-canvas {
-    background-color: black;
+body {
+    height: 100vh;
 }
 
 header {
@@ -20,5 +20,8 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 95vh;
+}
+
+canvas {
+    background-color: black;
 }
