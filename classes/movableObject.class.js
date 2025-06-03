@@ -3,6 +3,7 @@ class MovableObject {
     y;
     img;
     imageCache = {};
+    currentImageIndex = 0;
 
     loadImage(imagePath) {
         this.img = new Image();
