@@ -11,6 +11,7 @@ class Character extends MovableObject {
         '../assets/img/2_character_pepe/1_idle/idle/I-9.png',
         '../assets/img/2_character_pepe/1_idle/idle/I-10.png'
     ];
+    world;
 
     constructor() {
         super();
@@ -18,6 +19,7 @@ class Character extends MovableObject {
         this.y = 130;
         this.width = 150;
         this.height = 300;
+        this.speed = 1;
         this.loadImage('../assets/img/2_character_pepe/1_idle/idle/I-1.png');
         this.loadImages(this.imagesIdle);
         this.animate();
