@@ -8,7 +8,7 @@ function init() {
 }
 
 window.addEventListener('keydown', (event) => {
-    if (event.keyCode === 100 || event.keyCode === 39) {
+    if (event.keyCode === 68 || event.keyCode === 39) {
         keyboard.right = true;
     }
     if (event.keyCode === 97 || event.keyCode === 37) {
@@ -23,6 +23,7 @@ window.addEventListener('keydown', (event) => {
     if (event.keyCode === 32) {
         keyboard.space = true;
     }
+    console.log(event.keyCode);
 });
 
 window.addEventListener('keyup', (event) => {
