@@ -20,6 +20,7 @@ class Character extends MovableObject {
         './assets/img/2_character_pepe/2_walk/W-26.png'
     ];
     world;
+    speed = 10;
 
     constructor() {
         super();
@@ -27,31 +28,37 @@ class Character extends MovableObject {
         this.y = 130;
         this.width = 150;
         this.height = 300;
-        this.speed = 1;
         this.loadImage('./assets/img/2_character_pepe/1_idle/idle/I-1.png');
         this.loadImages(this.imagesIdle);
         this.loadImages(this.imagesWalking);
     }
 
     animate() {
+        setInterval(() => {
+            if (this.world.keyboard.right) {
+                this.x += this.speed;
+            } else if (this.world.keyboard.left) {
+                this.x -= this.speed;
+            }
+        },1000/60);
 
-            // this.x += this.speed;
-            setInterval(() => {
-                if (this.world.keyboard.right) {
+        setInterval(() => {
+            if (this.world.keyboard.right || this.world.keyboard.left) {
                 let index = this.currentImageIndex % this.imagesWalking.length;
                 let imagePath = this.imagesWalking[index];
                 this.img = this.imageCache[imagePath];
-                this.currentImageIndex++;    
-            }}, 1000 / 4); 
-        // } else {
-        //     setInterval(() => {
-        //         let index = this.currentImageIndex % this.imagesIdle.length;
-        //         let imagePath = this.imagesIdle[index];
-        //         this.img = this.imageCache[imagePath];
-        //         this.currentImageIndex++;    
-        //     }, 1000 / 4); 
-        // }
-    }
+                this.currentImageIndex++; 
+            }   
+            // } else {
+            //     setInterval(() => {
+            //         let index = this.currentImageIndex % this.imagesIdle.length;
+            //         let imagePath = this.imagesIdle[index];
+            //         this.img = this.imageCache[imagePath];
+            //         this.currentImageIndex++;    
+            //     }, 1000 / 4); 
+            // }
+        }, 50); 
+        } 
 
     jump() {
         console.log('Jumping');
