@@ -34,30 +34,23 @@ class Character extends MovableObject {
     }
 
     animate() {
-        setInterval(() => {
-            let index = this.currentImageIndex % this.imagesIdle.length;
-            let imagePath = this.imagesIdle[index];
-            this.img = this.imageCache[imagePath];
-            this.currentImageIndex++;    
-        }, 1000 / 4); 
-        if (this.world.keyboard.right) {
-            this.x += this.speed;
+
+            // this.x += this.speed;
             setInterval(() => {
+                if (this.world.keyboard.right) {
                 let index = this.currentImageIndex % this.imagesWalking.length;
                 let imagePath = this.imagesWalking[index];
                 this.img = this.imageCache[imagePath];
                 this.currentImageIndex++;    
-            }, 1000 / 4); 
-        }
-    }
-
-    playAnimation(images) {
-        setInterval(() => {
-            let index = this.currentImageIndex % images.length;
-            let imagePath = images[index];
-            this.img = this.imageCache[imagePath];
-            this.currentImageIndex++;    
-        }, 1000 / 4); 
+            }}, 1000 / 4); 
+        // } else {
+        //     setInterval(() => {
+        //         let index = this.currentImageIndex % this.imagesIdle.length;
+        //         let imagePath = this.imagesIdle[index];
+        //         this.img = this.imageCache[imagePath];
+        //         this.currentImageIndex++;    
+        //     }, 1000 / 4); 
+        // }
     }
 
     jump() {
