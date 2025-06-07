@@ -46,6 +46,12 @@ class World {
     }
 
     addToMap(mObject) {
+        if (mObject.otherDirection){
+            this.ctx.save();
+            this.ctx.translate(mObject.width, 0);
+            this.ctx.scale(-1, 1);
+            mObject.x = mObject.x * -1;
+        }
         this.ctx.drawImage(
             mObject.img, 
             mObject.x, 
@@ -53,6 +59,10 @@ class World {
             mObject.width, 
             mObject.height
         );
+        if (mObject.otherDirection) {
+            mObject.x = mObject.x * -1;
+            this.ctx.restore();
+        }
     }
 
     addObjectsToMap(objects) {
