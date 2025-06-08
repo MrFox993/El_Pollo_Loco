@@ -51,18 +51,16 @@ class Character extends MovableObject {
                 let imagePath = this.imagesWalking[index];
                 this.img = this.imageCache[imagePath];
                 this.currentImageIndex++; 
-            }   
+            } 
+            else {
+                let index = this.currentImageIndex % this.imagesIdle.length;
+                let imagePath = this.imagesIdle[index];
+                this.img = this.imageCache[imagePath];
+                this.currentImageIndex++;    
+            }  
 
         }, 50); 
-                    // } else {
-            //     setInterval(() => {
-            //         let index = this.currentImageIndex % this.imagesIdle.length;
-            //         let imagePath = this.imagesIdle[index];
-            //         this.img = this.imageCache[imagePath];
-            //         this.currentImageIndex++;    
-            //     }, 1000 / 4); 
-            // }
-        } 
+    } 
 
     jump() {
         console.log('Jumping');
