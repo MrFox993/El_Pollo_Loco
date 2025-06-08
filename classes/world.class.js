@@ -9,12 +9,20 @@ class World {
     clouds = [
         new Cloud()
     ]
-    backgroundObject = [
-        new BackgroundObject('./assets/img/5_background/layers/air.png', 0),
-        new BackgroundObject('./assets/img/5_background/layers/3_third_layer/1.png', 0),
-        new BackgroundObject('./assets/img/5_background/layers/2_second_layer/1.png', 0),
-        new BackgroundObject('./assets/img/5_background/layers/1_first_layer/1.png', 0),
+    backgroundObjects = [];
+    backgroundImages_1 = [
+        './assets/img/5_background/layers/air.png',
+        './assets/img/5_background/layers/3_third_layer/1.png',
+        './assets/img/5_background/layers/2_second_layer/1.png',
+        './assets/img/5_background/layers/1_first_layer/1.png'
     ];
+    backgroundImages_2 = [
+        './assets/img/5_background/layers/air.png',
+        './assets/img/5_background/layers/3_third_layer/2.png',
+        './assets/img/5_background/layers/2_second_layer/2.png',
+        './assets/img/5_background/layers/1_first_layer/2.png'
+    ];
+    bgImgStartingX = -3595;
     ctx;
     canvas;
     keyboard;
@@ -24,6 +32,7 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.generateBackgroundObjects();
         this.draw();
         this.setWorld();
     }
@@ -38,7 +47,7 @@ class World {
 
         this.ctx.translate(this.camera_x, 0);
 
-        this.addObjectsToMap(this.backgroundObject);
+        this.addObjectsToMap(this.backgroundObjects);
         this.addToMap(this.character);
         this.addObjectsToMap(this.enemies);
         this.addObjectsToMap(this.clouds);
@@ -74,5 +83,23 @@ class World {
         objects.forEach(obj => {
             this.addToMap(obj);
         });
+    }
+    
+    generateBackgroundObjects() {
+        const repetitions = 10;
+        const segmentWidth = 719;
+        let currentX = this.bgImgStartingX;
+
+        this.backgroundObjects = []; 
+
+        for (let i = 0; i < repetitions; i++) {
+            const imageSet = i % 2 === 0 ? this.backgroundImages_1 : this.backgroundImages_2;
+
+            for (let j = 0; j < imageSet.length; j++) {
+                this.backgroundObjects.push(new BackgroundObject(imageSet[j], currentX));
+            }
+
+            currentX += segmentWidth;
+        }
     }
 }
