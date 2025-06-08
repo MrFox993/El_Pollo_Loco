@@ -24,7 +24,7 @@ class Character extends MovableObject {
 
     constructor() {
         super();
-        this.x = 0;
+        this.x = 100;
         this.y = 130;
         this.width = 150;
         this.height = 300;
@@ -42,6 +42,7 @@ class Character extends MovableObject {
                 this.x -= this.speed;
                 this.otherDirection = true;
             }
+            this.world.camera_x = -this.x; 
         },1000/60);
 
         setInterval(() => {
