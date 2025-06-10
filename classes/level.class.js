@@ -3,7 +3,7 @@ class Level {
   clouds;
   backgroundObjects;
   bgImgStartingX = -719;
-  level_end_x = 6000;
+  level_end_x = 5750;
 
   constructor(enemies, clouds, backgroundObject1, backroundObject2) {
     this.enemies = enemies || [];
