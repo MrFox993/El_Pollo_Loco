@@ -54,7 +54,7 @@ class Character extends MovableObject {
       } else if (this.world.keyboard.left && this.x >= 0) {
         this.x -= this.speed;
         this.otherDirection = true;
-      } else if (this.world.keyboard.up ) {
+      } else if (this.world.keyboard.up || this.world.keyboard.space) {
         this.speedY = 20;
       } else if (this.world.keyboard.down) {
         // Implement crouch or other down action here if needed
