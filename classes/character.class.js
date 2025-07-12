@@ -55,7 +55,7 @@ class Character extends MovableObject {
         this.x -= this.speed;
         this.otherDirection = true;
       } else if ((this.world.keyboard.up || this.world.keyboard.space) && !this.checkAboveGround()) {
-        this.speedY = 30;
+        this.jump();
       } else if (this.world.keyboard.down) {
         // Implement crouch or other down action here if needed
       }
@@ -73,8 +73,4 @@ class Character extends MovableObject {
         }
         }, 100);
     }
-
-  jump() {
-    console.log("Jumping");
-  }
 }

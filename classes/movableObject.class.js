@@ -53,4 +53,8 @@ class MovableObject {
   checkAboveGround() {
     return this.y < 130;
   }
+
+  jump() {
+    this.speedY = 30;
+  }
 }
