@@ -49,6 +49,9 @@ class World {
       mObject.x = mObject.x * -1;
     }
     this.ctx.drawImage(mObject.img, mObject.x, mObject.y, mObject.width, mObject.height);
+    this.ctx.beginPath();
+    this.ctx.rect(mObject.x, mObject.y, mObject.width, mObject.height);
+    this.ctx.stroke();
     if (mObject.otherDirection) {
       mObject.x = mObject.x * -1;
       this.ctx.restore();
