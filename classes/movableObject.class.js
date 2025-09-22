@@ -15,6 +15,7 @@ class MovableObject {
     right: 0,
   }
   hp = 100;
+  lastHit = 0;
 
   loadImage(imagePath) {
     this.img = new Image();
@@ -86,11 +87,18 @@ class MovableObject {
     this.hp -= 5;
     if (this.hp < 0) {
       this.hp = 0;
+    } else {
+      this.lastHit = new Date().getTime();
     }
   }
-  
+
   isDead() {
     return this.hp == 0;
   }
 
+  isHurt() {
+    let timepassed = new Date().getTime() - this.lastHit; // difference in ms
+    timepassed = timepassed / 1000; // difference in s
+    return timepassed < 0.5;
+  }
 }
