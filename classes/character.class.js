@@ -30,6 +30,15 @@ class Character extends MovableObject {
     "./assets/img/2_character_pepe/3_jump/J-38.png",
     "./assets/img/2_character_pepe/3_jump/J-39.png",
   ];
+  imagesDead = [
+    "./assets/img/2_character_pepe/5_dead/D-51.png",
+    "./assets/img/2_character_pepe/5_dead/D-52.png",
+    "./assets/img/2_character_pepe/5_dead/D-53.png",
+    "./assets/img/2_character_pepe/5_dead/D-54.png",
+    "./assets/img/2_character_pepe/5_dead/D-55.png",
+    "./assets/img/2_character_pepe/5_dead/D-56.png",
+    "./assets/img/2_character_pepe/5_dead/D-57.png",
+    ];
   world;
   speed = 10;
   offset = {
@@ -49,6 +58,7 @@ class Character extends MovableObject {
     this.loadImages(this.imagesIdle);
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imagesJumping);
+    this.loadImages(this.imagesDead);
     this.applyGravity();
   }
 
@@ -69,7 +79,9 @@ class Character extends MovableObject {
     }, 1000 / 60);
 
     setInterval(() => {
-        if (this.checkAboveGround()) {
+      if (this.isDead()) {
+        this.playAnimation(this.imagesDead);
+      } else if (this.checkAboveGround()) {
             this.playAnimation(this.imagesJumping);
         }
         else if (this.world.keyboard.right || this.world.keyboard.left) {
