@@ -17,11 +17,28 @@ class World {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
+    this.checkCollisions();
   }
 
   setWorld() {
     this.character.world = this;
     this.character.animate();
+  }
+
+  checkCollisions() {
+    setInterval(() => {
+      this.level.enemies.forEach((enemy) => {
+        if (this.character.isColliding(enemy) ) {
+          console.log('Collision with enemy', enemy);
+          // if (this.character.isAboveGround() && this.character.y < enemy.y) {
+          //   enemy.hit();
+          //   this.character.jump();
+          // } else {
+          //   this.character.hit();
+          // }
+        }
+      });
+    }, 200);
   }
 
   draw() {
