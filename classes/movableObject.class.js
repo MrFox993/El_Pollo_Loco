@@ -14,6 +14,7 @@ class MovableObject {
     left: 0,
     right: 0,
   }
+  hp = 100;
 
   loadImage(imagePath) {
     this.img = new Image();
