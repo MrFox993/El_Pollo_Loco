@@ -8,6 +8,12 @@ class MovableObject {
   otherDirection = false;
   speedY = 0;
   acceleration = 2;
+  offset = {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  }
 
   loadImage(imagePath) {
     this.img = new Image();
@@ -36,10 +42,10 @@ class MovableObject {
 
   isColliding(mObject) {
     return (
-      this.x + this.width > mObject.x &&
-      this.x < mObject.x &&
-      this.y + this.height > mObject.y &&
-      this.y < mObject.y
+      this.x + this.width - this.offset.right > mObject.x - mObject.offset.left &&
+      this.x + this.offset.left < mObject.x + mObject.width - mObject.offset.right &&
+      this.y + this.height - this.offset.bottom > mObject.y + mObject.offset.top &&
+      this.y + this.offset.top < mObject.y + mObject.height - mObject.offset.bottom
     );
   }
 

@@ -32,6 +32,12 @@ class Character extends MovableObject {
   ];
   world;
   speed = 10;
+  offset = {
+    top: 120,
+    bottom: 20,
+    left: 30,
+    right: 30,
+  }
 
   constructor() {
     super();
