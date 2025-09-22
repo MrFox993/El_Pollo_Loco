@@ -34,6 +34,15 @@ class MovableObject {
     }
   }
 
+  isColliding(mObject) {
+    return (
+      this.x + this.width > mObject.x &&
+      this.x < mObject.x &&
+      this.y + this.height > mObject.y &&
+      this.y < mObject.y
+    );
+  }
+
   moveRight() {
     this.x += this.speed;
   }
