@@ -49,9 +49,13 @@ class World {
 
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
-    this.addToMap(this.statusBar);
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
+
+    this.ctx.translate(-this.camera_x, 0);
+    // ---- Space for fixed objects ---- 
+    this.addToMap(this.statusBar);
+    this.ctx.translate(this.camera_x, 0);
 
     this.ctx.translate(-this.camera_x, 0);
     let self = this;
