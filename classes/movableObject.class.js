@@ -13,14 +13,6 @@ class MovableObject extends DrawableObject {
   lastHit = 0;
 
 
-  drawFrame(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Endboss) {
-        ctx.beginPath();
-        ctx.rect(this.x, this.y, this.width, this.height);
-        ctx.stroke();
-    }
-  }
-
   playAnimation(images) {
     let index = this.currentImageIndex % images.length;
     let imagePath = images[index];
