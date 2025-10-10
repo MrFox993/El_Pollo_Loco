@@ -10,7 +10,9 @@ class World {
   canvas;
   keyboard;
   camera_x = 0;
-  statusBar = new StatusBar();
+  healthStatusBar = new StatusBar("health");
+  bottleStatusBar = new StatusBar("bottle");
+  coinStatusBar = new StatusBar("coins");
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -31,7 +33,7 @@ class World {
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy) ) {
           this.character.hit();
-          this.statusBar.setHealthBarPercentage(this.character.hp);
+          this.healthStatusBar.setHealthBarPercentage(this.character.hp);
           // if (this.character.isAboveGround() && this.character.y < enemy.y) {
           //   enemy.hit();
           //   this.character.jump();
@@ -55,7 +57,9 @@ class World {
 
     this.ctx.translate(-this.camera_x, 0);
     // ---- Space for fixed objects ---- 
-    this.addToMap(this.statusBar);
+    this.addToMap(this.healthStatusBar);
+    this.addToMap(this.coinStatusBar);
+    this.addToMap(this.bottleStatusBar);
     this.ctx.translate(this.camera_x, 0);
 
     this.ctx.translate(-this.camera_x, 0);
