@@ -13,7 +13,7 @@ class World {
   healthStatusBar = new StatusBar("health");
   bottleStatusBar = new StatusBar("bottle");
   coinStatusBar = new StatusBar("coins");
-  throwableObjects = [new ThrowableObject()];
+  throwableObjects = [];
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -46,9 +46,10 @@ class World {
   }
 
   checkThrowObjects() {
-    if (this.keyboard.c){
+    if (this.keyboard.c && this.character.bottles > 0) {
       let bottle = new ThrowableObject(this.character.x + (this.character.width / 2), this.character.y + (this.character.height / 2));
       this.throwableObjects.push(bottle);
+      this.character.bottles--;
     }
   }
 

@@ -1,6 +1,6 @@
 const level_1 = new Level(
-  [new Chicken(), new Chicken(), new Chicken(), new Chicken(), new Endboss()],
-  [new Cloud()],
+  [new ChickenSmall(), new ChickenSmall(), new ChickenSmall(), new ChickenSmall(), new Endboss()],
+  [new Cloud(), new Cloud(), new Cloud(), new Cloud(), new Cloud()],
   [
     "./assets/img/5_background/layers/air.png",
     "./assets/img/5_background/layers/3_third_layer/1.png",
