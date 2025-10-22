@@ -5,11 +5,15 @@ class Level {
   bgImgStartingX = -719;
   level_end_x = 5750;
 
-  constructor(enemies, clouds, backgroundObject1, backroundObject2) {
+  constructor(enemies, clouds, backgroundObject1, backroundObject2, bottles, coins) {
     this.enemies = enemies || [];
     this.clouds = clouds || [];
     this.backgroundObjects = [];
     this.generateBackgroundObjects(backgroundObject1, backroundObject2);
+    console.log(bottles),
+    this.bottles = bottles || [];
+    console.log(this.bottles);
+    this.coins = coins || [];
   }
 
   generateBackgroundObjects(backgroundObject1, backroundObject2) {
