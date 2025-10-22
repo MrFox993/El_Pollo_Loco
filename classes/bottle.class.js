@@ -5,6 +5,6 @@ class Bottle extends CollectableObject {
         this.height = 80;
         this.width = 60;
         this.y = 350;
-        this.x = this.placeObjectRandomly();
+        this.x = this.placeObjectXRandomly();
     }
 }

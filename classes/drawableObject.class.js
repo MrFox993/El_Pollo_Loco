@@ -10,7 +10,7 @@ class DrawableObject {
     }
 
     drawFrame(ctx) {
-        if (this instanceof Character || this instanceof ChickenSmall || this instanceof Endboss || this instanceof Bottle) {
+        if (this instanceof Character || this instanceof ChickenSmall || this instanceof Endboss || this instanceof Bottle || this instanceof Coin) {
             ctx.beginPath();
             ctx.rect(this.x, this.y, this.width, this.height);
             ctx.stroke();
