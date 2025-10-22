@@ -10,9 +10,7 @@ class Level {
     this.clouds = clouds || [];
     this.backgroundObjects = [];
     this.generateBackgroundObjects(backgroundObject1, backroundObject2);
-    console.log(bottles),
     this.bottles = bottles || [];
-    console.log(this.bottles);
     this.coins = coins || [];
   }
 

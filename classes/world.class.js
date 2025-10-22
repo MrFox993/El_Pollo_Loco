@@ -34,10 +34,26 @@ class World {
   }
 
   checkCollisions() {
+    this.collisionWithEneny();
+    this.collisionWithBottle();
+  }
+
+  collisionWithEneny() {
     this.level.enemies.forEach((enemy) => {
       if (this.character.isColliding(enemy) ) {
         this.character.hit();
         this.healthStatusBar.setHealthBarPercentage(this.character.hp);
+      }
+    });
+  }
+
+  collisionWithBottle() {
+    this.level.bottles.forEach((bottle, index) => {
+      if (this.character.isColliding(bottle)) {
+        this.character.bottles++;
+        this.level.bottles.splice(index, 1);
+        console.log(this.character.bottles);
+        this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
       }
     });
   }

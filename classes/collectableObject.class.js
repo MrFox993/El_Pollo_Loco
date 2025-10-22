@@ -11,6 +11,6 @@ class CollectableObject extends DrawableObject {
     }
 
     placeObjectRandomly() {
-        return this.x = 200 + Math.random() * 3000; // Random x position between 200 and 3200
+        return this.x = 400 + Math.random() * 2000; // Random x position between 400 and 2400
     }
 }
