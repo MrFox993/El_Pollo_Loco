@@ -36,6 +36,7 @@ class World {
   checkCollisions() {
     this.collisionWithEneny();
     this.collisionWithBottle();
+    this.collisionWithCoin();
   }
 
   collisionWithEneny() {
@@ -53,6 +54,16 @@ class World {
         this.character.bottles++;
         this.level.bottles.splice(index, 1);
         this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
+      }
+    });
+  }
+
+  collisionWithCoin() {
+    this.level.coins.forEach((coin, index) => {
+      if (this.character.isColliding(coin)) {
+        this.character.coins++;
+        this.level.coins.splice(index, 1);
+        this.coinStatusBar.setCoinBarPercentage(this.character.coins);
       }
     });
   }
