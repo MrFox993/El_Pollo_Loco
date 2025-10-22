@@ -52,7 +52,6 @@ class World {
       if (this.character.isColliding(bottle)) {
         this.character.bottles++;
         this.level.bottles.splice(index, 1);
-        console.log(this.character.bottles);
         this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
       }
     });
@@ -63,6 +62,7 @@ class World {
       let bottle = new ThrowableObject(this.character.x + (this.character.width / 2), this.character.y + (this.character.height / 2));
       this.throwableObjects.push(bottle);
       this.character.bottles--;
+      this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
     }
   }
 
