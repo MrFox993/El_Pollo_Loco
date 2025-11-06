@@ -2,6 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Special Elite", system-ui;
+    font-style: normal;
 }
 
 body {
@@ -14,6 +16,14 @@ header {
     align-items: center;
     height: auto;
     padding: 20px;
+}
+
+header h1 {
+    font-size: 120px;
+    font-weight: 400;
+    color: #99240d;
+    margin: 0px 0 10px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 main {
