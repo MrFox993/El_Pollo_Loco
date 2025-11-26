@@ -2,9 +2,21 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
-function init() {
+function startNewGame() {
+    hideMenuScreen();
+    showCanvasScreen();
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
+}
+
+function hideMenuScreen() {
+    let menuScreen = document.getElementById('menuScreen');
+    menuScreen.style.display = 'none';
+}
+
+function showCanvasScreen() {
+    let canvasScreen = document.querySelector('.canvas-screen');
+    canvasScreen.style.display = 'flex';
 }
 
 window.addEventListener('keydown', (event) => {

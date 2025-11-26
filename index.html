@@ -23,12 +23,23 @@
     <script src="./scripts/game.js"></script>
     <script src="./classes/world.class.js"></script>
   </head>
-  <body onload="init()">
+  <body>
     <header>
       <h1>El Pollo Loco</h1>
     </header>
     <main>
-      <canvas id="canvas" width="720px" height="480px"> </canvas>
+      <section class="main-screen">
+        <div class="menu-screen" id="menuScreen">
+          <button class="start-game-button" id="startGame" onclick="startNewGame()">Start New Game</button>
+          <div class="navigation">
+            <button class="navigation-buttons" id="controls">Controls</button>
+            <button class="navigation-buttons" id="impressum">Impressum</button>
+          </div>
+        </div>
+      </section>
+      <section class="canvas-screen">
+        <canvas id="canvas" width="720px" height="480px"> </canvas>
+      </section>
     </main>
   </body>
 </html>
