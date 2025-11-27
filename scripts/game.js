@@ -11,12 +11,13 @@ function startNewGame() {
 
 function hideMenuScreen() {
     let menuScreen = document.getElementById('menuScreen');
-    menuScreen.style.display = 'none';
+    menuScreen.classList.remove('show-screen');
+    menuScreen.classList.add('hide-screen');
 }
 
 function showCanvasScreen() {
     let canvasScreen = document.querySelector('.canvas-screen');
-    canvasScreen.style.display = 'flex';
+    canvasScreen.classList.add('show-screen');
 }
 
 window.addEventListener('keydown', (event) => {
