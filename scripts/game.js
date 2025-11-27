@@ -17,7 +17,26 @@ function hideMenuScreen() {
 
 function showCanvasScreen() {
     let canvasScreen = document.querySelector('.canvas-screen');
+    canvasScreen.classList.remove('hide-screen');
     canvasScreen.classList.add('show-screen');
+}
+
+function hideCanvasScreen() {
+    let canvasScreen = document.querySelector('.canvas-screen');
+    canvasScreen.classList.add('hide-screen');
+    canvasScreen.classList.remove('show-screen');
+}
+
+function showControlScreen() {
+    let controlScreen = document.getElementById('controlScreen');
+    controlScreen.classList.remove('hide-screen');
+    controlScreen.classList.add('show-screen');
+}
+
+function hideControlScreen() {
+    let controlScreen = document.getElementById('controlScreen');
+    controlScreen.classList.add('hide-screen');
+    controlScreen.classList.remove('show-screen');
 }
 
 window.addEventListener('keydown', (event) => {

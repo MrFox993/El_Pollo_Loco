@@ -30,10 +30,43 @@
     <main>
       <section class="main-screen">
         <div class="menu-screen show-screen" id="menuScreen">
-          <button class="start-game-button" id="startGame" onclick="startNewGame()">Start New Game</button>
+          <button class="start-game-button" onclick="startNewGame()">Start New Game</button>
           <div class="navigation">
-            <button class="navigation-buttons" id="controls">Controls</button>
-            <button class="navigation-buttons" id="impressum">Impressum</button>
+            <button class="navigation-buttons" onclick="hideMenuScreen(), showControlScreen()">Controls</button>
+            <button class="navigation-buttons" onclick="">Impressum</button>
+          </div>
+        </div>
+        <div class="menu-screen hide-screen" id="controlScreen">
+          <div class="control-box">
+            <h2>Controls</h2>
+            <table>
+              <tr>
+                <th>Move Left</th>
+                <td>Left Arrow or a</td>
+              </tr>
+              <tr>
+                <th>Move Right</th>
+                <td>Right Arrow or d</td>
+              </tr>
+              <tr>
+                <th>Jump</th>
+                <td>Up Arrow or w or Spacebar</td>
+              </tr>
+              <tr>
+                <th>Throw Bottle</th>
+                <td>c</td>
+              </tr>
+            </table>
+            <!-- <ul>
+              <li>Move Left: Left Arrow or 'a'</li>
+              <li>Move Right: Right Arrow or 'd'</li>
+              <li>Jump: Up Arrow or 'w' or Spacebar</li>
+              <li>Throw Bottle: 'c'</li>
+            </ul>   -->
+          </div>
+          <div class="navigation">
+            <button class="navigation-buttons" onclick="hideControlScreen()">Back</button>
+            <button class="navigation-buttons" onclick="startNewGame()">Start New Game</button>
           </div>
         </div>
       </section>
