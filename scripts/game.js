@@ -4,6 +4,7 @@ let keyboard = new Keyboard();
 
 function startNewGame() {
     hideMenuScreen();
+    hideControlScreen();
     showCanvasScreen();
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
