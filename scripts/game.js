@@ -15,6 +15,12 @@ function hideMenuScreen() {
     menuScreen.classList.add('hide-screen');
 }
 
+function showMenuScreen() {
+    let menuScreen = document.getElementById('menuScreen');
+    menuScreen.classList.add('show-screen');
+    menuScreen.classList.remove('hide-screen');
+}
+
 function showCanvasScreen() {
     let canvasScreen = document.querySelector('.canvas-screen');
     canvasScreen.classList.remove('hide-screen');
