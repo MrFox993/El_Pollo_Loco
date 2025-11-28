@@ -56,9 +56,16 @@ class StatusBar extends DrawableObject {
         if (type == 'coins') this.setCoinBarPercentage(0);
     }
 
+    
+    mapHealthToIndex(healthPercentage) {
+        // healthPercentage: 100, 95, 90, ..., 0
+        let index = Math.floor(healthPercentage / 20);
+        return index; // 100 -> 5, 80 -> 4, 60 -> 3, 40 -> 2, 20 -> 1, 0 -> 0
+    }
+
     setHealthBarPercentage(percentage) {
-        this.healthBarPercentage = percentage;
-        let path = this.imagesHealthBar[this.resolveImageIndex(percentage)];
+        this.healthBarPercentage = this.mapHealthToIndex(percentage);
+        let path = this.imagesHealthBar[this.resolveImageIndex(this.healthBarPercentage)];
         this.img = this.imageCache[path];
     }
 
@@ -75,17 +82,17 @@ class StatusBar extends DrawableObject {
     }
 
     resolveImageIndex(ObjectPercentage) {
-        if (ObjectPercentage == 100 || ObjectPercentage >= 5) {
+    if (ObjectPercentage >= 5) {
             return 0;
-        } else if (ObjectPercentage >= 80 || ObjectPercentage == 4) {
+        } else if (ObjectPercentage === 4) {
             return 1;
-        } else if (ObjectPercentage >= 60 || ObjectPercentage == 3) {
+        } else if (ObjectPercentage === 3) {
             return 2;
-        } else if (ObjectPercentage >= 40 || ObjectPercentage == 2) {
+        } else if (ObjectPercentage === 2) {
             return 3;
-        } else if (ObjectPercentage >= 20 || ObjectPercentage == 1) {
+        } else if (ObjectPercentage === 1) {
             return 4;
-        } else if (ObjectPercentage == 0) {
+        } else {
             return 5;
         }
     }
