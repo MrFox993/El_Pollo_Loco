@@ -35,7 +35,7 @@
         <div class="menu-screen show-screen" id="menuScreen">
           <button class="start-game-button" onclick="startNewGame()">Start New Game</button>
           <div class="navigation">
-            <button class="navigation-buttons" onclick="hideMenuScreen(), showControlScreen()">Controls</button>
+            <button class="navigation-buttons" onclick="toggleScreen('menuScreen', 'hide'), toggleScreen('controlScreen', 'show')">Controls</button>
             <button class="navigation-buttons" onclick="">Impressum</button>
           </div>
         </div>
@@ -62,7 +62,7 @@
             </table>
           </div>
           <div class="navigation">
-            <button class="navigation-buttons" onclick="hideControlScreen(), showMenuScreen()">Back</button>
+            <button class="navigation-buttons" onclick="toggleScreen('controlScreen', 'hide'), toggleScreen('menuScreen', 'show')">Back</button>
             <button class="navigation-buttons" onclick="startNewGame()">Start New Game</button>
           </div>
         </div>

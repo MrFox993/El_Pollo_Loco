@@ -3,48 +3,29 @@ let world;
 let keyboard = new Keyboard();
 
 function startNewGame() {
-    hideMenuScreen();
-    hideControlScreen();
-    showCanvasScreen();
+    toggleScreen('menuScreen', 'hide');
+    toggleScreen('controlScreen', 'hide');
+    toggleScreen('.canvas-screen', 'show');
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
 }
 
-function hideMenuScreen() {
-    let menuScreen = document.getElementById('menuScreen');
-    menuScreen.classList.remove('show-screen');
-    menuScreen.classList.add('hide-screen');
+function toggleScreen(screenIdOrClass, action) {
+    let element = screenIdOrClass.startsWith('.') 
+        ? document.querySelector(screenIdOrClass) 
+        : document.getElementById(screenIdOrClass);
+
+    if (!element) return;
+
+    if (action === 'show') {
+        element.classList.add('show-screen');
+        element.classList.remove('hide-screen');
+    } else if (action === 'hide') {
+        element.classList.add('hide-screen');
+        element.classList.remove('show-screen');
+    }
 }
 
-function showMenuScreen() {
-    let menuScreen = document.getElementById('menuScreen');
-    menuScreen.classList.add('show-screen');
-    menuScreen.classList.remove('hide-screen');
-}
-
-function showCanvasScreen() {
-    let canvasScreen = document.querySelector('.canvas-screen');
-    canvasScreen.classList.remove('hide-screen');
-    canvasScreen.classList.add('show-screen');
-}
-
-function hideCanvasScreen() {
-    let canvasScreen = document.querySelector('.canvas-screen');
-    canvasScreen.classList.add('hide-screen');
-    canvasScreen.classList.remove('show-screen');
-}
-
-function showControlScreen() {
-    let controlScreen = document.getElementById('controlScreen');
-    controlScreen.classList.remove('hide-screen');
-    controlScreen.classList.add('show-screen');
-}
-
-function hideControlScreen() {
-    let controlScreen = document.getElementById('controlScreen');
-    controlScreen.classList.add('hide-screen');
-    controlScreen.classList.remove('show-screen');
-}
 
 window.addEventListener('keydown', (event) => {
     if (event.keyCode === 65 || event.keyCode === 37) {
