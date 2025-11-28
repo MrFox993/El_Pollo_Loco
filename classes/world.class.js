@@ -41,7 +41,11 @@ class World {
 
   collisionWithEneny() {
     this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy) ) {
+      if (this.character.isCollidingFromTop(enemy)) {
+        this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
+        this.character.jump();
+      }
+      else if (this.character.isColliding(enemy) ) {
         this.character.hit();
         this.healthStatusBar.setHealthBarPercentage(this.character.hp);
       }
