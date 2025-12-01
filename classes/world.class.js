@@ -75,14 +75,18 @@ class World {
   }
 
   collisionBottleWithEndboss() {
-      this.throwableObjects.forEach((bottle, index) => {
-          if (bottle.isColliding(this.level.endboss)) {
-            this.level.endboss.hit(); 
-            this.throwableObjects.splice(index, 1); 
-          }
-      });
+      if (this.level.endboss && this.throwableObjects.length > 0) {
+          this.throwableObjects.forEach((bottle, index) => {
+              if (bottle.isColliding(this.level.endboss)) {
+                  this.level.endboss.hit();
+                  if (this.endbossStatusBar) {
+                      this.endbossStatusBar.setEndbossHealthBarPercentage(this.level.endboss.hp);
+                  }
+                  this.throwableObjects.splice(index, 1);
+              }
+          });
+      }
   }
-
 
   checkThrowObjects() {
     if (this.keyboard.c && this.character.bottles > 0) {
