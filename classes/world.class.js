@@ -37,6 +37,7 @@ class World {
     this.collisionWithEneny();
     this.collisionWithBottle();
     this.collisionWithCoin();
+    this.collisionBottleWithEndboss();
   }
 
   collisionWithEneny() {
@@ -72,6 +73,17 @@ class World {
     });
   }
 
+  collisionBottleWithEndboss() {
+      this.throwableObjects.forEach((bottle, index) => {
+          if (bottle.isColliding(this.level.endboss)) {
+            console.log("Endboss getroffen!");
+              // this.level.endboss.hit(); // Schaden zufügen
+              // this.throwableObjects.splice(index, 1); // Flasche entfernen
+          }
+      });
+  }
+
+
   checkThrowObjects() {
     if (this.keyboard.c && this.character.bottles > 0) {
       let bottle = new ThrowableObject(this.character.x + (this.character.width / 2), this.character.y + (this.character.height / 2));
@@ -93,6 +105,7 @@ class World {
     this.addObjectsToMap(this.level.coins);
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
+    this.addToMap(this.level.endboss);
 
     this.ctx.translate(-this.camera_x, 0);
     // ---- Space for fixed objects ---- 
@@ -109,7 +122,8 @@ class World {
   }
 
   addToMap(mObject) {
-    if (mObject.otherDirection) {
+    if (!mObject) return;
+    if (mObject.otherDirection === true) {
       this.flipImage(mObject);
     }
     mObject.draw(this.ctx);
@@ -121,6 +135,7 @@ class World {
   }
 
   addObjectsToMap(objects) {
+    if (!Array.isArray(objects)) return;
     objects.forEach((obj) => {
       this.addToMap(obj);
     });
