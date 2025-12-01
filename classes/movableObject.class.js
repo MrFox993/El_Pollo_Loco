@@ -29,20 +29,23 @@ class MovableObject extends DrawableObject {
     );
   }
 
-  isCollidingFromTop(mObject) {
-      const isHorizontalOverlap =
-          this.x + this.width - this.offset.right > mObject.x - mObject.offset.left &&
-          this.x + this.offset.left < mObject.x + mObject.width - mObject.offset.right;
 
-      const isVerticalCollision =
-          this.y + this.height - this.offset.bottom > mObject.y + mObject.offset.top &&
-          this.y + this.offset.top < mObject.y + mObject.height - mObject.offset.bottom;
+isCollidingFromTop(mObject) {
+    const charBottom = this.y + this.height - this.offset.bottom;
+    const charTop = this.y + this.offset.top;
+    const enemyTop = mObject.y + mObject.offset.top;
+    const enemyBottom = mObject.y + mObject.height - mObject.offset.bottom;
 
-      const isFromTop =
-          (this.y + this.height) <= (mObject.y + mObject.height / 2) && this.speedY > 0;
+    const isHorizontalOverlap =
+        this.x + this.width - this.offset.right > mObject.x - mObject.offset.left &&
+        this.x + this.offset.left < mObject.x + mObject.width - mObject.offset.right;
 
-      return isHorizontalOverlap && isVerticalCollision && isFromTop;
-  }
+    const isFromTop =
+        charBottom >= enemyTop && charTop < enemyTop && this.speedY < 0;
+
+    return isHorizontalOverlap && isFromTop;
+}
+
 
 
   moveRight() {
