@@ -20,6 +20,21 @@ class MovableObject extends DrawableObject {
     this.currentImageIndex++;
   }
 
+  
+  playDeadAnimation(imagesDeadArray, removeCallback) {
+      this.speed = 0; 
+      this.currentImageIndex = 0;
+      let interval = setInterval(() => {
+          this.playAnimation(imagesDeadArray);
+      }, 1000 / 10);
+
+      setTimeout(() => {
+          clearInterval(interval);
+          if (removeCallback) removeCallback();
+      }, 500);
+  }
+
+
   isColliding(mObject) {
     return (
       this.x + this.width - this.offset.right > mObject.x - mObject.offset.left &&

@@ -44,15 +44,7 @@ class World {
   collisionWithEneny() {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isCollidingFromTop(enemy)) {
-        enemy.currentImageIndex = 0;
-        enemy.speed = 0;
-        let interval = setInterval(() => {enemy.playAnimation(enemy.imagesSmallChickenDead)}, 1000 / 10); // 10FPS
-
-        setTimeout(() => {
-          clearInterval(interval)
-          this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
-        }, 500);
-
+        enemy.playDeadAnimation(enemy.imagesSmallChickenDead, () => {this.level.enemies.splice(index, 1)})
         this.character.jump();
       }
       else if (this.character.isColliding(enemy) ) {
