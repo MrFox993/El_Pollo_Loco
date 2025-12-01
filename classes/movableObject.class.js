@@ -78,7 +78,7 @@ isCollidingFromTop(mObject) {
   }
 
   hit() {
-    this.hp -= 5;
+    this.hp -= 20;
     if (this.hp < 0) {
       this.hp = 0;
     } else {

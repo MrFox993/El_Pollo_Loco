@@ -16,7 +16,7 @@ class Endboss extends MovableObject {
     "./assets/img/4_enemie_boss_chicken/2_alert/G12.png",
   ];
 
-  hp = 100;
+  hp = 60;
   otherDirection = false;
 
   constructor() {

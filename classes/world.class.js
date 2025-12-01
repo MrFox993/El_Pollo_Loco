@@ -76,9 +76,8 @@ class World {
   collisionBottleWithEndboss() {
       this.throwableObjects.forEach((bottle, index) => {
           if (bottle.isColliding(this.level.endboss)) {
-            console.log("Endboss getroffen!");
-              // this.level.endboss.hit(); // Schaden zufügen
-              // this.throwableObjects.splice(index, 1); // Flasche entfernen
+            this.level.endboss.hit(); 
+            this.throwableObjects.splice(index, 1); 
           }
       });
   }
