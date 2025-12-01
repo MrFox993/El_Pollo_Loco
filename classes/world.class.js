@@ -30,6 +30,7 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrowObjects();
+      this.checkEndbossStatusBar();
     }, 200);
   }
 
@@ -92,6 +93,12 @@ class World {
     }
   }
 
+  checkEndbossStatusBar() {
+    if (!this.endbossStatusBar && this.character.x >= 2000) {
+        this.endbossStatusBar = new StatusBar("endboss", this.canvas.width);
+    }
+  }
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -111,6 +118,9 @@ class World {
     this.addToMap(this.healthStatusBar);
     this.addToMap(this.coinStatusBar);
     this.addToMap(this.bottleStatusBar);
+    if (this.endbossStatusBar) {
+      this.addToMap(this.endbossStatusBar);
+    }
     this.ctx.translate(this.camera_x, 0);
 
     this.ctx.translate(-this.camera_x, 0);

@@ -24,15 +24,16 @@ class StatusBar extends DrawableObject {
         "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/orange/0.png",
     ];
     healthBarPercentage = 100;
+    endbossHealthBarPercentage = 100;
     bottleBarPercentage = 0;
     coinBarPercentage = 0;
 
-    constructor(type){
+    constructor(type, canvasWidth){
         super();
-        this.x = 20;
-        this.y = this.getYByType(type);
         this.width = 200;
         this.height = 60;
+        this.x = type === 'endboss' ? canvasWidth - this.width - 20 : 20;
+        this.y = this.getYByType(type);
         this.images = this.getImagesByType(type);
         this.loadImages(this.images);
         this.initPercentageByType(type);
@@ -42,10 +43,11 @@ class StatusBar extends DrawableObject {
         if (type == 'health') return 0;
         if (type == 'bottle') return 50;
         if (type == 'coins') return 100;
+        if (type == 'endboss') return 0;
     }
 
     getImagesByType(type) {
-        if (type == 'health') return this.imagesHealthBar;
+        if (type == 'health' || type == 'endboss') return this.imagesHealthBar;
         if (type == 'bottle') return this.imagesBootleBar;
         if (type == 'coins') return this.imagesCoinBar;
     }
@@ -54,6 +56,7 @@ class StatusBar extends DrawableObject {
         if (type == 'health') this.setHealthBarPercentage(100);
         if (type == 'bottle') this.setBottleBarPercentage(0);
         if (type == 'coins') this.setCoinBarPercentage(0);
+        if (type == 'endboss') this.setEndbossHealthBarPercentage(100);
     }
 
     
@@ -78,6 +81,12 @@ class StatusBar extends DrawableObject {
     setCoinBarPercentage(percentage) {
         this.coinBarPercentage = percentage;
         let path = this.imagesCoinBar[this.resolveImageIndex(percentage)];
+        this.img = this.imageCache[path];
+    }
+
+    setEndbossHealthBarPercentage(percentage) {
+        this.endbossHealthBarPercentage = this.mapHealthToIndex(percentage);
+        let path = this.imagesHealthBar[this.resolveImageIndex(this.endbossHealthBarPercentage)];
         this.img = this.imageCache[path];
     }
 
