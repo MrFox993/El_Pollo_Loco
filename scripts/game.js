@@ -10,9 +10,10 @@ function startNewGame() {
     toggleScreen('menuScreen', 'hide');
     toggleScreen('controlScreen', 'hide');
     toggleScreen('.canvas-screen', 'show');
+    newLevel = createLevel1();
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
-    world.level = level_1;
+    world.level = newLevel;
     world.startWorld();
 }
 
