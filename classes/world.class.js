@@ -1,6 +1,6 @@
 class World {
   character = new Character();
-  level = level_1;
+  // level = level_1;
   backgroundImages_1;
   backgroundImages_2;
   ctx;
@@ -16,9 +16,17 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    // this.draw();
+    // this.setWorld();
+    // this.run();
+  }
+
+  startWorld() {
     this.draw();
     this.setWorld();
     this.run();
+    this.level.enemies.forEach(enemy => enemy.startAnimation());
+    if (this.level.endboss) this.level.endboss.startAnimation();
   }
 
   setWorld() {

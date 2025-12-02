@@ -19,10 +19,10 @@ class ChickenSmall extends MovableObject {
     this.loadImage("./assets/img/3_enemies_chicken/chicken_small/1_walk/1_w.png");
     this.loadImages(this.imagesSmallChickenWalking);
     this.loadImages(this.imagesSmallChickenDead)
-    this.animate();
+    // this.animate();
   }
 
-  animate() {
+  startAnimation() {
     setInterval(() => {
       this.playAnimation(this.imagesSmallChickenWalking);
     }, 1000 / 2);

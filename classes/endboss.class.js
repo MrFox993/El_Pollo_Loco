@@ -39,10 +39,10 @@ class Endboss extends MovableObject {
     this.y = 100;
     this.width = 360;
     this.height = 360;
-    this.animate();
+    // this.animate();
   }
 
-  animate() {
+  startAnimation() {
       setInterval(() => {
           if (this.isDead()) {
               this.playAnimation(this.imagesDead);

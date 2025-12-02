@@ -8,6 +8,8 @@ function startNewGame() {
     toggleScreen('.canvas-screen', 'show');
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
+    world.level = level_1;
+    world.startWorld();
 }
 
 function toggleScreen(screenIdOrClass, action) {
