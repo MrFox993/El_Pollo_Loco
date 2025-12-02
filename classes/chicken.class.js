@@ -23,6 +23,8 @@ class ChickenSmall extends MovableObject {
   }
 
   startAnimation() {
+    if (!gameStarted) return;
+    if (gameOver) return;
     setInterval(() => {
       this.playAnimation(this.imagesSmallChickenWalking);
     }, 1000 / 2);

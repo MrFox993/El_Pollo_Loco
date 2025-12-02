@@ -72,6 +72,8 @@ class Character extends MovableObject {
   }
 
   animate() {
+    if (!gameStarted) return;
+    if (gameOver) return;
     setInterval(() => {
       if (this.world.keyboard.right && this.x <= this.world.level.level_end_x) {
         this.otherDirection = false;
@@ -81,9 +83,7 @@ class Character extends MovableObject {
         this.moveLeft();
       } else if ((this.world.keyboard.up || this.world.keyboard.space) && !this.checkAboveGround()) {
         this.jump();
-      } else if (this.world.keyboard.down) {
-        // Implement crouch or other down action here if needed
-      }
+      } 
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 

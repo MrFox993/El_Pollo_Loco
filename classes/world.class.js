@@ -16,9 +16,6 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    // this.draw();
-    // this.setWorld();
-    // this.run();
   }
 
   startWorld() {
@@ -35,12 +32,40 @@ class World {
   }
 
   run() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
+      if (!gameStarted) return;
       this.checkCollisions();
       this.checkThrowObjects();
       this.checkEndbossStatusBar();
+      this.checkGameOver();
     }, 200);
   }
+
+  stop() {
+    clearInterval(this.intervalId)
+  }
+
+checkGameOver() {
+    if (this.character.isDead()) {
+        this.endGame("lost");
+    } else if (this.level.endboss && this.level.endboss.isDead()) {
+        this.endGame("won");
+    }
+}
+
+endGame(result) {
+  this.stop()
+  gameOver = true
+  setTimeout(() => {
+      gameStarted = false;
+      toggleScreen('canvas-screen', 'hide');
+      if (result === "won") {
+        toggleScreen('youWonScreen', 'show');
+      } else {
+        toggleScreen('youLostScreen', 'show');
+      }
+  }, 1000); // Wait for animation
+}
 
   checkCollisions() {
     this.collisionWithEneny();
@@ -112,6 +137,7 @@ class World {
   }
 
   draw() {
+    if (!gameStarted) return;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.translate(this.camera_x, 0);

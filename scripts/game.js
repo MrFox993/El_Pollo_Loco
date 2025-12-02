@@ -1,8 +1,12 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let gameStarted = false;
+let gameOver = false;
 
 function startNewGame() {
+    gameStarted = true;
+    gameOver = false;
     toggleScreen('menuScreen', 'hide');
     toggleScreen('controlScreen', 'hide');
     toggleScreen('.canvas-screen', 'show');
@@ -26,6 +30,19 @@ function toggleScreen(screenIdOrClass, action) {
         element.classList.add('hide-screen');
         element.classList.remove('show-screen');
     }
+}
+
+function goToMainMenu() { 
+    if (world) {
+        world.stop();
+        world = null;
+    }
+    gameStarted = false;
+    gameOver = false;
+    toggleScreen('youWonScreen', 'hide');
+    toggleScreen('youLostScreen', 'hide');
+    toggleScreen('.canvas-screen', 'hide');
+    toggleScreen('menuScreen', 'show');
 }
 
 

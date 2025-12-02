@@ -70,6 +70,23 @@
       <section class="canvas-screen">
         <canvas id="canvas" width="720px" height="480px"> </canvas>
       </section>
+      <section class="end-screens">
+        <div id="youWonScreen" class="end-screen hide-screen">
+            <img src="./assets/img/YouWonYouLost/YouWinA.png">
+            <div class="navigation">
+              <button class="navigation-buttons" onclick="goToMainMenu()">Main Menu</button>
+              <button class="navigation-buttons" onclick="startNextLevel()">Next Level</button>
+            </div>
+        </div>
+
+        <div id="youLostScreen" class="end-screen hide-screen">
+            <img src="./assets/img/YouWonYouLost/GameOver.png"> 
+            <div class="navigation">
+              <button class="navigation-buttons" onclick="goToMainMenu()">Main Menu</button>
+              <button class="navigation-buttons" onclick="startNewGame()">Restart Level</button>
+            </div>
+        </div>
+      </section>
     </main>
   </body>
 </html>
