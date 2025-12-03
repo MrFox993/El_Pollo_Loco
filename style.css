@@ -149,4 +149,9 @@ button {
     align-items: center;
     color: white;
     font-size: 2em;
+
+    img {
+        width: 50vw;
+        height: 50vh;
+    }
 }
