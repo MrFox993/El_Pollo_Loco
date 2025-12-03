@@ -123,7 +123,18 @@ endGame(result) {
 
   checkThrowObjects() {
     if (this.keyboard.c && this.character.bottles > 0) {
-      let bottle = new ThrowableObject(this.character.x + (this.character.width / 2), this.character.y + (this.character.height / 2));
+      let direction = this.character.otherDirection ? 'left' : 'right';
+
+      let bottle = new ThrowableObject(
+        this.character.x + (this.character.width / 2),
+        this.character.y + (this.character.height / 2),
+        direction
+      );
+
+      if (direction === 'left') {
+        bottle.otherDirection = true;
+      }
+
       this.throwableObjects.push(bottle);
       this.character.bottles--;
       this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
