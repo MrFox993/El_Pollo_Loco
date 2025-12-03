@@ -68,13 +68,13 @@ endGame(result) {
 }
 
   checkCollisions() {
-    this.collisionWithEneny();
+    this.collisionWithEnemy();
     this.collisionWithBottle();
     this.collisionWithCoin();
     this.collisionBottleWithEndboss();
   }
 
-  collisionWithEneny() {
+  collisionWithEnemy() {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isCollidingFromTop(enemy)) {
         enemy.playDeadAnimation(enemy.imagesSmallChickenDead, () => {this.level.enemies.splice(index, 1)})
@@ -85,6 +85,10 @@ endGame(result) {
         this.healthStatusBar.setHealthBarPercentage(this.character.hp);
       }
     });
+    if (this.character.isColliding(this.level.endboss)) {
+      this.character.hit();
+      this.healthStatusBar.setHealthBarPercentage(this.character.hp);
+    }
   }
 
   collisionWithBottle() {
