@@ -72,6 +72,10 @@ endGame(result) {
     this.collisionWithBottle();
     this.collisionWithCoin();
     this.collisionBottleWithEndboss();
+    this.bottleSpashAnimation();
+  
+    this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
+
   }
 
   collisionWithEnemy() {
@@ -114,14 +118,18 @@ endGame(result) {
   collisionBottleWithEndboss() {
       if (this.level.endboss && this.throwableObjects.length > 0) {
           this.throwableObjects.forEach((bottle, index) => {
-              if (bottle.isColliding(this.level.endboss)) {
-                  this.level.endboss.hit();
-                  if (this.endbossStatusBar) {
-                      this.endbossStatusBar.setEndbossHealthBarPercentage(this.level.endboss.hp);
-                  }
-                  this.throwableObjects.splice(index, 1);
+              if (bottle.isColliding(this.level.endboss) && !bottle.markForRemoval) {
+                this.level.endboss.hit();
+                if (this.endbossStatusBar) {
+                    this.endbossStatusBar.setEndbossHealthBarPercentage(this.level.endboss.hp);
+                }
+                bottle.stopThrow();
+                bottle.stopGravity();
+                bottle.playSplashAnimation();
+                bottle.markForRemoval = true;
               }
           });
+          // this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
       }
   }
 
@@ -132,7 +140,9 @@ endGame(result) {
       let bottle = new ThrowableObject(
         this.character.x + (this.character.width / 2),
         this.character.y + (this.character.height / 2),
-        direction
+        direction,
+        Bottle.imagesBottleRotation,
+        Bottle.imagesBottleSplash
       );
 
       if (direction === 'left') {
@@ -149,6 +159,30 @@ endGame(result) {
     if (!this.endbossStatusBar && this.character.x >= 2000) {
         this.endbossStatusBar = new StatusBar("endboss", this.canvas.width);
     }
+  }
+
+  bottleSpashAnimation() {
+    this.throwableObjects.forEach((bottle, index) => {
+        let splashTriggered = false;
+
+        if (bottle.y >= 350) {
+            splashTriggered = true;
+        }
+
+        this.level.enemies.forEach(enemy => {
+            if (bottle.isColliding(enemy)) {
+                splashTriggered = true;
+            }
+        });
+
+        if (splashTriggered && !bottle.markForRemoval) {
+            bottle.stopThrow();
+            bottle.stopGravity()
+            bottle.playSplashAnimation();
+        }
+            });
+
+        this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
   }
 
   draw() {

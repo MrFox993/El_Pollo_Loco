@@ -72,12 +72,16 @@ isCollidingFromTop(mObject) {
   }
 
   applyGravity() {
-    setInterval(() => {
+    this.gravityInterval = setInterval(() => {
         if (this.checkAboveGround() || this.speedY > 0) {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;
         }
     }, 1000 / 25);
+  }
+
+  stopGravity() {
+    clearInterval(this.gravityInterval)
   }
 
   checkAboveGround() {

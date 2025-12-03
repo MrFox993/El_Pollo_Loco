@@ -9,6 +9,8 @@ function startNewGame() {
     gameOver = false;
     toggleScreen('menuScreen', 'hide');
     toggleScreen('controlScreen', 'hide');
+    toggleScreen('youWonScreen', 'hide');
+    toggleScreen('youLostScreen', 'hide');
     toggleScreen('.canvas-screen', 'show');
     newLevel = createLevel1();
     canvas = document.getElementById('canvas');
