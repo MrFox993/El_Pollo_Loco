@@ -126,7 +126,7 @@ endGame(result) {
                 bottle.stopThrow();
                 bottle.stopGravity();
                 bottle.playSplashAnimation();
-                bottle.markForRemoval = true;
+                // bottle.markForRemoval = true;
               }
           });
           // this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
@@ -162,12 +162,14 @@ endGame(result) {
   }
 
   bottleSpashAnimation() {
-    this.throwableObjects.forEach((bottle, index) => {
+    this.throwableObjects.forEach((bottle) => {
         let splashTriggered = false;
 
-        if (bottle.y >= 350) {
-            splashTriggered = true;
+        if (bottle.hasSplashed || bottle.markForRemoval) {
+            return;
         }
+
+        splashTriggered= bottle.y >= 350;
 
         this.level.enemies.forEach(enemy => {
             if (bottle.isColliding(enemy)) {

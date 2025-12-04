@@ -11,6 +11,8 @@ class MovableObject extends DrawableObject {
   }
   hp = 100;
   lastHit = 0;
+  damageCooldownMs = 500;
+  defaultHitDamage = 20;
 
 
   playAnimation(images) {
@@ -96,13 +98,16 @@ isCollidingFromTop(mObject) {
     this.speedY = 30;
   }
 
-  hit() {
-    this.hp -= 20;
+  hit(damage = this.defaultHitDamage) {
+    // this.hp -= 20;
+    if (this.isHurt()) return;
+
+    this.hp -= damage;
     if (this.hp < 0) {
       this.hp = 0;
-    } else {
-      this.lastHit = new Date().getTime();
     }
+
+    this.lastHit = new Date().getTime();
   }
 
   isDead() {
@@ -110,8 +115,8 @@ isCollidingFromTop(mObject) {
   }
 
   isHurt() {
-    let timepassed = new Date().getTime() - this.lastHit; // difference in ms
-    timepassed = timepassed / 1000; // difference in s
-    return timepassed < 0.5;
+    let timePassedMs = new Date().getTime() - this.lastHit; // difference in ms
+    // timepassed = timepassed / 1000; // difference in s
+    return timePassedMs < this.damageCooldownMs;
   }
 }

@@ -26,7 +26,7 @@ class Endboss extends MovableObject {
     "./assets/img/4_enemie_boss_chicken/5_dead/G26.png"
   ]
 
-  hp = 60;
+  hp = 100;
   otherDirection = false;
 
   constructor() {
@@ -39,7 +39,8 @@ class Endboss extends MovableObject {
     this.y = 100;
     this.width = 360;
     this.height = 360;
-    // this.animate();
+    this.damageCooldownMs = 400;
+    this.defaultHitDamage = 34;
   }
 
   startAnimation() {

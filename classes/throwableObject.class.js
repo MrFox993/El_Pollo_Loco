@@ -10,6 +10,7 @@ class ThrowableObject extends MovableObject {
         this.y = y;
         this.height = 80;
         this.width = 60;
+        this.hasSplashed = false;
         this.direction = direction || 'right';
         this.throw();
     }
@@ -37,6 +38,8 @@ class ThrowableObject extends MovableObject {
     }
 
     playSplashAnimation() {
+        if (this.hasSplashed) return;
+        this.hasSplashed = true;
         let splashInterval = setInterval(() => {
             this.playAnimation(this.imagesBottleSplash);
         }, 100);
