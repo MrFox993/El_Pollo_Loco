@@ -4,9 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>El Pollo Loco</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@200..800&family=Sancreek&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css" />
-    <script src="./classes/world.class.js"></script>
+    <script src="./classes/drawableObject.class.js"></script>
     <script src="./classes/movableObject.class.js"></script>
+    <script src="./classes/throwableObject.class.js"></script>
+    <script src="./classes/collectableObject.class.js"></script>
+    <script src="./classes/statusbar.class.js"></script>
     <script src="./classes/character.class.js"></script>
     <script src="./classes/chicken.class.js"></script>
     <script src="./classes/cloud.class.js"></script>
@@ -14,15 +20,73 @@
     <script src="./classes/keyboard.class.js"></script>
     <script src="./classes/level.class.js"></script>
     <script src="./classes/endboss.class.js"></script>
+    <script src="./classes/bottle.class.js"></script>    
+    <script src="./classes/coin.class.js"></script>    
     <script src="./levels/level1.js"></script>
     <script src="./scripts/game.js"></script>
+    <script src="./classes/world.class.js"></script>
   </head>
-  <body onload="init()">
+  <body>
     <header>
       <h1>El Pollo Loco</h1>
     </header>
     <main>
-      <canvas id="canvas" width="720px" height="480px"> </canvas>
+      <section class="main-screen">
+        <div class="menu-screen show-screen" id="menuScreen">
+          <button class="start-game-button" onclick="startNewGame()">Start New Game</button>
+          <div class="navigation">
+            <button class="navigation-buttons" onclick="toggleScreen('menuScreen', 'hide'), toggleScreen('controlScreen', 'show')">Controls</button>
+            <button class="navigation-buttons" onclick="">Impressum</button>
+          </div>
+        </div>
+        <div class="menu-screen hide-screen" id="controlScreen">
+          <div class="control-box">
+            <h2>Controls</h2>
+            <table>
+              <tr>
+                <th>Move Left</th>
+                <td>Left Arrow or a</td>
+              </tr>
+              <tr>
+                <th>Move Right</th>
+                <td>Right Arrow or d</td>
+              </tr>
+              <tr>
+                <th>Jump</th>
+                <td>Up Arrow or w or Spacebar</td>
+              </tr>
+              <tr>
+                <th>Throw Bottle</th>
+                <td>c</td>
+              </tr>
+            </table>
+          </div>
+          <div class="navigation">
+            <button class="navigation-buttons" onclick="toggleScreen('controlScreen', 'hide'), toggleScreen('menuScreen', 'show')">Back</button>
+            <button class="navigation-buttons" onclick="startNewGame()">Start New Game</button>
+          </div>
+        </div>
+      </section>
+      <section class="canvas-screen">
+        <canvas id="canvas" width="720px" height="480px"> </canvas>
+      </section>
+      <section class="end-screens">
+        <div id="youWonScreen" class="end-screen hide-screen">
+            <img src="./assets/img/YouWonYouLost/YouWinA.png" alt="You Win">
+            <div class="navigation">
+              <button type="button" class="navigation-buttons" onclick="goToMainMenu()">Main Menu</button>
+              <button type="button" class="navigation-buttons" onclick="startNextLevel()" disabled >Next Level</button>
+            </div>
+        </div>
+
+        <div id="youLostScreen" class="end-screen hide-screen">
+            <img src="./assets/img/YouWonYouLost/GameOver.png" alt="Game Over"> 
+            <div class="navigation">
+              <button type="button" class="navigation-buttons" onclick="goToMainMenu()">Main Menu</button>
+              <button type="button" class="navigation-buttons" onclick="startNewGame()">Restart Level</button>
+            </div>
+        </div>
+      </section>
     </main>
   </body>
 </html>

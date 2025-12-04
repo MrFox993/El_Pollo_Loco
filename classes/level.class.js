@@ -1,32 +1,37 @@
+
 class Level {
-  enemies;
-  clouds;
-  backgroundObjects;
-  bgImgStartingX = -719;
-  level_end_x = 5750;
+    enemies = [];
+    endboss = null;
+    clouds = [];
+    backgroundObjects = [];
+    bottles = [];
+    coins = [];
+    bgImgStartingX = -719;
+    level_end_x = 5750;
 
-  constructor(enemies, clouds, backgroundObject1, backroundObject2) {
-    this.enemies = enemies || [];
-    this.clouds = clouds || [];
-    this.backgroundObjects = [];
-    this.generateBackgroundObjects(backgroundObject1, backroundObject2);
-  }
-
-  generateBackgroundObjects(backgroundObject1, backroundObject2) {
-    const repetitions = 10;
-    const segmentWidth = 719;
-    let currentX = this.bgImgStartingX;
-
-    this.backgroundObjects = [];
-
-    for (let i = 0; i < repetitions; i++) {
-      const imageSet = i % 2 === 0 ? backgroundObject1 : backroundObject2;
-
-      for (let j = 0; j < imageSet.length; j++) {
-        this.backgroundObjects.push(new BackgroundObject(imageSet[j], currentX));
-      }
-
-      currentX += segmentWidth;
+    constructor({ enemies = [], endboss = null, clouds = [], backgroundObject1 = [], backgroundObject2 = [], bottles = [], coins = [] }) {
+        this.enemies = enemies;
+        this.endboss = endboss;
+        this.clouds = clouds;
+        this.bottles = bottles;
+        this.coins = coins;
+        this.backgroundObjects = [];
+        this.generateBackgroundObjects(backgroundObject1, backgroundObject2);
     }
-  }
+
+
+    generateBackgroundObjects(backgroundObject1, backgroundObject2) {
+      if (!backgroundObject1.length || !backgroundObject2.length) return;
+      const repetitions = 10;
+      const segmentWidth = 719;
+      let currentX = this.bgImgStartingX;
+
+      for (let i = 0; i < repetitions; i++) {
+          const imageSet = i % 2 === 0 ? backgroundObject1 : backgroundObject2;
+          for (let img of imageSet) {
+              this.backgroundObjects.push(new BackgroundObject(img, currentX));
+          }
+          currentX += segmentWidth;
+      }
+    }
 }
