@@ -94,8 +94,15 @@ button {
     text-align: center;
     cursor: pointer;
     background-color: #F4A460;
-    border: 4px, solid, #8B4513;
+    border: 4px solid #8B4513;
     border-radius: 30px;
+}
+button:disabled,
+button:disabled:hover,
+button:disabled:active {
+    background-color: grey !important;
+    border-color: grey;
+    cursor: not-allowed !important;
 }
 
 .control-box {
