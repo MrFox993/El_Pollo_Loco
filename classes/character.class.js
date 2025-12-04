@@ -11,6 +11,18 @@ class Character extends MovableObject {
     "./assets/img/2_character_pepe/1_idle/idle/I-9.png",
     "./assets/img/2_character_pepe/1_idle/idle/I-10.png",
   ];
+  imagesLongIdle = [
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-11.png",
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-12.png",
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-13.png",
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-14.png",
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-15.png",
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-16.png",
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-17.png",
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-18.png",
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-19.png",
+    "./assets/img/2_character_pepe/1_idle/long_idle/I-20.png"
+  ]
   imagesWalking = [
     "./assets/img/2_character_pepe/2_walk/W-21.png",
     "./assets/img/2_character_pepe/2_walk/W-22.png",
@@ -64,6 +76,7 @@ class Character extends MovableObject {
     this.coins = 0;
     this.loadImage("./assets/img/2_character_pepe/1_idle/idle/I-1.png");
     this.loadImages(this.imagesIdle);
+    this.loadImages(this.imagesLongIdle);
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imagesJumping);
     this.loadImages(this.imagesDead);
