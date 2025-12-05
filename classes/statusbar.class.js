@@ -23,6 +23,14 @@ class StatusBar extends DrawableObject {
         "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/orange/20.png",
         "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/orange/0.png",
     ];
+    imagesEndbossHealthBar = [
+        "./assets/img/7_statusbars/2_statusbar_endboss/green/green100.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/green/green80.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/blue/blue60.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/blue/blue40.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/orange/orange20.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/orange/orange0.png",
+    ];
     healthBarPercentage = 100;
     endbossHealthBarPercentage = 100;
     bottleBarPercentage = 0;
