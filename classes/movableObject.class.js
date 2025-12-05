@@ -99,7 +99,6 @@ isCollidingFromTop(mObject) {
   }
 
   hit(damage = this.defaultHitDamage) {
-    // this.hp -= 20;
     if (this.isHurt()) return;
 
     this.hp -= damage;
@@ -115,8 +114,7 @@ isCollidingFromTop(mObject) {
   }
 
   isHurt() {
-    let timePassedMs = new Date().getTime() - this.lastHit; // difference in ms
-    // timepassed = timepassed / 1000; // difference in s
+    let timePassedMs = new Date().getTime() - this.lastHit; 
     return timePassedMs < this.damageCooldownMs;
   }
 }

@@ -70,9 +70,8 @@ class StatusBar extends DrawableObject {
 
     
     mapHealthToIndex(healthPercentage) {
-        // healthPercentage: 100, 95, 90, ..., 0
         let index = Math.floor(healthPercentage / 20);
-        return index; // 100 -> 5, 80 -> 4, 60 -> 3, 40 -> 2, 20 -> 1, 0 -> 0
+        return index;
     }
 
     setHealthBarPercentage(percentage) {

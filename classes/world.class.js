@@ -1,6 +1,5 @@
 class World {
   character = new Character();
-  // level = level_1;
   backgroundImages_1;
   backgroundImages_2;
   ctx;
@@ -64,7 +63,7 @@ endGame(result) {
       } else {
         toggleScreen('youLostScreen', 'show');
       }
-  }, 1000); // Wait for animation
+  }, 1000);
 }
 
   checkCollisions() {
@@ -135,7 +134,6 @@ endGame(result) {
 collisionBottleWithEnemies() {
   if (!this.throwableObjects.length || !Array.isArray(this.level.enemies)) return;
 
-  // Wir nehmen for-Schleifen statt forEach, um nach dem ersten Treffer pro Flasche "brechen" zu können.
   for (let b = 0; b < this.throwableObjects.length; b++) {
     const bottle = this.throwableObjects[b];
     if (bottle.markForRemoval || bottle.hasSplashed) continue;
@@ -143,31 +141,22 @@ collisionBottleWithEnemies() {
     for (let e = 0; e < this.level.enemies.length; e++) {
       const enemy = this.level.enemies[e];
 
-      // Falls Enemy schon tot/entfernt ist, überspringen
       if (enemy.isDead && enemy.isDead()) continue;
 
       if (bottle.isColliding(enemy)) {
-        // 1) Enemy sofort sterben lassen + Dead-Animation
         if (typeof enemy.playDeadAnimation === 'function') {
-          // Versuche zuerst das bekannte Array aus deinem bestehenden Code zu nutzen:
           const deadImages =
             enemy.imagesSmallChickenDead || enemy.imagesDead || enemy.imagesDying;
 
           enemy.playDeadAnimation(deadImages, () => {
-            // nach der Animation aus der Liste entfernen
             const idx = this.level.enemies.indexOf(enemy);
             if (idx >= 0) this.level.enemies.splice(idx, 1);
           });
         } else {
-          // Fallback: direkt entfernen, falls keine Methode existiert
           enemy.hp = 0;
           this.level.enemies.splice(e, 1);
         }
-
-        // 2) Flasche Splash ausführen (einmalig)
         bottle.playSplashAnimation();
-
-        // 3) WICHTIG: Nach erstem Treffer pro Flasche direkt zur nächsten Flasche
         break;
       }
     }
@@ -263,7 +252,7 @@ collisionBottleWithEnemies() {
       this.flipImage(mObject);
     }
     mObject.draw(this.ctx);
-    mObject.drawFrame(this.ctx);
+    // mObject.drawFrame(this.ctx);
 
     if (mObject.otherDirection) {
       this.flipImageBack(mObject);
