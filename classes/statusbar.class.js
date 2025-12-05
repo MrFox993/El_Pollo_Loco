@@ -23,6 +23,14 @@ class StatusBar extends DrawableObject {
         "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/orange/20.png",
         "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/orange/0.png",
     ];
+    imagesEndbossHealthBar = [
+        "./assets/img/7_statusbars/2_statusbar_endboss/green/green100.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/green/green80.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/blue/blue60.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/blue/blue40.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/orange/orange20.png",
+        "./assets/img/7_statusbars/2_statusbar_endboss/orange/orange0.png",
+    ];
     healthBarPercentage = 100;
     endbossHealthBarPercentage = 100;
     bottleBarPercentage = 0;
@@ -47,9 +55,10 @@ class StatusBar extends DrawableObject {
     }
 
     getImagesByType(type) {
-        if (type == 'health' || type == 'endboss') return this.imagesHealthBar;
+        if (type == 'health') return this.imagesHealthBar;
         if (type == 'bottle') return this.imagesBootleBar;
         if (type == 'coins') return this.imagesCoinBar;
+        if (type == 'endboss') return this.imagesEndbossHealthBar;
     }
 
     initPercentageByType(type) {
@@ -86,7 +95,7 @@ class StatusBar extends DrawableObject {
 
     setEndbossHealthBarPercentage(percentage) {
         this.endbossHealthBarPercentage = this.mapHealthToIndex(percentage);
-        let path = this.imagesHealthBar[this.resolveImageIndex(this.endbossHealthBarPercentage)];
+        let path = this.imagesEndbossHealthBar[this.resolveImageIndex(this.endbossHealthBarPercentage)];
         this.img = this.imageCache[path];
     }
 
