@@ -67,7 +67,7 @@ class Character extends MovableObject {
   }
   lastActiveAt = Date.now();
   isLongIdling = false;
-  longIdleThresholdMs = 15000; // 15 seconds
+  longIdleThresholdMs = 15000; 
 
 
   constructor() {

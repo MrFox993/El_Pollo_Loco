@@ -11,7 +11,7 @@ class ChickenSmall extends MovableObject {
 
   constructor() {
     super();
-    this.x = 500 + Math.random() * 600; // Random x position
+    this.x = 500 + Math.random() * 600; 
     this.y = 370;
     this.width = 60;
     this.height = 60;
@@ -46,7 +46,7 @@ class ChickenBig extends MovableObject {
 
   constructor() {
     super();
-    this.x = 650 + Math.random() * 600; // Random x position
+    this.x = 650 + Math.random() * 600; 
     this.y = 370;
     this.width = 60;
     this.height = 60;
