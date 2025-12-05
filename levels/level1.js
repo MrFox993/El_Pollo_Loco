@@ -4,7 +4,7 @@ function createLevel1() {
         new ChickenSmall(),
         new ChickenSmall(),
         new ChickenSmall(),
-        new ChickenSmall()
+        new ChickenBig()
       ],
       endboss: new Endboss(),
       clouds: [
