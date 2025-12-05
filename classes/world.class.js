@@ -252,7 +252,7 @@ collisionBottleWithEnemies() {
       this.flipImage(mObject);
     }
     mObject.draw(this.ctx);
-    mObject.drawFrame(this.ctx);
+    // mObject.drawFrame(this.ctx);
 
     if (mObject.otherDirection) {
       this.flipImageBack(mObject);
