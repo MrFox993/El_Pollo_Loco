@@ -24,12 +24,12 @@
     <script src="./classes/bottle.class.js"></script>    
     <script src="./classes/coin.class.js"></script>    
     <script src="./levels/level1.js"></script>
-    <script src="./scripts/game.js"></script>
     <script src="./classes/audioManager.class.js"></script>
+    <script src="./scripts/game.js"></script>
     <script src="./classes/world.class.js"></script>
     
   <script>
-    const audioManager = new AudioManager({
+    window.audioManager = new AudioManager({
       bgmMenu: { src: 'assets/audio/acoustic-mexican-guitar-218610.mp3',   loop: true, volume: 0.4 },
       bgmGame: { src: 'assets/audio/mexican-mexico-music-434632.mp3', loop: true, volume: 0.35 },
       footsteps: { src: 'assets/audio/person-walking-on-rocks-and-sand-100586.mp3', loop: true, volume: 0.6 },
@@ -54,11 +54,11 @@
     <main>
       <section class="main-screen">
         <div class="menu-screen show-screen" id="menuScreen">
-          <button class="start-game-button" onclick="startNewGame()">Start New Game</button>
+          <button type="button" class="start-game-button" onclick="startNewGame()">Start New Game</button>
           <div class="navigation">
-            <button class="navigation-buttons" onclick="toggleScreen('menuScreen', 'hide'), toggleScreen('controlScreen', 'show')">Controls</button>
-            <button class="navigation-buttons" onclick="">Legal Notice</button>
-            <button id="muteBtn" class="navigation-buttons" aria-pressed="false" title="Mute/Unmute (Key M)">
+            <button type="button" class="navigation-buttons" onclick="toggleScreen('menuScreen', 'hide'), toggleScreen('controlScreen', 'show')">Controls</button>
+            <button type="button" class="navigation-buttons" onclick="">Legal Notice</button>
+            <button type="button" id="muteBtn" class="navigation-buttons" aria-pressed="false" title="Mute/Unmute (Key M)">
               <img id="muteIcon" src="./assets/icons/volume_on.svg" alt="mute">
               <span class="visually-hidden">Sound</span>
             </button>
@@ -91,8 +91,8 @@
             </table>
           </div>
           <div class="navigation">
-            <button class="navigation-buttons" onclick="toggleScreen('controlScreen', 'hide'), toggleScreen('menuScreen', 'show')">Back</button>
-            <button class="navigation-buttons" onclick="startNewGame()">Start New Game</button>
+            <button type="button" class="navigation-buttons" onclick="toggleScreen('controlScreen', 'hide'), toggleScreen('menuScreen', 'show')">Back</button>
+            <button type="button" class="navigation-buttons" onclick="startNewGame()">Start New Game</button>
           </div>
         </div>
       </section>
