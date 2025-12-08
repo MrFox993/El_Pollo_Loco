@@ -25,6 +25,7 @@
     <script src="./classes/coin.class.js"></script>    
     <script src="./levels/level1.js"></script>
     <script src="./scripts/game.js"></script>
+    <script src="./classes/audioManager.class.js"></script>
     <script src="./classes/world.class.js"></script>
   </head>
   <body>
@@ -37,7 +38,11 @@
           <button class="start-game-button" onclick="startNewGame()">Start New Game</button>
           <div class="navigation">
             <button class="navigation-buttons" onclick="toggleScreen('menuScreen', 'hide'), toggleScreen('controlScreen', 'show')">Controls</button>
-            <button class="navigation-buttons" onclick="">Impressum</button>
+            <button class="navigation-buttons" onclick="">Legal Notice</button>
+            <button id="muteBtn" class="navigation-buttons" aria-pressed="false" title="Mute/Unmute (Taste M)">
+              <img src="./assets/icons/volume_on.svg" alt="mute">
+              <span class="visually-hidden">Sound</span>
+            </button>
           </div>
         </div>
         <div class="menu-screen hide-screen" id="controlScreen">
@@ -59,6 +64,10 @@
               <tr>
                 <th>Throw Bottle</th>
                 <td>c</td>
+              </tr>
+              <tr>
+                <th>Mute/Unmute Game</th>
+                <td>m</td>
               </tr>
             </table>
           </div>
