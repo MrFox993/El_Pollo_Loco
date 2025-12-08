@@ -17,6 +17,12 @@ function startNewGame() {
     world = new World(canvas, keyboard);
     world.level = newLevel;
     world.startWorld();
+    
+    if (window.audioManager) {
+        audioManager.stopMenuBgm();
+        audioManager.playGameBgm();
+    }
+
 }
 
 function toggleScreen(screenIdOrClass, action) {
@@ -40,6 +46,12 @@ function goToMainMenu() {
         world.stop();
         world = null;
     }
+    
+    if (window.audioManager) {
+        audioManager.stopGameBgm();
+        audioManager.playMenuBgm();
+    }
+
     gameStarted = false;
     gameOver = false;
     toggleScreen('youWonScreen', 'hide');

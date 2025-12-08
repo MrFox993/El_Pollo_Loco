@@ -32,11 +32,14 @@ class AudioManager {
 
     this._applyMute();
 
-        if (this.audios.has('bgm')) {
-        const startBgm = () => this.play('bgm');
-        document.addEventListener('click', startBgm, { once: true });
-        document.addEventListener('keydown', startBgm, { once: true });
+
+        // BGM after first User-Interaction 
+        if (this.audios.has('bgmMenu')) {
+            const startMenu = () => this.play('bgmMenu');
+            document.addEventListener('click', startMenu, { once: true });
+            document.addEventListener('keydown', startMenu, { once: true });
         }
+
 
         // DOM-Wiring, if DOM is ready
         this._initDomWhenReady();
@@ -98,6 +101,11 @@ class AudioManager {
     }
 
   // ---------- Convenience ----------
+    playMenuBgm() { this.play('bgmMenu'); }
+    stopMenuBgm() { this.stop('bgmMenu'); }
+    playGameBgm() { this.play('bgmGame'); }
+    stopGameBgm() { this.stop('bgmGame'); }
+
     playFootsteps() { this.play('footsteps'); }
     stopFootsteps() { this.stop('footsteps'); }
     playHpLost()    { this.play('hpLost'); }
