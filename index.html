@@ -27,6 +27,22 @@
     <script src="./scripts/game.js"></script>
     <script src="./classes/audioManager.class.js"></script>
     <script src="./classes/world.class.js"></script>
+    
+  <script>
+    const audioManager = new AudioManager({
+      bgm:       { src: 'assets/audio/',   loop: true, volume: 0.4 },
+      footsteps: { src: 'assets/audio/',  loop: true, volume: 0.6 },
+      hpLost:    { src: 'assets/audio/',    volume: 1.0 },
+      enemyHit:  { src: 'assets/audio/',  volume: 0.8 }
+    }, {
+      muteButton: '#muteBtn',                 
+      iconMode:   'img',                      
+      iconOn:     'assets/icons/volume_on.svg',
+      iconOff:    'assets/icons/volume_off.svg',
+      shortcutKey:'m'                         
+    });
+  </script>
+
   </head>
   <body>
     <header>
@@ -39,8 +55,8 @@
           <div class="navigation">
             <button class="navigation-buttons" onclick="toggleScreen('menuScreen', 'hide'), toggleScreen('controlScreen', 'show')">Controls</button>
             <button class="navigation-buttons" onclick="">Legal Notice</button>
-            <button id="muteBtn" class="navigation-buttons" aria-pressed="false" title="Mute/Unmute (Taste M)">
-              <img src="./assets/icons/volume_on.svg" alt="mute">
+            <button id="muteBtn" class="navigation-buttons" aria-pressed="false" title="Mute/Unmute (Key M)">
+              <img id="muteIcon" src="./assets/icons/volume_on.svg" alt="mute">
               <span class="visually-hidden">Sound</span>
             </button>
           </div>
