@@ -17,6 +17,7 @@ class AudioManager {
         this.iconOn        = options.iconOn      || 'assets/icons/volume_on.svg';
         this.iconOff       = options.iconOff     || 'assets/icons/volume_off.svg';
         this.muteButtonRef = options.muteButton  || null;
+        this.mode = 'menu';
 
         // ---- Condition & Audio-Objects ----
         this.isMuted = this._loadMuted();
@@ -33,17 +34,21 @@ class AudioManager {
     this._applyMute();
 
 
-        // BGM after first User-Interaction 
+    // BGM after first User-Interaction 
+    
         if (this.audios.has('bgmMenu')) {
-            const startMenu = () => this.play('bgmMenu');
-            document.addEventListener('click', startMenu, { once: true });
-            document.addEventListener('keydown', startMenu, { once: true });
+        const startMenuIfNeeded = () => {
+            if (this.mode !== 'menu') return;
+            this.play('bgmMenu');
+        };
+        document.addEventListener('click',   startMenuIfNeeded, { once: true });
+        document.addEventListener('keydown', startMenuIfNeeded, { once: true });
         }
 
 
         // DOM-Wiring, if DOM is ready
         this._initDomWhenReady();
-    }
+}
 
   // ---------- Persistence ----------
     _loadMuted() {
@@ -98,6 +103,10 @@ class AudioManager {
         if (!audio) return;
         audio.pause();
         audio.currentTime = 0;
+    }
+
+    setMode(mode) {
+        this.mode = mode === 'game' ? 'game' : 'menu';
     }
 
   // ---------- Convenience ----------

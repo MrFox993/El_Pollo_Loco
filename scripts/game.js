@@ -19,6 +19,7 @@ function startNewGame() {
     world.startWorld();
     
     if (window.audioManager) {
+        audioManager.setMode('game');
         audioManager.stopMenuBgm();
         audioManager.playGameBgm();
     }
@@ -48,6 +49,7 @@ function goToMainMenu() {
     }
     
     if (window.audioManager) {
+        audioManager.setMode('menu');
         audioManager.stopGameBgm();
         audioManager.playMenuBgm();
     }
