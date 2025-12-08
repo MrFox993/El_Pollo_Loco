@@ -163,7 +163,7 @@ class AudioManager {
 
     // ARIA / Title
     this.muteBtn.setAttribute('aria-pressed', String(this.isMuted));
-    this.muteBtn.title = this.isMuted ? 'Sound off (Key M)' : 'Sound on (Key M)';
+    this.muteBtn.title = this.isMuted ? 'Sound on (Key M)' : 'Sound off (Key M)';
 
     if (this.iconMode === 'img') {
         let img = this.muteBtn.querySelector('#muteIcon');
