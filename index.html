@@ -30,10 +30,13 @@
     
   <script>
     const audioManager = new AudioManager({
-      bgm:       { src: 'assets/audio/',   loop: true, volume: 0.4 },
-      footsteps: { src: 'assets/audio/',  loop: true, volume: 0.6 },
-      hpLost:    { src: 'assets/audio/',    volume: 1.0 },
-      enemyHit:  { src: 'assets/audio/',  volume: 0.8 }
+      bgmMenu: { src: 'assets/audio/acoustic-mexican-guitar-218610.mp3',   loop: true, volume: 0.4 },
+      bgmGame: { src: 'assets/audio/mexican-mexico-music-434632.mp3', loop: true, volume: 0.35 },
+      footsteps: { src: 'assets/audio/person-walking-on-rocks-and-sand-100586.mp3', loop: true, volume: 0.6 },
+      jump: { src: 'assets/audio/cartoon-jump-6462.mp3', volume: 1.0 },
+      hpLost:    { src: 'assets/audio/ouch-sound-effect-30-11844.mp3', volume: 1.0 },
+      enemyHit:  { src: 'assets/audio/chicken-sound-402826.mp3',  volume: 0.8 },
+      coin: { src: 'assets/audio/coin-257878.mp3', volume: 0.8 }
     }, {
       muteButton: '#muteBtn',                 
       iconMode:   'img',                      
