@@ -138,7 +138,7 @@ class Character extends MovableObject {
       } else if (this.isHurt()){
         this.isLongIdling = false;
         this.playAnimation(this.imagesHurt);
-        window.audioManager.play('hurt');
+        window.audioManager.play('hpLost');
       } else if (this.checkAboveGround()) {
         this.isLongIdling = false;
         this.playAnimation(this.imagesJumping);
@@ -150,11 +150,17 @@ class Character extends MovableObject {
         if (idleDurationMs >= this.longIdleThresholdMs) {
             this.isLongIdling = true;
             this.playAnimation(this.imagesLongIdle);
-            window.audioManager.play('snoring');
+            if (!this.isSnoringPlaying) {
+                window.audioManager.play('snoring');
+                this.isSnoringPlaying = true;
+              }
     }else {
           this.isLongIdling = false;
           this.playAnimation(this.imagesIdle);
-          window.audioManager.stop('snoring');
+          if (this.isSnoringPlaying) {
+              window.audioManager.stop('snoring');
+              this.isSnoringPlaying = false;
+            }
         }
       }
     }, 100);
