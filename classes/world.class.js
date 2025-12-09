@@ -101,6 +101,7 @@ endGame(result) {
         this.character.bottles++;
         this.level.bottles.splice(index, 1);
         this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
+        window.audioManager.play('bottleCollect');
       }
     });
   }
@@ -111,6 +112,7 @@ endGame(result) {
         this.character.coins++;
         this.level.coins.splice(index, 1);
         this.coinStatusBar.setCoinBarPercentage(this.character.coins);
+        window.audioManager.play('coin');
       }
     });
   }
@@ -125,6 +127,10 @@ endGame(result) {
                 }
                 bottle.stopThrow();
                 bottle.stopGravity();
+                if (!bottle.hasSfxPlayed) {
+                        window.audioManager.play('bottleShatter');
+                        bottle.hasSfxPlayed = true;
+                      }
                 bottle.playSplashAnimation();
               }
           });
@@ -155,6 +161,10 @@ collisionBottleWithEnemies() {
         } else {
           enemy.hp = 0;
           this.level.enemies.splice(e, 1);
+        }
+        if (!bottle.hasSfxPlayed) {
+          window.audioManager.play('bottleShatter');
+          bottle.hasSfxPlayed = true;
         }
         bottle.playSplashAnimation();
         break;
@@ -206,7 +216,11 @@ collisionBottleWithEnemies() {
 
         if (splashTriggered && !bottle.markForRemoval) {
             bottle.stopThrow();
-            bottle.stopGravity()
+            bottle.stopGravity();
+            if (!bottle.hasSfxPlayed) {
+              window.audioManager.play('bottleShatter');
+              bottle.hasSfxPlayed = true;
+            }
             bottle.playSplashAnimation();
         }
             });
