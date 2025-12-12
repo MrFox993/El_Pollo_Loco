@@ -82,6 +82,7 @@ endGame(result) {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isCollidingFromTop(enemy)) {
         enemy.playDeadAnimation(enemy.imagesSmallChickenDead, () => {this.level.enemies.splice(index, 1)})
+        window.audioManager.play('enemyHit');
         this.character.jump();
       }
       else if (this.character.isColliding(enemy) ) {
@@ -131,6 +132,7 @@ endGame(result) {
                         window.audioManager.play('bottleShatter');
                         bottle.hasSfxPlayed = true;
                       }
+                window.audioManager.play('endbossHit');
                 bottle.playSplashAnimation();
               }
           });
