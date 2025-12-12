@@ -46,8 +46,10 @@ class World {
 
 checkGameOver() {
     if (this.character.isDead()) {
+        window.audioManager.play('gameOver');
         this.endGame("lost");
     } else if (this.level.endboss && this.level.endboss.isDead()) {
+        window.audioManager.play('youWin');
         this.endGame("won");
     }
 }
