@@ -96,6 +96,7 @@ isCollidingFromTop(mObject) {
 
   jump() {
     this.speedY = 30;
+    window.audioManager.play('jump');
   }
 
   hit(damage = this.defaultHitDamage) {

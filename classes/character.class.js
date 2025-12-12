@@ -102,10 +102,18 @@ class Character extends MovableObject {
       let didAction = false;
       if (this.world.keyboard.right && this.x <= this.world.level.level_end_x) {
         this.otherDirection = false;
+        if (!this.isWalkingSoundPlaying) {
+          window.audioManager.play('walking');
+          this.isWalkingSoundPlaying = true;
+      }
         this.moveRight();
         didAction = true;
       } else if (this.world.keyboard.left && this.x >= 0) {
         this.otherDirection = true;
+        if (!this.isWalkingSoundPlaying) {
+          window.audioManager.play('walking');
+          this.isWalkingSoundPlaying = true;
+      }
         this.moveLeft();
         didAction = true;
       } else if ((this.world.keyboard.up || this.world.keyboard.space) && !this.checkAboveGround()) {
@@ -113,6 +121,13 @@ class Character extends MovableObject {
         didAction = true;
       } 
       if (didAction) this.resetIdleTimer();
+      else {
+        didAction = false;
+        if (this.isWalkingSoundPlaying) {
+          window.audioManager.stop('walking');
+          this.isWalkingSoundPlaying = false;
+      }
+      }
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 
@@ -123,6 +138,7 @@ class Character extends MovableObject {
       } else if (this.isHurt()){
         this.isLongIdling = false;
         this.playAnimation(this.imagesHurt);
+        window.audioManager.play('hpLost');
       } else if (this.checkAboveGround()) {
         this.isLongIdling = false;
         this.playAnimation(this.imagesJumping);
@@ -134,9 +150,17 @@ class Character extends MovableObject {
         if (idleDurationMs >= this.longIdleThresholdMs) {
             this.isLongIdling = true;
             this.playAnimation(this.imagesLongIdle);
+            if (!this.isSnoringPlaying) {
+                window.audioManager.play('snoring');
+                this.isSnoringPlaying = true;
+              }
     }else {
           this.isLongIdling = false;
           this.playAnimation(this.imagesIdle);
+          if (this.isSnoringPlaying) {
+              window.audioManager.stop('snoring');
+              this.isSnoringPlaying = false;
+            }
         }
       }
     }, 100);

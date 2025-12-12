@@ -46,8 +46,10 @@ class World {
 
 checkGameOver() {
     if (this.character.isDead()) {
+        window.audioManager.play('gameOver');
         this.endGame("lost");
     } else if (this.level.endboss && this.level.endboss.isDead()) {
+        window.audioManager.play('youWin');
         this.endGame("won");
     }
 }
@@ -82,6 +84,7 @@ endGame(result) {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isCollidingFromTop(enemy)) {
         enemy.playDeadAnimation(enemy.imagesSmallChickenDead, () => {this.level.enemies.splice(index, 1)})
+        window.audioManager.play('enemyHit');
         this.character.jump();
       }
       else if (this.character.isColliding(enemy) ) {
@@ -101,6 +104,7 @@ endGame(result) {
         this.character.bottles++;
         this.level.bottles.splice(index, 1);
         this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
+        window.audioManager.play('bottleCollect');
       }
     });
   }
@@ -111,6 +115,7 @@ endGame(result) {
         this.character.coins++;
         this.level.coins.splice(index, 1);
         this.coinStatusBar.setCoinBarPercentage(this.character.coins);
+        window.audioManager.play('coin');
       }
     });
   }
@@ -125,6 +130,11 @@ endGame(result) {
                 }
                 bottle.stopThrow();
                 bottle.stopGravity();
+                if (!bottle.hasSfxPlayed) {
+                        window.audioManager.play('bottleShatter');
+                        bottle.hasSfxPlayed = true;
+                      }
+                window.audioManager.play('endbossHit');
                 bottle.playSplashAnimation();
               }
           });
@@ -155,6 +165,10 @@ collisionBottleWithEnemies() {
         } else {
           enemy.hp = 0;
           this.level.enemies.splice(e, 1);
+        }
+        if (!bottle.hasSfxPlayed) {
+          window.audioManager.play('bottleShatter');
+          bottle.hasSfxPlayed = true;
         }
         bottle.playSplashAnimation();
         break;
@@ -206,7 +220,11 @@ collisionBottleWithEnemies() {
 
         if (splashTriggered && !bottle.markForRemoval) {
             bottle.stopThrow();
-            bottle.stopGravity()
+            bottle.stopGravity();
+            if (!bottle.hasSfxPlayed) {
+              window.audioManager.play('bottleShatter');
+              bottle.hasSfxPlayed = true;
+            }
             bottle.playSplashAnimation();
         }
             });
