@@ -52,6 +52,7 @@ class Endboss extends MovableObject {
     this.y = 100;
     this.width = 360;
     this.height = 360;
+    this.speed = 0.5 + Math.random() * 0.5;
     this.damageCooldownMs = 600;
     this.defaultHitDamage = 34;
   }
@@ -65,8 +66,21 @@ class Endboss extends MovableObject {
         } else if (this.isHurt()) {
             this.playAnimation(this.imagesHurt);
         } else {
+            if (this.hitCount >= 1) {
+              this.playAnimation(this.imagesWalking);
+            }else {
             this.playAnimation(this.imagesAlert);
+            }
         }
     }, 200);
+    setInterval(() => {
+        if (this.isDead() || this.isHurt()) {
+            return;
+        } else {
+            if (this.hitCount >= 1) {
+              this.moveLeft();
+            }
+        }
+    }, 1000 / 60);
   }
 }
