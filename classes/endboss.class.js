@@ -38,6 +38,7 @@ class Endboss extends MovableObject {
 
   hp = 100;
   otherDirection = false;
+  hitCount = 0;
 
   constructor() {
     super();
@@ -51,7 +52,7 @@ class Endboss extends MovableObject {
     this.y = 100;
     this.width = 360;
     this.height = 360;
-    this.damageCooldownMs = 400;
+    this.damageCooldownMs = 600;
     this.defaultHitDamage = 34;
   }
 
@@ -66,6 +67,6 @@ class Endboss extends MovableObject {
         } else {
             this.playAnimation(this.imagesAlert);
         }
-    }, 100);
+    }, 200);
   }
 }
