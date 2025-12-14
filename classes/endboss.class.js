@@ -66,6 +66,9 @@ class Endboss extends MovableObject {
     this.speed = 0.5 + Math.random() * 0.5;
     this.damageCooldownMs = 600;
     this.defaultHitDamage = 34;
+    this.leftBoundary = 0;
+    this.rightBoundary = 720 - this.width; 
+    this.turnAroundOffset = 5;
     this.applyGravity();
   }
 
@@ -119,9 +122,23 @@ class Endboss extends MovableObject {
         }
         return;
       }
-    
-      this.moveLeft();
+      
+      if (!this.otherDirection && this.x <= this.leftBoundary + this.turnAroundOffset) {
+        this.otherDirection = true;
+      }
+      
+      if (this.otherDirection && this.x >= this.rightBoundary - this.turnAroundOffset) {
+        this.otherDirection = false;
+      }
+
+      if (!this.otherDirection) {
+        this.moveLeft();
+      } else {
+        this.moveRight();
+      }
+      
       this.startWalkingSound();
+      
     
     }, 1000 / 60);
     
