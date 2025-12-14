@@ -55,8 +55,14 @@ checkGameOver() {
 }
 
 endGame(result) {
-  this.stop()
   gameOver = true
+  this.stop()
+  this.character.stop(); 
+  this.level.enemies.forEach(e => e.stop?.());
+  this.level.endboss?.stop?.();
+
+  window.audioManager.stopAll();
+  
   setTimeout(() => {
       gameStarted = false;
       toggleScreen('canvas-screen', 'hide');
