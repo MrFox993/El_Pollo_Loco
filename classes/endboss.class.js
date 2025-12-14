@@ -44,7 +44,7 @@ class Endboss extends MovableObject {
   lastAttackTime = 0;
   attackCooldownMin = 2000; 
   attackCooldownMax = 6000; 
-  jumpAttackForce = 22; 
+  jumpAttackForce = 30; 
   nextAttackTime = 0;
   attackSpeedX = 0;
   isPreparingAttack = false;
@@ -67,7 +67,7 @@ class Endboss extends MovableObject {
     this.damageCooldownMs = 600;
     this.defaultHitDamage = 34;
     this.leftBoundary = 0;
-    this.rightBoundary = 720 - this.width; 
+    this.rightBoundary = 5000 - this.width; 
     this.turnAroundOffset = 5;
     this.applyGravity();
   }
@@ -115,7 +115,11 @@ class Endboss extends MovableObject {
       }
     
       if (this.isAttacking) {
-        this.x -= this.attackSpeedX;
+        if (this.otherDirection) {
+          this.x += this.attackSpeedX;
+        } else {
+          this.x -= this.attackSpeedX;
+        }
     
         if (!this.checkAboveGround()) {
           this.finishAttack();
@@ -174,8 +178,10 @@ class Endboss extends MovableObject {
     this.nextAttackTime = Date.now() + cooldown;
   
     this.speedY = this.jumpAttackForce;
-    this.attackSpeedX = this.speed * 3;
+  
+    this.attackSpeedX = this.speed * (2.5 + Math.random());
   }
+  
   
 
   finishAttack() {
