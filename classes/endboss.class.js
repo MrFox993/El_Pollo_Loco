@@ -40,6 +40,12 @@ class Endboss extends MovableObject {
   otherDirection = false;
   hitCount = 0;
   isWalkingSoundPlaying = false;
+  isAttacking = false;
+  lastAttackTime = 0;
+  attackCooldownMin = 2000; 
+  attackCooldownMax = 4000; 
+  jumpAttackForce = 40; 
+
 
   constructor() {
     super();
