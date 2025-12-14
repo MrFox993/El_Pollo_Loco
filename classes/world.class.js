@@ -125,6 +125,7 @@ endGame(result) {
           this.throwableObjects.forEach((bottle, index) => {
               if (bottle.isColliding(this.level.endboss) && !bottle.markForRemoval) {
                 this.level.endboss.hit();
+                this.level.endboss.hitCount ++;
                 if (this.endbossStatusBar) {
                     this.endbossStatusBar.setEndbossHealthBarPercentage(this.level.endboss.hp);
                 }
