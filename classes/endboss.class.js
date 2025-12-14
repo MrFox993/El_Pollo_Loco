@@ -83,19 +83,33 @@ class Endboss extends MovableObject {
         }
     }, 200);
     setInterval(() => {
-        if (this.isDead() || this.isHurt()) {
-          this.stopWalkingSound();
-          return;
-        } else {
-          if (this.hitCount >= 1) {
-            this.moveLeft();
-            this.startWalkingSound();
-          }
-          else{
-            this.stopWalkingSound();
-          }
+      if (this.isDead() || this.isHurt()) {
+        this.stopWalkingSound();
+        return;
+      }
+    
+      if (this.hitCount < 1) {
+        this.stopWalkingSound();
+        return;
+      }
+    
+      if (!this.isAttacking && this.canAttack()) {
+        this.startAttack();
+        return;
+      }
+    
+      if (this.isAttacking) {
+        if (!this.checkAboveGround()) {
+          this.finishAttack();
         }
+        return;
+      }
+    
+      this.moveLeft();
+      this.startWalkingSound();
+    
     }, 1000 / 60);
+    
   }
 
   startWalkingSound() {
