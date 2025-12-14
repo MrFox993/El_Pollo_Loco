@@ -39,6 +39,7 @@ class Endboss extends MovableObject {
   hp = 100;
   otherDirection = false;
   hitCount = 0;
+  isWalkingSoundPlaying = false;
 
   constructor() {
     super();
@@ -75,12 +76,31 @@ class Endboss extends MovableObject {
     }, 200);
     setInterval(() => {
         if (this.isDead() || this.isHurt()) {
-            return;
+          this.stopWalkingSound();
+          return;
         } else {
-            if (this.hitCount >= 1) {
-              this.moveLeft();
-            }
+          if (this.hitCount >= 1) {
+            this.moveLeft();
+            this.startWalkingSound();
+          }
+          else{
+            this.stopWalkingSound();
+          }
         }
     }, 1000 / 60);
+  }
+
+  startWalkingSound() {
+    if (!this.isWalkingSoundPlaying) {
+        window.audioManager.play('endbossWalking');
+        this.isWalkingSoundPlaying = true;
+    }
+  }
+
+  stopWalkingSound() {
+    if (this.isWalkingSoundPlaying) {
+        window.audioManager.stop('endbossWalking');
+        this.isWalkingSoundPlaying = false;
+    }
   }
 }
