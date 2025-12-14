@@ -62,6 +62,7 @@ class Endboss extends MovableObject {
     this.speed = 0.5 + Math.random() * 0.5;
     this.damageCooldownMs = 600;
     this.defaultHitDamage = 34;
+    this.applyGravity();
   }
 
   startAnimation() {
