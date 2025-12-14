@@ -118,13 +118,20 @@ class Endboss extends MovableObject {
   
     return now - this.lastAttackTime > cooldown;
   }
-  
+
   startAttack() {
     this.isAttacking = true;
     this.lastAttackTime = Date.now();
     this.stopWalkingSound();
   
-    this.speedY = this.jumpAttackForce; // stärkerer Sprung
+    this.speedY = this.jumpAttackForce; 
   }
+
+  finishAttack() {
+    this.isAttacking = false;
+  
+    // calculate new speed with slight random increase
+    this.speed = Math.max(this.speed + 0.1, this.speed + Math.random() * 0.3);
+  }  
   
 }
