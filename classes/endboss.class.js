@@ -205,10 +205,13 @@ class Endboss extends MovableObject {
   }
   
   stop() {
-    clearInterval(this.moveInterval);
-    clearInterval(this.animationInterval);
-  
+    super.stop();
+
     window.audioManager.stop('endbossWalking');
+    this.isWalkingSoundPlaying = false;
+
+    this.isAttacking = false;
+    this.isPreparingAttack = false;
   }
   
 }

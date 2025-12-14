@@ -167,8 +167,7 @@ class Character extends MovableObject {
   }
 
   stop() {
-    clearInterval(this.moveInterval);
-    clearInterval(this.animationInterval);
+    super.stop();
   
     window.audioManager.stop('walking');
     window.audioManager.stop('snoring');

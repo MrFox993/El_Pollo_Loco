@@ -24,10 +24,10 @@ class ChickenSmall extends MovableObject {
   startAnimation() {
     if (!gameStarted) return;
     if (gameOver) return;
-    setInterval(() => {
+    this.animationInterval = setInterval(() => {
       this.playAnimation(this.imagesSmallChickenWalking);
     }, 1000 / 2);
-    setInterval(() => {
+    this.moveInterval = setInterval(() => {
       this.moveLeft();
     }, 1000 / 60);
   }
@@ -59,10 +59,10 @@ class ChickenBig extends MovableObject {
   startAnimation() {
     if (!gameStarted) return;
     if (gameOver) return;
-    setInterval(() => {
+    this. animationInterval = setInterval(() => {
       this.playAnimation(this.imagesBigChickenWalking);
     }, 1000 / 2);
-    setInterval(() => {
+    this. moveInterval = setInterval(() => {
       this.moveLeft();
     }, 1000 / 60);
   }
