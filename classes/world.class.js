@@ -46,11 +46,11 @@ class World {
 
 checkGameOver() {
     if (this.character.isDead()) {
-        window.audioManager.play('gameOver');
-        this.endGame("lost");
+      this.endGame("lost");
+      window.audioManager.play('gameOver');
     } else if (this.level.endboss && this.level.endboss.isDead()) {
-        window.audioManager.play('youWin');
-        this.endGame("won");
+      window.audioManager.play('youWin');
+      this.endGame("won");
     }
 }
 
@@ -62,7 +62,7 @@ endGame(result) {
   this.level.endboss?.stop?.();
 
   window.audioManager.stopAll();
-  
+
   setTimeout(() => {
       gameStarted = false;
       toggleScreen('canvas-screen', 'hide');
