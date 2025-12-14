@@ -46,6 +46,7 @@ class Endboss extends MovableObject {
   attackCooldownMax = 6000; 
   jumpAttackForce = 40; 
   nextAttackTime = 0;
+  attackSpeedX = 0;
 
 
   constructor() {
@@ -101,6 +102,7 @@ class Endboss extends MovableObject {
       }
     
       if (this.isAttacking) {
+        this.x -= this.attackSpeedX;
         if (!this.checkAboveGround()) {
           this.finishAttack();
         }
@@ -150,9 +152,10 @@ class Endboss extends MovableObject {
 
   finishAttack() {
     this.isAttacking = false;
+    this.attackSpeedX = 0;
   
-    // calculate new speed with slight random increase
-    this.speed = Math.max(this.speed + 0.1, this.speed + Math.random() * 0.3);
-  }  
+    this.speed += 0.1 + Math.random() * 0.2;
+  }
+  
   
 }
