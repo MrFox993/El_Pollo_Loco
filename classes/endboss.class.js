@@ -43,8 +43,9 @@ class Endboss extends MovableObject {
   isAttacking = false;
   lastAttackTime = 0;
   attackCooldownMin = 2000; 
-  attackCooldownMax = 4000; 
+  attackCooldownMax = 6000; 
   jumpAttackForce = 40; 
+  nextAttackTime = 0;
 
 
   constructor() {
@@ -128,20 +129,23 @@ class Endboss extends MovableObject {
   }
 
   canAttack() {
-    const now = Date.now();
-    const cooldown =
-      this.attackCooldownMin +
-      Math.random() * (this.attackCooldownMax - this.attackCooldownMin);
-  
-    return now - this.lastAttackTime > cooldown;
+    return Date.now() > this.nextAttackTime;
   }
 
   startAttack() {
     this.isAttacking = true;
     this.lastAttackTime = Date.now();
+  
+    const cooldown =
+      this.attackCooldownMin +
+      Math.random() * (this.attackCooldownMax - this.attackCooldownMin);
+  
+    this.nextAttackTime = Date.now() + cooldown;
+  
     this.stopWalkingSound();
   
-    this.speedY = this.jumpAttackForce; 
+    this.speedY = this.jumpAttackForce;
+    this.attackSpeedX = this.speed * 3; 
   }
 
   finishAttack() {
