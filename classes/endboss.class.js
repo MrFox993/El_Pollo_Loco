@@ -75,7 +75,7 @@ class Endboss extends MovableObject {
   startAnimation() {
     if (!gameStarted) return;
     if (gameOver) return;
-    setInterval(() => {
+    this.animationInterval = setInterval(() => {
         if (this.isDead()) {
             this.playAnimation(this.imagesDead);
         } else if (this.isHurt()) {
@@ -92,7 +92,7 @@ class Endboss extends MovableObject {
           }
         }
     }, 200);
-    setInterval(() => {
+    this.moveInterval = setInterval(() => {
 
       if (this.isDead() || this.isHurt()) {
         this.stopWalkingSound();
