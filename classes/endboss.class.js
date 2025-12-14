@@ -109,4 +109,14 @@ class Endboss extends MovableObject {
         this.isWalkingSoundPlaying = false;
     }
   }
+
+  canAttack() {
+    const now = Date.now();
+    const cooldown =
+      this.attackCooldownMin +
+      Math.random() * (this.attackCooldownMax - this.attackCooldownMin);
+  
+    return now - this.lastAttackTime > cooldown;
+  }
+  
 }
