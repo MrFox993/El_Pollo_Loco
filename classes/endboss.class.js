@@ -44,9 +44,11 @@ class Endboss extends MovableObject {
   lastAttackTime = 0;
   attackCooldownMin = 2000; 
   attackCooldownMax = 6000; 
-  jumpAttackForce = 40; 
+  jumpAttackForce = 22; 
   nextAttackTime = 0;
   attackSpeedX = 0;
+  isPreparingAttack = false;
+  prepareDuration = 600;
 
 
   constructor() {
@@ -75,6 +77,8 @@ class Endboss extends MovableObject {
             this.playAnimation(this.imagesDead);
         } else if (this.isHurt()) {
             this.playAnimation(this.imagesHurt);
+        } else if (this.isPreparingAttack) {
+          this.playAnimation(this.imagesAlert);
         } else if (this.isAttacking) {
           this.playAnimation(this.imagesAttack);
         } else {
@@ -86,6 +90,7 @@ class Endboss extends MovableObject {
         }
     }, 200);
     setInterval(() => {
+
       if (this.isDead() || this.isHurt()) {
         this.stopWalkingSound();
         return;
@@ -96,13 +101,19 @@ class Endboss extends MovableObject {
         return;
       }
     
+      if (this.isPreparingAttack) {
+        this.stopWalkingSound();
+        return;
+      }
+    
       if (!this.isAttacking && this.canAttack()) {
-        this.startAttack();
+        this.prepareAttack();
         return;
       }
     
       if (this.isAttacking) {
         this.x -= this.attackSpeedX;
+    
         if (!this.checkAboveGround()) {
           this.finishAttack();
         }
@@ -113,6 +124,7 @@ class Endboss extends MovableObject {
       this.startWalkingSound();
     
     }, 1000 / 60);
+    
     
   }
 
@@ -144,11 +156,10 @@ class Endboss extends MovableObject {
   
     this.nextAttackTime = Date.now() + cooldown;
   
-    this.stopWalkingSound();
-  
     this.speedY = this.jumpAttackForce;
-    this.attackSpeedX = this.speed * 3; 
+    this.attackSpeedX = this.speed * 3;
   }
+  
 
   finishAttack() {
     this.isAttacking = false;
@@ -157,5 +168,17 @@ class Endboss extends MovableObject {
     this.speed += 0.1 + Math.random() * 0.2;
   }
   
+  prepareAttack() {
+    this.isPreparingAttack = true;
+    this.stopWalkingSound();
+  
+    this.attackSpeedX = 0;
+  
+    setTimeout(() => {
+      if (this.isDead()) return;
+      this.isPreparingAttack = false;
+      this.startAttack();
+    }, this.prepareDuration);
+  }
   
 }
