@@ -47,7 +47,7 @@ class MovableObject extends DrawableObject {
   }
 
 
-isCollidingFromTop(mObject) {
+  isCollidingFromTop(mObject) {
     const charBottom = this.y + this.height - this.offset.bottom;
     const charTop = this.y + this.offset.top;
     const enemyTop = mObject.y + mObject.offset.top;
@@ -61,7 +61,7 @@ isCollidingFromTop(mObject) {
         charBottom >= enemyTop && charTop < enemyTop && this.speedY < 0;
 
     return isHorizontalOverlap && isFromTop;
-}
+  }
 
 
 
