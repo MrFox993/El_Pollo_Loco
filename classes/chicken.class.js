@@ -18,7 +18,7 @@ class ChickenSmall extends MovableObject {
     this.height = 60;
     this.speed = 0.15 + Math.random() * 0.5;
     this.leftBoundary = 0;
-    this.rightBoundary = 5000 - this.width;
+    this.rightBoundary = this.world?.level?.level_end_x - this.width;
     this.loadImage("./assets/img/3_enemies_chicken/chicken_small/1_walk/1_w.png");
     this.loadImages(this.imagesSmallChickenWalking);
     this.loadImages(this.imagesSmallChickenDead)
@@ -56,7 +56,7 @@ class ChickenBig extends MovableObject {
     this.height = 60;
     this.speed = 0.25 + Math.random() * 0.5;
     this.leftBoundary = 0;
-    this.rightBoundary = 5000 - this.width;
+    this.rightBoundary = this.world?.level?.level_end_x - this.width;
     this.loadImage("./assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.imagesBigChickenWalking);
     this.loadImages(this.imagesBigChickenDead)
