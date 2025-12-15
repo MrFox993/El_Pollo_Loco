@@ -241,6 +241,7 @@ collisionBottleWithEnemies() {
 
   draw() {
     if (!gameStarted) return;
+    this.updateCamera();
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.translate(this.camera_x, 0);
@@ -302,6 +303,26 @@ collisionBottleWithEnemies() {
     mObject.x = mObject.x * -1;
     this.ctx.restore();
   }
+
+  updateCamera() {
+    const canvasCenter = this.canvas.width / 2;
+    const levelStart = 0;
+    const levelEnd = this.level.level_end_x - this.canvas.width;
+  
+    let targetCameraX =
+      -this.character.x + canvasCenter - this.character.width / 2;
+  
+    if (targetCameraX > levelStart) {
+      targetCameraX = levelStart;
+    }
+  
+    if (targetCameraX < -levelEnd) {
+      targetCameraX = -levelEnd;
+    }
+  
+    this.camera_x = targetCameraX;
+  }
+  
 
 }
 
