@@ -126,24 +126,12 @@ class Endboss extends MovableObject {
         }
         return;
       }
-      
-      if (!this.otherDirection && this.x <= this.leftBoundary + this.turnAroundOffset) {
-        this.otherDirection = true;
-      }
-      
-      if (this.otherDirection && this.x >= this.rightBoundary - this.turnAroundOffset) {
-        this.otherDirection = false;
-      }
 
-      if (!this.otherDirection) {
-        this.moveLeft();
-      } else {
-        this.moveRight();
+      if (!this.isAttacking && !this.isPreparingAttack) {
+        this.walkBetweenBoundaries();
+        this.startWalkingSound();
       }
       
-      this.startWalkingSound();
-      
-    
     }, 1000 / 60);
     
     
