@@ -6,6 +6,9 @@ class World {
   canvas;
   keyboard;
   camera_x = 0;
+  cameraTargetX = 0;
+  LOOK_AHEAD_DISTANCE = 220; 
+  CAMERA_LERP = 0.05; 
   healthStatusBar = new StatusBar("health");
   bottleStatusBar = new StatusBar("bottle");
   coinStatusBar = new StatusBar("coins");
@@ -309,20 +312,26 @@ collisionBottleWithEnemies() {
     const levelStart = 0;
     const levelEnd = this.level.level_end_x - this.canvas.width;
   
-    let targetCameraX =
-      -this.character.x + canvasCenter - this.character.width / 2;
-  
-    if (targetCameraX > levelStart) {
-      targetCameraX = levelStart;
+    const lookAhead = this.character.otherDirection
+      ? -150  
+      : 150;  
+
+    const target =
+      -this.character.x +
+      canvasCenter -
+      this.character.width / 2 -
+      lookAhead;
+
+    this.camera_x += (target - this.camera_x) * 0.08;
+
+    if (this.camera_x > levelStart) {
+      this.camera_x = levelStart;
     }
   
-    if (targetCameraX < -levelEnd) {
-      targetCameraX = -levelEnd;
+    if (this.camera_x < -levelEnd) {
+      this.camera_x = -levelEnd;
     }
-  
-    this.camera_x = targetCameraX;
   }
   
-
 }
 
