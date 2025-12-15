@@ -73,6 +73,22 @@ class MovableObject extends DrawableObject {
     this.x -= this.speed;
   }
 
+  walkBetweenBoundaries() {
+    if (!this.otherDirection && this.x <= this.leftBoundary) {
+      this.otherDirection = true;
+    }
+  
+    if (this.otherDirection && this.x >= this.rightBoundary) {
+      this.otherDirection = false;
+    }
+  
+    if (this.otherDirection) {
+      this.moveRight();
+    } else {
+      this.moveLeft();
+    }
+  }
+
   applyGravity() {
     this.gravityInterval = setInterval(() => {
         if (this.checkAboveGround() || this.speedY > 0) {
