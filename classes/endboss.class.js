@@ -67,7 +67,7 @@ class Endboss extends MovableObject {
     this.damageCooldownMs = 600;
     this.defaultHitDamage = 34;
     this.leftBoundary = 0;
-    this.rightBoundary = 5000 - this.width; 
+    this.rightBoundary = this.world?.level?.level_end_x - this.width; 
     this.turnAroundOffset = 5;
     this.applyGravity();
   }
@@ -126,24 +126,12 @@ class Endboss extends MovableObject {
         }
         return;
       }
-      
-      if (!this.otherDirection && this.x <= this.leftBoundary + this.turnAroundOffset) {
-        this.otherDirection = true;
-      }
-      
-      if (this.otherDirection && this.x >= this.rightBoundary - this.turnAroundOffset) {
-        this.otherDirection = false;
-      }
 
-      if (!this.otherDirection) {
-        this.moveLeft();
-      } else {
-        this.moveRight();
+      if (!this.isAttacking && !this.isPreparingAttack) {
+        this.walkBetweenBoundaries();
+        this.startWalkingSound();
       }
       
-      this.startWalkingSound();
-      
-    
     }, 1000 / 60);
     
     
