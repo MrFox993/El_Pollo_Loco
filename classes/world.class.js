@@ -89,7 +89,7 @@ endGame(result) {
   collisionWithEnemy() {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isCollidingFromTop(enemy)) {
-        enemy.playDeadAnimation(enemy.imagesSmallChickenDead, () => {this.level.enemies.splice(index, 1)})
+        enemy.playDeadAnimation(enemy.imagesDead, () => {this.level.enemies.splice(index, 1)})
         window.audioManager.play('enemyHit');
         this.character.jump();
       }
