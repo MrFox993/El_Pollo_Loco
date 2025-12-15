@@ -105,6 +105,13 @@ class AudioManager {
         audio.currentTime = 0;
     }
 
+    stopAll() {
+        this.audios.forEach(audio => {
+          audio.pause();
+          audio.currentTime = 0;
+        });
+      }      
+
     setMode(mode) {
         this.mode = mode === 'game' ? 'game' : 'menu';
     }

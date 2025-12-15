@@ -118,4 +118,18 @@ class MovableObject extends DrawableObject {
     let timePassedMs = new Date().getTime() - this.lastHit; 
     return timePassedMs < this.damageCooldownMs;
   }
+
+  stop() {
+    clearInterval(this.animationInterval);
+    clearInterval(this.moveInterval);
+    clearInterval(this.gravityInterval);
+    clearTimeout(this.prepareTimeout);
+
+    this.animationInterval = null;
+    this.moveInterval = null;
+    this.gravityInterval = null;
+    this.prepareTimeout = null;
+
+    this.speedY = 0;
+  }
 }
