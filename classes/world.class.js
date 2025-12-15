@@ -6,6 +6,7 @@ class World {
   canvas;
   keyboard;
   camera_x = 0;
+  cameraTargetX = 0;
   healthStatusBar = new StatusBar("health");
   bottleStatusBar = new StatusBar("bottle");
   coinStatusBar = new StatusBar("coins");
@@ -18,8 +19,8 @@ class World {
   }
 
   startWorld() {
-    this.draw();
     this.setWorld();
+    this.draw();
     this.run();
     this.level.enemies.forEach(enemy => enemy.startAnimation());
     if (this.level.endboss) this.level.endboss.startAnimation();
@@ -241,6 +242,9 @@ collisionBottleWithEnemies() {
 
   draw() {
     if (!gameStarted) return;
+
+    this.character.update();
+    this.updateCamera();
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.translate(this.camera_x, 0);
@@ -293,15 +297,40 @@ collisionBottleWithEnemies() {
 
   flipImage(mObject) {
     this.ctx.save();
-      this.ctx.translate(mObject.width, 0);
-      this.ctx.scale(-1, 1);
-      mObject.x = mObject.x * -1;
+    this.ctx.translate(mObject.x + mObject.width, mObject.y);
+    this.ctx.scale(-1, 1);
+    this.ctx.translate(-mObject.x, -mObject.y);
   }
+  
 
-  flipImageBack(mObject) {
-    mObject.x = mObject.x * -1;
+  flipImageBack() {
     this.ctx.restore();
   }
 
+  updateCamera() {
+    const canvasCenter = this.canvas.width / 2;
+  
+    const LOOK_AHEAD = 240;
+    const LERP_MOVE = 0.08;
+    const LERP_IDLE = 0.05;
+  
+    const isMoving = this.keyboard.left || this.keyboard.right;
+    const direction = this.character.otherDirection ? -1 : 1;
+  
+    const desiredX =
+      -this.character.x +
+      canvasCenter -
+      this.character.width / 2 -
+      direction * LOOK_AHEAD;
+  
+    this.camera_x += (desiredX - this.camera_x) *
+      (isMoving ? LERP_MOVE : LERP_IDLE);
+  
+    const minX = -(this.level.level_end_x - this.canvas.width);
+    const maxX = 0;
+  
+    this.camera_x = Math.max(minX, Math.min(maxX, this.camera_x));
+  }  
+  
 }
 
