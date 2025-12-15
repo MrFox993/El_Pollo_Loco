@@ -8,6 +8,7 @@ class ChickenSmall extends MovableObject {
     "./assets/img/3_enemies_chicken/chicken_small/2_dead/dead.png"
   ]
   speed = 0.5;
+  imagesDead = this.imagesSmallChickenDead;
 
   constructor() {
     super();
@@ -43,6 +44,7 @@ class ChickenBig extends MovableObject {
     "./assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png"
   ]
   speed = 0.5;
+  imagesDead = this.imagesBigChickenDead;
 
   constructor() {
     super();
