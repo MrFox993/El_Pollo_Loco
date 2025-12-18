@@ -9,14 +9,15 @@
     function applyUIState() {
         const coarse = isCoarseInput();
         const landscape = isLandscape();
+        const gameStarted = Boolean(window.gameStarted);
 
-        const showMobile = coarse && landscape;
-        const showRotate = coarse && !landscape;
+        const showMobile = coarse && landscape && gameStarted;
+        const showRotate = coarse && !landscape && gameStarted;
 
         mobileControls.setAttribute('aria-hidden', String(!showMobile));
         rotateOverlay.setAttribute('aria-hidden', String(!showRotate));
 
-        mobileControls.style.display = showMobile ? 'flex' : 'none';
+        // mobileControls.style.display = showMobile ? 'flex' : 'none';
         rotateOverlay.style.display  = showRotate ? 'flex' : 'none';
 
         canvasScreen.classList.toggle('blocked', showRotate);
@@ -34,10 +35,10 @@
 
     function bindMobileControls(keyboard) {
         const bindings = [
-        { sel: '#btnLeft',  key: 'LEFT'  },
-        { sel: '#btnRight', key: 'RIGHT' },
-        { sel: '#btnJump',  key: 'UP'    }, // oder 'JUMP' – abhängig von deiner Keyboard-Implementierung
-        { sel: '#btnThrow', key: 'THROW' }, // z.B. 'C' -> Werfen
+        { sel: '#btnLeft',  key: 'left'  },
+        { sel: '#btnRight', key: 'right' },
+        { sel: '#btnJump',  key: 'up'    }, // oder 'JUMP' – abhängig von deiner Keyboard-Implementierung
+        { sel: '#btnThrow', key: 'c' }, // z.B. 'C' -> Werfen
         ];
 
     bindings.forEach(({ sel, key }) => {
@@ -47,14 +48,14 @@
         const down = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            keyboard.setMobile?.(key, true);   
+            // keyboard.setMobile?.(key, true);   
             if (keyboard[key] !== undefined) keyboard[key] = true;
             el.classList.add('pressed');
         };
         const up = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            keyboard.setMobile?.(key, false);
+            // keyboard.setMobile?.(key, false);
             if (keyboard[key] !== undefined) keyboard[key] = false;
             el.classList.remove('pressed');
         };
@@ -74,4 +75,4 @@
         applyUIState,
         bindMobileControls
     };
-});
+})();

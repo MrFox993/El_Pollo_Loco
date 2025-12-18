@@ -205,7 +205,6 @@ button:disabled:active {
     left: 0;
     right: 0;
     bottom: 0;
-    display: none;            
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     z-index: 900;
@@ -236,16 +235,4 @@ button:disabled:active {
 .canvas-screen.blocked {
     filter: blur(2px);
     pointer-events: none;
-}
-
-@media (pointer: coarse) {
-    .mobile-controls {
-        display: flex;
-    }
-}
-
-@media (pointer: coarse) and (orientation: landscape) {
-    .mobile-controls { display: flex; }
-}
-@media (pointer: coarse) and (orientation: portrait) {
 }
