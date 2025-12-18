@@ -31,3 +31,4 @@ assets/img/YouWonYouLost
 !assets/img/YouWonYouLost/YouWinA.png
 !assets/img/YouWonYouLost/GameOver.png
 .DS_Store
+.vscode/

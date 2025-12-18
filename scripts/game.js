@@ -17,7 +17,12 @@ function startNewGame() {
     world = new World(canvas, keyboard);
     world.level = newLevel;
     world.startWorld();
-    
+
+    if (window.MobileUI) {
+            window.MobileUI.bindMobileControls(keyboard);
+            window.MobileUI.applyUIState();
+        }
+
     if (window.audioManager) {
         audioManager.setMode('game');
         audioManager.stopMenuBgm();

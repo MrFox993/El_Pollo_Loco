@@ -25,6 +25,7 @@
     <script src="./classes/coin.class.js"></script>    
     <script src="./levels/level1.js"></script>
     <script src="./classes/audioManager.class.js"></script>
+    <script src="./scripts/mobile-ui.js"></script>
     <script src="./scripts/game.js"></script>
     <script src="./classes/world.class.js"></script>
     
@@ -123,6 +124,20 @@
             </div>
         </div>
       </section>
+      
+      <div id="rotateOverlay" class="rotate-overlay" role="dialog" aria-live="assertive" aria-hidden="true">
+        <div class="rotate-content">
+          <p>Bitte drehe dein Gerät ins Querformat, um spielen zu können.</p>
+        </div>
+      </div>
+      
+      <div id="mobileControls" class="mobile-controls" oncontextmenu="return false" aria-label="Mobile Steuerung" aria-hidden="true">
+        <button id="btnLeft"  class="control-btn" aria-label="Nach links" title="Links">⟵</button>
+        <button id="btnRight" class="control-btn" aria-label="Nach rechts" title="Rechts">⟶</button>
+        <button id="btnJump"  class="control-btn" aria-label="Springen" title="Springen">⤴︎</button>
+        <button id="  <button id="btnThrow" class="control-btn" aria-label="Werfen"  title="Werfen">🧪</button>
+      </div>
+
     </main>
   </body>
 </html>
