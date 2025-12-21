@@ -12,7 +12,7 @@
         const gameStarted = Boolean(window.gameStarted);
 
         const showMobile = coarse && landscape && gameStarted;
-        const showRotate = coarse && !landscape && gameStarted;
+        const showRotate = coarse && !landscape;
 
         mobileControls.setAttribute('aria-hidden', String(!showMobile));
         rotateOverlay.setAttribute('aria-hidden', String(!showRotate));
@@ -27,7 +27,8 @@
     if (window.screen && window.screen.orientation) {
         window.screen.orientation.addEventListener('change', applyUIState);
     }
-    document.addEventListener('DOMContentLoaded', applyUIState);
+    // document.addEventListener('DOMContentLoaded', applyUIState);
+    applyUIState();
 
     ['contextmenu'].forEach(evt => {
         mobileControls.addEventListener(evt, e => e.preventDefault(), { passive: false });
