@@ -33,7 +33,7 @@ class World {
 
   run() {
     this.intervalId = setInterval(() => {
-      if (!gameStarted) return;
+      if (!gameStarted || gamePaused) return;
       this.checkCollisions();
       this.checkThrowObjects();
       this.checkEndbossStatusBar();
@@ -241,7 +241,7 @@ collisionBottleWithEnemies() {
   }
 
   draw() {
-    if (!gameStarted) return;
+    if (!gameStarted || gamePaused) return;
 
     this.character.update();
     this.updateCamera();

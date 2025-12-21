@@ -3,6 +3,7 @@ let world;
 let keyboard = new Keyboard();
 let gameStarted = false;
 let gameOver = false;
+let gamePaused = false;
 
 function startNewGame() {
     gameStarted = true;
@@ -74,6 +75,38 @@ function goToMainMenu() {
     }
 }
 
+function pauseGame() {
+    if (!gameStarted || gamePaused) return;
+
+    gamePaused = true;
+
+    if (world) {
+        world.character?.stop?.();
+        world.level?.enemies?.forEach(e => e.stop?.());
+        world.level?.endboss?.stop?.();
+    }
+
+    if (window.audioManager) {
+        audioManager.pauseAll?.();
+    }
+}
+
+function resumeGame() {
+    if (!gamePaused) return;
+
+    gamePaused = false;
+
+    if (world) {
+        world.character?.animate?.();
+        world.level?.enemies?.forEach(e => e.startAnimation?.());
+        world.level?.endboss?.startAnimation?.();
+    }
+
+    if (window.audioManager) {
+        audioManager.resumeAll?.();
+    }
+}
+
 
 window.addEventListener('keydown', (event) => {
     if (event.keyCode === 65 || event.keyCode === 37) {
@@ -116,3 +149,6 @@ window.addEventListener('keyup', (event) => {
         keyboard.c = false;
     }
 });
+
+window.pauseGame = pauseGame;
+window.resumeGame = resumeGame;

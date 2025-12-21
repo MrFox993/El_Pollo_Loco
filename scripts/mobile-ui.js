@@ -7,7 +7,7 @@
     const isLandscape = () =>
         window.matchMedia('(orientation: landscape)').matches ||
         Math.abs(window.innerWidth) > Math.abs(window.innerHeight);
-        
+
     function applyUIState() {
         const coarse = isCoarseInput();
         const landscape = isLandscape();
@@ -19,17 +19,21 @@
         mobileControls.setAttribute('aria-hidden', String(!showMobile));
         rotateOverlay.setAttribute('aria-hidden', String(!showRotate));
 
-        // mobileControls.style.display = showMobile ? 'flex' : 'none';
         rotateOverlay.style.display  = showRotate ? 'flex' : 'none';
 
         canvasScreen.classList.toggle('blocked', showRotate);
+
+        if (showRotate && gameStarted) {
+            window.pauseGame?.();
+        } else {
+            window.resumeGame?.();
+        }
     }
 
     window.addEventListener('resize', applyUIState);
     if (window.screen && window.screen.orientation) {
         window.screen.orientation.addEventListener('change', applyUIState);
     }
-    // document.addEventListener('DOMContentLoaded', applyUIState);
     applyUIState();
 
     ['contextmenu'].forEach(evt => {
