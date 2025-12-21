@@ -4,8 +4,10 @@
     const canvasScreen   = document.querySelector('.canvas-screen');
 
     const isCoarseInput = () => window.matchMedia('(pointer: coarse)').matches;
-    const isLandscape   = () => window.matchMedia('(orientation: landscape)').matches;
-
+    const isLandscape = () =>
+        window.matchMedia('(orientation: landscape)').matches ||
+        Math.abs(window.innerWidth) > Math.abs(window.innerHeight);
+        
     function applyUIState() {
         const coarse = isCoarseInput();
         const landscape = isLandscape();
