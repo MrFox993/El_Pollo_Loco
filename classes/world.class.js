@@ -76,6 +76,7 @@ endGame(result) {
 }
 
   checkCollisions() {
+    console.log("collision tick", gamePaused);
     this.collisionWithEnemy();
     this.collisionWithBottle();
     this.collisionWithCoin();

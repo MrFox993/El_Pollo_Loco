@@ -27,7 +27,8 @@ class MovableObject extends DrawableObject {
       this.speed = 0; 
       this.currentImageIndex = 0;
       let interval = setInterval(() => {
-          this.playAnimation(imagesDeadArray);
+        if (!gameStarted || gamePaused) return;
+        this.playAnimation(imagesDeadArray);
       }, 1000 / 10);
 
       setTimeout(() => {
@@ -91,10 +92,11 @@ class MovableObject extends DrawableObject {
 
   applyGravity() {
     this.gravityInterval = setInterval(() => {
-        if (this.checkAboveGround() || this.speedY > 0) {
-            this.y -= this.speedY;
-            this.speedY -= this.acceleration;
-        }
+      if (!gameStarted || gamePaused) return;
+      if (this.checkAboveGround() || this.speedY > 0) {
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration;
+      }
     }, 1000 / 25);
   }
 
@@ -116,6 +118,7 @@ class MovableObject extends DrawableObject {
   }
 
   hit(damage = this.defaultHitDamage) {
+    if (gamePaused) return;
     if (this.isHurt()) return;
 
     this.hp -= damage;

@@ -77,35 +77,45 @@ function goToMainMenu() {
 
 function pauseGame() {
     if (!gameStarted || gamePaused) return;
-
+  
     gamePaused = true;
-
+  
     if (world) {
-        world.character?.stop?.();
-        world.level?.enemies?.forEach(e => e.stop?.());
-        world.level?.endboss?.stop?.();
+      world.stop();
+  
+      world.character?.stop(); 
+  
+      world.level?.enemies?.forEach(e => e.stop?.());
+      world.throwableObjects?.forEach(o => o.stop?.());
+      world.level?.endboss?.stop?.();
     }
+  
+    window.audioManager?.pauseAll?.();
+  }
+  
 
-    if (window.audioManager) {
-        audioManager.pauseAll?.();
-    }
-}
-
-function resumeGame() {
+  function resumeGame() {
     if (!gamePaused) return;
-
+  
     gamePaused = false;
-
+  
     if (world) {
-        world.character?.animate?.();
-        world.level?.enemies?.forEach(e => e.startAnimation?.());
-        world.level?.endboss?.startAnimation?.();
+      world.run(); 
+      world.character?.applyGravity?.();
+      world.character?.animate?.();
+  
+      world.level?.enemies?.forEach(e => {
+        e.applyGravity?.();
+        e.startAnimation?.();
+      });
+  
+      world.throwableObjects?.forEach(o => o.applyGravity?.());
+      world.level?.endboss?.startAnimation?.();
     }
-
-    if (window.audioManager) {
-        audioManager.resumeAll?.();
-    }
-}
+  
+    window.audioManager?.resumeAll?.();
+  }
+  
 
 
 window.addEventListener('keydown', (event) => {

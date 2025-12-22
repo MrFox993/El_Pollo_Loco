@@ -131,6 +131,7 @@ class Character extends MovableObject {
     // }, 1000 / 60);
 
     this.animationInterval = setInterval(() => {
+      if (!gameStarted || gamePaused) return;
       if (this.isDead()) {
         this.isLongIdling = false;
         this.playAnimation(this.imagesDead);
