@@ -16,6 +16,9 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+
+    this.pauseIcon = new Image();
+    this.pauseIcon.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect x="15" y="0" width="20" height="80" fill="white"/><rect x="45" y="0" width="20" height="80" fill="white"/></svg>';
   }
 
   startWorld() {
@@ -242,33 +245,54 @@ collisionBottleWithEnemies() {
 
   draw() {
     if (!gameStarted) return;
-  
+
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.ctx.save();
+    this.ctx.translate(this.camera_x, 0);
+
+    this.addObjectsToMap(this.level.backgroundObjects);
+    this.addObjectsToMap(this.level.clouds);
+    this.addObjectsToMap(this.throwableObjects);
+    this.addObjectsToMap(this.level.bottles);
+    this.addObjectsToMap(this.level.coins);
+    this.addToMap(this.character);
+    this.addObjectsToMap(this.level.enemies);
+    this.addToMap(this.character);
+    this.addToMap(this.level.endboss);
+
+    this.ctx.restore();
+
+    this.addToMap(this.healthStatusBar);
+    this.addToMap(this.coinStatusBar);
+    this.addToMap(this.bottleStatusBar);
+    if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
+
     if (!gamePaused) {
-      this.character.update();
-      this.updateCamera();
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  
-      this.ctx.translate(this.camera_x, 0);
-  
-      this.addObjectsToMap(this.level.backgroundObjects);
-      this.addObjectsToMap(this.level.clouds);
-      this.addObjectsToMap(this.throwableObjects);
-      this.addObjectsToMap(this.level.bottles);
-      this.addObjectsToMap(this.level.coins);
-      this.addToMap(this.character);
-      this.addObjectsToMap(this.level.enemies);
-      this.addToMap(this.level.endboss);
-  
-      this.ctx.translate(-this.camera_x, 0);
-  
-      this.addToMap(this.healthStatusBar);
-      this.addToMap(this.coinStatusBar);
-      this.addToMap(this.bottleStatusBar);
-      if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
+        this.character.update();
+        this.updateCamera();
+        this.checkCollisions();
+        this.checkThrowObjects();
+        this.checkEndbossStatusBar();
+        this.checkGameOver();
     }
-  
+
+    if (gamePaused) {
+        this.ctx.fillStyle = 'rgba(0,0,0,0.3)'; // leichtes Abdunkeln
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        const iconSize = 80;
+        this.ctx.drawImage(
+            this.pauseIcon,
+            this.canvas.width / 2 - iconSize / 2,
+            this.canvas.height / 2 - iconSize / 2,
+            iconSize,
+            iconSize
+        );
+    }
+
     requestAnimationFrame(() => this.draw());
-  }
+}
 
   addToMap(mObject) {
     if (!mObject) return;
