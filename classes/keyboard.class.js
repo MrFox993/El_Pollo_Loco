@@ -6,4 +6,5 @@ class Keyboard {
     space = false;
     c = false;
     m = false;
+    p = false;
 }
