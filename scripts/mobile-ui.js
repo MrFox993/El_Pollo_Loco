@@ -53,6 +53,19 @@
         mobileControls.addEventListener(evt, e => e.preventDefault(), { passive: false });
     });
 
+    const pauseBtn = document.querySelector('#btnPause');
+    if (pauseBtn) {
+        pauseBtn.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            window.gamePaused ? window.resumeGame() : window.pauseGame();
+            pauseBtn.classList.add('pressed');
+        });
+        pauseBtn.addEventListener('pointerup', (e) => {
+            e.preventDefault();
+            pauseBtn.classList.remove('pressed');
+        });
+    }
+
     function bindMobileControls(keyboard) {
         const bindings = [
         { sel: '#btnLeft',  key: 'left'  },
