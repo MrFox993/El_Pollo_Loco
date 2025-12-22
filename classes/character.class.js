@@ -95,42 +95,12 @@ class Character extends MovableObject {
     }
   }
 
-  animate() {
-    if (!gameStarted) return;
-    if (gameOver) return;
-    // this.moveInterval = setInterval(() => {
-    //   let didAction = false;
-    //   if (this.world.keyboard.right && this.x <= this.world.level.level_end_x) {
-    //     this.otherDirection = false;
-    //     if (!this.isWalkingSoundPlaying) {
-    //       window.audioManager.play('walking');
-    //       this.isWalkingSoundPlaying = true;
-    //   }
-    //     this.moveRight();
-    //     didAction = true;
-    //   } else if (this.world.keyboard.left && this.x >= 0) {
-    //     this.otherDirection = true;
-    //     if (!this.isWalkingSoundPlaying) {
-    //       window.audioManager.play('walking');
-    //       this.isWalkingSoundPlaying = true;
-    //   }
-    //     this.moveLeft();
-    //     didAction = true;
-    //   } else if ((this.world.keyboard.up || this.world.keyboard.space) && !this.checkAboveGround()) {
-    //     this.jump();
-    //     didAction = true;
-    //   } 
-    //   if (didAction) this.resetIdleTimer();
-    //   else {
-    //     didAction = false;
-    //     if (this.isWalkingSoundPlaying) {
-    //       window.audioManager.stop('walking');
-    //       this.isWalkingSoundPlaying = false;
-    //   }
-    //   }
-    // }, 1000 / 60);
-
+  animate() {    
+    if (this.animationInterval) return; 
+    if (!window.gameStarted || window.gameOver) return;
     this.animationInterval = setInterval(() => {
+      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+
       if (this.isDead()) {
         this.isLongIdling = false;
         this.playAnimation(this.imagesDead);

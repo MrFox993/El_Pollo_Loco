@@ -73,27 +73,28 @@ class Endboss extends MovableObject {
   }
 
   startAnimation() {
-    if (!gameStarted) return;
-    if (gameOver) return;
+    if (this.animationInterval || this.moveInterval) return;
+    if (!window.gameStarted || window.gameOver) return;
     this.animationInterval = setInterval(() => {
-        if (this.isDead()) {
-            this.playAnimation(this.imagesDead);
-        } else if (this.isHurt()) {
-            this.playAnimation(this.imagesHurt);
-        } else if (this.isPreparingAttack) {
-          this.playAnimation(this.imagesAlert);
-        } else if (this.isAttacking) {
-          this.playAnimation(this.imagesAttack);
-        } else {
-          if (this.hitCount >= 1) {
-            this.playAnimation(this.imagesWalking);
-          }else {
-          this.playAnimation(this.imagesAlert);
-          }
+      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+      if (this.isDead()) {
+        this.playAnimation(this.imagesDead);
+      } else if (this.isHurt()) {
+        this.playAnimation(this.imagesHurt);
+      } else if (this.isPreparingAttack) {
+        this.playAnimation(this.imagesAlert);
+      } else if (this.isAttacking) {
+        this.playAnimation(this.imagesAttack);
+      } else {
+        if (this.hitCount >= 1) {
+          this.playAnimation(this.imagesWalking);
+        }else {
+        this.playAnimation(this.imagesAlert);
         }
+      }
     }, 200);
     this.moveInterval = setInterval(() => {
-
+      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
       if (this.isDead() || this.isHurt()) {
         this.stopWalkingSound();
         return;
@@ -168,9 +169,7 @@ class Endboss extends MovableObject {
     this.speedY = this.jumpAttackForce;
   
     this.attackSpeedX = this.speed * (2.5 + Math.random());
-  }
-  
-  
+  } 
 
   finishAttack() {
     this.isAttacking = false;

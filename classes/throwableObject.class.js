@@ -20,7 +20,8 @@ class ThrowableObject extends MovableObject {
         this.speedY = 30;
         this.applyGravity();
         this.throwInterval = setInterval(() => {
-        if (this.direction === 'left') {
+            if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+            if (this.direction === 'left') {
                     this.x -= 10;
                 } else {
                     this.x += 10;
@@ -28,6 +29,7 @@ class ThrowableObject extends MovableObject {
         }, 25);
         
         this.rotationInterval = setInterval(() => {
+            if (!window.gameStarted || window.gamePaused || window.gameOver) return;
             this.playAnimation(this.imagesBottleRotation);
         }, 100);
     } 
@@ -41,6 +43,7 @@ class ThrowableObject extends MovableObject {
         if (this.hasSplashed) return;
         this.hasSplashed = true;
         let splashInterval = setInterval(() => {
+            if (!window.gameStarted || window.gamePaused || window.gameOver) return;
             this.playAnimation(this.imagesBottleSplash);
         }, 100);
         

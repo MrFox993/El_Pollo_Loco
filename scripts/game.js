@@ -1,23 +1,30 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-let gameStarted = false;
-let gameOver = false;
+window.gameStarted = false;
+window.gameOver = false;
+window.gamePaused = false;
 
 function startNewGame() {
-    gameStarted = true;
-    gameOver = false;
+    window.gameStarted = true;
+    window.gameOver = false;
     toggleScreen('menuScreen', 'hide');
     toggleScreen('controlScreen', 'hide');
     toggleScreen('youWonScreen', 'hide');
     toggleScreen('youLostScreen', 'hide');
     toggleScreen('.canvas-screen', 'show');
+
     newLevel = createLevel1();
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
     world.level = newLevel;
     world.startWorld();
-    
+
+    if (window.MobileUI) {
+            window.MobileUI.bindMobileControls(keyboard);
+            window.MobileUI.applyUIState();
+        }
+
     if (window.audioManager) {
         audioManager.setMode('game');
         audioManager.stopMenuBgm();
@@ -54,13 +61,31 @@ function goToMainMenu() {
         audioManager.playMenuBgm();
     }
 
-    gameStarted = false;
-    gameOver = false;
+    window.gameStarted = false;
+    window.gameOver = false;
     toggleScreen('youWonScreen', 'hide');
     toggleScreen('youLostScreen', 'hide');
     toggleScreen('.canvas-screen', 'hide');
     toggleScreen('menuScreen', 'show');
+
+    if (window.MobileUI) {
+        window.MobileUI.applyUIState();
+    }
 }
+
+    function pauseGame() {
+        if (!gameStarted || gamePaused) return;
+        window.gamePaused = true;
+        window.audioManager?.pauseAll?.();
+    }
+  
+
+    function resumeGame() {
+        if (!gamePaused) return;
+        window.gamePaused = false;
+        window.audioManager?.resumeAll?.();
+    }
+  
 
 
 window.addEventListener('keydown', (event) => {
@@ -104,3 +129,6 @@ window.addEventListener('keyup', (event) => {
         keyboard.c = false;
     }
 });
+
+window.pauseGame = pauseGame;
+window.resumeGame = resumeGame;
