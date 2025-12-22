@@ -1,13 +1,13 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-let gameStarted = false;
-let gameOver = false;
-let gamePaused = false;
+window.gameStarted = false;
+window.gameOver = false;
+window.gamePaused = false;
 
 function startNewGame() {
-    gameStarted = true;
-    gameOver = false;
+    window.gameStarted = true;
+    window.gameOver = false;
     toggleScreen('menuScreen', 'hide');
     toggleScreen('controlScreen', 'hide');
     toggleScreen('youWonScreen', 'hide');
@@ -62,8 +62,8 @@ function goToMainMenu() {
         audioManager.playMenuBgm();
     }
 
-    gameStarted = false;
-    gameOver = false;
+    window.gameStarted = false;
+    window.gameOver = false;
     toggleScreen('youWonScreen', 'hide');
     toggleScreen('youLostScreen', 'hide');
     toggleScreen('.canvas-screen', 'hide');
@@ -75,46 +75,18 @@ function goToMainMenu() {
     }
 }
 
-function pauseGame() {
-    if (!gameStarted || gamePaused) return;
-  
-    gamePaused = true;
-  
-    if (world) {
-      world.stop();
-  
-      world.character?.stop(); 
-  
-      world.level?.enemies?.forEach(e => e.stop?.());
-      world.throwableObjects?.forEach(o => o.stop?.());
-      world.level?.endboss?.stop?.();
+    function pauseGame() {
+        if (!gameStarted || gamePaused) return;
+        window.gamePaused = true;
+        window.audioManager?.pauseAll?.();
     }
-  
-    window.audioManager?.pauseAll?.();
-  }
   
 
-  function resumeGame() {
-    if (!gamePaused) return;
-  
-    gamePaused = false;
-  
-    if (world) {
-      world.run(); 
-      world.character?.applyGravity?.();
-      world.character?.animate?.();
-  
-      world.level?.enemies?.forEach(e => {
-        e.applyGravity?.();
-        e.startAnimation?.();
-      });
-  
-      world.throwableObjects?.forEach(o => o.applyGravity?.());
-      world.level?.endboss?.startAnimation?.();
+    function resumeGame() {
+        if (!gamePaused) return;
+        window.gamePaused = false;
+        window.audioManager?.resumeAll?.();
     }
-  
-    window.audioManager?.resumeAll?.();
-  }
   
 
 

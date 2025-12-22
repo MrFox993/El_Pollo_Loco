@@ -25,7 +25,8 @@
 
         if (showRotate && gameStarted) {
             window.pauseGame?.();
-        } else {
+        } 
+        if (!showRotate && gameStarted) {
             window.resumeGame?.();
         }
     }

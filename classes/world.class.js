@@ -65,7 +65,7 @@ endGame(result) {
   window.audioManager.play(result === 'won' ? 'youWin' : 'gameOver');
 
   setTimeout(() => {
-      gameStarted = false;
+      window.gameStarted = false;
       toggleScreen('canvas-screen', 'hide');
       if (result === "won") {
         toggleScreen('youWonScreen', 'show');
@@ -76,7 +76,6 @@ endGame(result) {
 }
 
   checkCollisions() {
-    console.log("collision tick", gamePaused);
     this.collisionWithEnemy();
     this.collisionWithBottle();
     this.collisionWithCoin();
@@ -242,38 +241,33 @@ collisionBottleWithEnemies() {
   }
 
   draw() {
-    if (!gameStarted || gamePaused) return;
-
-    this.character.update();
-    this.updateCamera();
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    this.ctx.translate(this.camera_x, 0);
-
-    this.addObjectsToMap(this.level.backgroundObjects);
-    this.addObjectsToMap(this.level.clouds);
-    this.addObjectsToMap(this.throwableObjects);
-    this.addObjectsToMap(this.level.bottles);
-    this.addObjectsToMap(this.level.coins);
-    this.addToMap(this.character);
-    this.addObjectsToMap(this.level.enemies);
-    this.addToMap(this.level.endboss);
-
-    this.ctx.translate(-this.camera_x, 0);
-    // ---- Space for fixed objects ---- 
-    this.addToMap(this.healthStatusBar);
-    this.addToMap(this.coinStatusBar);
-    this.addToMap(this.bottleStatusBar);
-    if (this.endbossStatusBar) {
-      this.addToMap(this.endbossStatusBar);
+    if (!gameStarted) return;
+  
+    if (!gamePaused) {
+      this.character.update();
+      this.updateCamera();
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  
+      this.ctx.translate(this.camera_x, 0);
+  
+      this.addObjectsToMap(this.level.backgroundObjects);
+      this.addObjectsToMap(this.level.clouds);
+      this.addObjectsToMap(this.throwableObjects);
+      this.addObjectsToMap(this.level.bottles);
+      this.addObjectsToMap(this.level.coins);
+      this.addToMap(this.character);
+      this.addObjectsToMap(this.level.enemies);
+      this.addToMap(this.level.endboss);
+  
+      this.ctx.translate(-this.camera_x, 0);
+  
+      this.addToMap(this.healthStatusBar);
+      this.addToMap(this.coinStatusBar);
+      this.addToMap(this.bottleStatusBar);
+      if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
     }
-    this.ctx.translate(this.camera_x, 0);
-
-    this.ctx.translate(-this.camera_x, 0);
-    let self = this;
-    requestAnimationFrame(function () {
-      self.draw();
-    });
+  
+    requestAnimationFrame(() => this.draw());
   }
 
   addToMap(mObject) {
