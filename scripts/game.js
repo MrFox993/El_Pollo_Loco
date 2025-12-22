@@ -13,7 +13,6 @@ function startNewGame() {
     toggleScreen('youWonScreen', 'hide');
     toggleScreen('youLostScreen', 'hide');
     toggleScreen('.canvas-screen', 'show');
-    toggleScreen('mobileControls', 'show')
 
     newLevel = createLevel1();
     canvas = document.getElementById('canvas');
@@ -68,7 +67,6 @@ function goToMainMenu() {
     toggleScreen('youLostScreen', 'hide');
     toggleScreen('.canvas-screen', 'hide');
     toggleScreen('menuScreen', 'show');
-    toggleScreen('mobileControls', 'hide')
 
     if (window.MobileUI) {
         window.MobileUI.applyUIState();
