@@ -125,14 +125,13 @@ button:disabled:active {
         corner-shape: squircle;
         background-color: #F4A460;
         border-radius: 60px;
-        padding: 12px;
+        padding: 24px;
 
     h2 {
         font-family: "Sancreek", serif;
         font-size: 120px;
         font-weight: 400;
         color: #8B0000 ;
-        font-size: 36px;
         margin-bottom: 12px;
         text-align: center;
     }
@@ -145,7 +144,7 @@ button:disabled:active {
 
         th, td {
             padding: 8px 12px;
-            font-size: 24px;
+            font-size: 48px;
             color: #3E2723;
         }
     }
@@ -178,7 +177,6 @@ button:disabled:active {
     }
 }
 
-
 #muteBtn {
     display: inline-flex;
     align-items: center;
@@ -189,6 +187,7 @@ button:disabled:active {
     display: block;
     width: 64px;
 }
+
 .visually-hidden {
     position: absolute !important;
     width: 1px; height: 1px;
