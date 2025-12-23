@@ -107,6 +107,9 @@ window.addEventListener('keydown', (event) => {
     if (event.keyCode === 67) {
         keyboard.c = true;
     }
+    if (event.keyCode === 80) {
+        window.gamePaused ? window.resumeGame() : window.pauseGame();
+    }
 });
 
 window.addEventListener('keyup', (event) => {
