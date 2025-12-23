@@ -91,6 +91,7 @@ canvas {
     padding-top: 20px;
     align-items: center;
     min-width: 50vw;
+    gap: 24px;
 }
 
 .navigation-buttons {
@@ -183,6 +184,7 @@ button:disabled:active {
     gap: 8px;
     padding: 6px 12px;
 }
+
 #muteBtn img {
     display: block;
     width: 64px;
@@ -271,6 +273,42 @@ button:disabled:active {
 .mobile-btn-bottle {
     height: 40px;
     width: 70px;
+}
+
+@media (max-width: 1440px) {
+    header h1 {
+        font-size: 150px;
+    }
+
+    .start-game-button {
+        font-size: 56px;
+    }
+
+    .navigation-buttons {
+        font-size: 40px;
+    }
+
+    #muteBtn img {
+        width: 48px;
+    }
+}
+
+@media (max-width: 1300px) {
+    header h1 {
+        font-size: 120px;
+    }
+
+    .start-game-button {
+        font-size: 40px;
+    }
+
+    .navigation-buttons {
+        font-size: 24px;
+    }
+
+    #muteBtn img {
+        width: 32px;
+    }
 }
 
 @media (max-width: 768px) {
