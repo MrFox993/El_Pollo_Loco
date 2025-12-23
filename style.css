@@ -27,7 +27,7 @@ header {
 
 header h1 {
     font-family: "Sancreek", serif;
-    font-size: 140px;
+    font-size: 220px;
     font-weight: 400;
     color: #8B0000 ;
     margin: 100px 0 10px 0;
@@ -73,14 +73,13 @@ canvas {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 64px;
     border-radius: 64px;
     padding: 24px 48px;
-    margin-top: 100px;
 }
 
 .start-game-button {
-    font-size: 48px;
+    font-size: 64px;
     padding: 12px 24px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
     transition: background-color 0.3s, transform 0.2s;
@@ -95,7 +94,7 @@ canvas {
 }
 
 .navigation-buttons {
-    font-size: 34px;
+    font-size: 48px;
     padding: 5px 12px;
 }
 
@@ -188,6 +187,7 @@ button:disabled:active {
 }
 #muteBtn img {
     display: block;
+    width: 64px;
 }
 .visually-hidden {
     position: absolute !important;
