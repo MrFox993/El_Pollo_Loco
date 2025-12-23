@@ -79,7 +79,7 @@ canvas {
 }
 
 .start-game-button {
-    font-size: 64px;
+    font-size: 6rem;
     padding: 12px 24px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
     transition: background-color 0.3s, transform 0.2s;
@@ -95,7 +95,7 @@ canvas {
 }
 
 .navigation-buttons {
-    font-size: 48px;
+    font-size: 4rem;
     padding: 5px 12px;
 }
 
@@ -281,11 +281,11 @@ button:disabled:active {
     }
 
     .start-game-button {
-        font-size: 56px;
+        font-size: 4rem;
     }
 
     .navigation-buttons {
-        font-size: 40px;
+        font-size: 2.5rem;
     }
 
     #muteBtn img {
@@ -305,11 +305,11 @@ button:disabled:active {
     }
 
     .start-game-button {
-        font-size: 40px;
+        font-size: 2rem;
     }
 
     .navigation-buttons {
-        font-size: 24px;
+        font-size: 1.5rem;
     }
 
     #muteBtn img {
@@ -342,11 +342,11 @@ button:disabled:active {
     }
 
     .start-game-button {
-        font-size: 24px;
+        font-size: 1rem;
     }
 
     .navigation-buttons {
-        font-size: 16px;
+        font-size: 1rem;
     }
 
     #muteBtn img {
