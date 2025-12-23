@@ -11,6 +11,7 @@ class World {
   bottleStatusBar = new StatusBar("bottle");
   coinStatusBar = new StatusBar("coins");
   throwableObjects = [];
+  canThrow = true;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -192,7 +193,8 @@ collisionBottleWithEnemies() {
 
 
   checkThrowObjects() {
-    if (this.keyboard.c && this.character.bottles > 0) {
+    if (this.keyboard.c && this.character.bottles > 0 && this.canThrow) {
+      this.canThrow = false;
       let direction = this.character.otherDirection ? 'left' : 'right';
 
       let bottle = new ThrowableObject(
@@ -210,6 +212,9 @@ collisionBottleWithEnemies() {
       this.throwableObjects.push(bottle);
       this.character.bottles--;
       this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
+    }
+    if (!this.keyboard.c) {
+      this.canThrow = true;
     }
   }
 
@@ -256,7 +261,7 @@ collisionBottleWithEnemies() {
     this.addObjectsToMap(this.throwableObjects);
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.coins);
-    this.addToMap(this.character);
+    // this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addToMap(this.character);
     this.addToMap(this.level.endboss);
