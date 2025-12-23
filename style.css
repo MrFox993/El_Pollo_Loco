@@ -252,3 +252,8 @@ button:disabled:active {
     filter: blur(2px);
     pointer-events: none;
 }
+
+.mobile-btn-bottle {
+    height: 40px;
+    width: 70px;
+}
