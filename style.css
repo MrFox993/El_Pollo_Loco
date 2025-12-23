@@ -294,8 +294,14 @@ button:disabled:active {
 }
 
 @media (max-width: 1300px) {
+    .menu-screen {
+        gap: 40px;
+    }
+
     header h1 {
         font-size: 120px;
+        margin: 50px 0 10px 0;
+
     }
 
     .start-game-button {
@@ -308,6 +314,16 @@ button:disabled:active {
 
     #muteBtn img {
         width: 32px;
+    }
+}
+
+@media (max-width: 900px) {
+    .menu-screen {
+        gap: 12px;
+    }
+
+    header h1 {
+        margin: 0;
     }
 }
 
@@ -324,4 +340,17 @@ button:disabled:active {
         font-size: 48px;
         margin: 16px 0;
     }
+
+    .start-game-button {
+        font-size: 24px;
+    }
+
+    .navigation-buttons {
+        font-size: 16px;
+    }
+
+    #muteBtn img {
+        width: 20px;
+    }
+
 }
