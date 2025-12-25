@@ -275,7 +275,8 @@ button:disabled:active {
     width: 70px;
 }
 
-@media (max-width: 1440px) {
+/* desktop & latop --> (hover: hover) and (pointer: fine) and  */
+@media (hover: hover) and (pointer: fine) and (max-width: 1440px) {
     header h1 {
         font-size: 150px;
     }
@@ -293,7 +294,7 @@ button:disabled:active {
     }
 }
 
-@media (max-width: 1300px) {
+@media (hover: hover) and (pointer: fine) and (max-width: 1300px) {
     .menu-screen {
         gap: 40px;
     }
@@ -317,7 +318,7 @@ button:disabled:active {
     }
 }
 
-@media (max-width: 900px) {
+@media (hover: hover) and (pointer: fine) and (max-width: 900px) {
     .menu-screen {
         gap: 12px;
     }
@@ -327,7 +328,7 @@ button:disabled:active {
     }
 }
 
-@media (max-width: 768px) {
+@media (hover: hover) and (pointer: fine) and (max-width: 768px) {
     canvas {
         max-height: 60vh;
     }
