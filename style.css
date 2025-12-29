@@ -386,7 +386,6 @@ button:disabled:active {
     }
 
     .mobile-controls {
-        display: flex;
         padding: 8px;
         gap: 0.35rem;
     }
