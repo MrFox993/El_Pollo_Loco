@@ -243,6 +243,9 @@ button:disabled:active {
     font-size: 1.25rem;
     font-weight: 700;
     box-shadow: 0 2px 0 #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pause-btn {
@@ -384,11 +387,17 @@ button:disabled:active {
 
     .mobile-controls {
         display: flex;
+        padding: 8px;
+        gap: 0.35rem;
     }
 
-    header h1 {
+    header {
+        top: 0;
+
+        h1 {
         font-size: 48px;
-        margin: 16px 0;
+        margin: 0;
+        }
     }
 
     .start-game-button {
