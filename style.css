@@ -377,3 +377,46 @@ button:disabled:active {
 }
 
 /* mobile devices --> (hover: none) and (pointer: coarse) */
+@media (hover: none) and (pointer: coarse) {
+    canvas {
+        max-height: 60vh;
+    }
+
+    .mobile-controls {
+        display: flex;
+    }
+
+    header h1 {
+        font-size: 48px;
+        margin: 16px 0;
+    }
+
+    .start-game-button {
+        font-size: 1rem;
+    }
+
+    .navigation {
+        gap: 8px;
+    }
+
+    .navigation-buttons {
+        font-size: 1rem;
+        width: max-content;
+        gap: 12px;
+    }
+
+    #muteBtn img {
+        width: 20px;
+    }
+
+    .rotate-content img {
+        width: 60vw;
+    }
+
+    .menu-screen {
+        gap: 12px;
+        padding: 0;
+    }
+
+
+}
