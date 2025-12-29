@@ -325,6 +325,19 @@ button:disabled:active {
 
     header h1 {
         margin: 0;
+        font-size: 72px;
+    }
+
+    .start-game-button {
+        font-size: 1.5rem;
+    }
+
+    .navigation-buttons {
+        font-size: 1rem;
+    }
+
+    #muteBtn img {
+        width: 25px;
     }
 }
 
@@ -346,8 +359,14 @@ button:disabled:active {
         font-size: 1rem;
     }
 
+    .navigation {
+        gap: 8px;
+    }
+
     .navigation-buttons {
         font-size: 1rem;
+        width: max-content;
+        gap: 12px;
     }
 
     #muteBtn img {
@@ -355,3 +374,5 @@ button:disabled:active {
     }
 
 }
+
+/* mobile devices --> (hover: none) and (pointer: coarse) */
