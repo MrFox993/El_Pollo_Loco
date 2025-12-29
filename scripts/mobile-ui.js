@@ -23,12 +23,15 @@
         const mobile = isMobileOrEmulated();
         const landscape = isLandscape();
         const gameStarted = Boolean(window.gameStarted);
+        const gameOver = Boolean(window.gameOver);
       
         const showMobile = mobile && !keyboardUsed && landscape && gameStarted;
         const showRotate = mobile && !landscape;
+        const hideMobile = mobile && landscape && gameOver;
       
         mobileControls.style.display = showMobile ? 'flex' : 'none';
         rotateOverlay.style.display  = showRotate ? 'flex' : 'none';
+        mobileControls.style.display = hideMobile ? 'none' : mobileControls.style.display;
       
         mobileControls.setAttribute('aria-hidden', String(!showMobile));
         rotateOverlay.setAttribute('aria-hidden', String(!showRotate));
@@ -70,8 +73,8 @@
         const bindings = [
         { sel: '#btnLeft',  key: 'left'  },
         { sel: '#btnRight', key: 'right' },
-        { sel: '#btnJump',  key: 'up'    }, // oder 'JUMP' – abhängig von deiner Keyboard-Implementierung
-        { sel: '#btnThrow', key: 'c' }, // z.B. 'C' -> Werfen
+        { sel: '#btnJump',  key: 'up'    },
+        { sel: '#btnThrow', key: 'c' },
         ];
 
     bindings.forEach(({ sel, key }) => {
@@ -81,14 +84,12 @@
         const down = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            // keyboard.setMobile?.(key, true);   
             if (keyboard[key] !== undefined) keyboard[key] = true;
             el.classList.add('pressed');
         };
         const up = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            // keyboard.setMobile?.(key, false);
             if (keyboard[key] !== undefined) keyboard[key] = false;
             el.classList.remove('pressed');
         };
