@@ -58,7 +58,8 @@ checkGameOver() {
 }
 
 endGame(result) {
-  gameOver = true
+  window.gameOver = true
+  window.gameStarted = false;
   this.stop()
   this.character.stop(); 
   this.level.enemies.forEach(e => e.stop?.());
@@ -70,6 +71,7 @@ endGame(result) {
 
   setTimeout(() => {
       window.gameStarted = false;
+      window.MobileUI.applyUIState();
       toggleScreen('canvas-screen', 'hide');
       if (result === "won") {
         toggleScreen('youWonScreen', 'show');
@@ -261,7 +263,6 @@ collisionBottleWithEnemies() {
     this.addObjectsToMap(this.throwableObjects);
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.coins);
-    // this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addToMap(this.character);
     this.addToMap(this.level.endboss);
@@ -283,7 +284,7 @@ collisionBottleWithEnemies() {
     }
 
     if (gamePaused) {
-        this.ctx.fillStyle = 'rgba(0,0,0,0.3)'; // leichtes Abdunkeln
+        this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         const iconSize = 80;
