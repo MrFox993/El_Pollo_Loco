@@ -25,7 +25,7 @@ class World {
   startWorld() {
     this.setWorld();
     this.draw();
-    this.run();
+    // this.run();
     this.level.enemies.forEach(enemy => enemy.startAnimation());
     if (this.level.endboss) this.level.endboss.startAnimation();
   }
@@ -94,20 +94,30 @@ endGame(result) {
   }
 
   collisionWithEnemy() {
-    this.level.enemies.forEach((enemy, index) => {
+    for (let i = 0; i < this.level.enemies.length; i++) {
+      const enemy = this.level.enemies[i];
+  
+      if (enemy.isDeadFlag) continue;
+  
       if (this.character.isCollidingFromTop(enemy)) {
-        enemy.playDeadAnimation(enemy.imagesDead, () => {this.level.enemies.splice(index, 1)})
+        enemy.isDeadFlag = true;
+        enemy.hp = 0;
+  
+        enemy.playDeadAnimation(enemy.imagesDead, () => {
+          const idx = this.level.enemies.indexOf(enemy);
+          if (idx >= 0) this.level.enemies.splice(idx, 1);
+        });
+  
         window.audioManager.play('enemyHit');
         this.character.jump();
+        return;
       }
-      else if (this.character.isColliding(enemy) ) {
+  
+      if (this.character.isColliding(enemy)) {
         this.character.hit();
         this.healthStatusBar.setHealthBarPercentage(this.character.hp);
+        return;
       }
-    });
-    if (this.character.isColliding(this.level.endboss)) {
-      this.character.hit();
-      this.healthStatusBar.setHealthBarPercentage(this.character.hp);
     }
   }
 
