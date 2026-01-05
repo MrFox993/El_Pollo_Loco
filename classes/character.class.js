@@ -99,7 +99,7 @@ class Character extends MovableObject {
     if (this.animationInterval) return; 
     if (!window.gameStarted || window.gameOver) return;
     this.animationInterval = setInterval(() => {
-      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
 
       if (this.isDead()) {
         this.isLongIdling = false;
