@@ -27,7 +27,7 @@ class MovableObject extends DrawableObject {
       this.speed = 0; 
       this.currentImageIndex = 0;
       let interval = setInterval(() => {
-        if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+        if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
         this.playAnimation(imagesDeadArray);
       }, 1000 / 10);
 
@@ -92,7 +92,7 @@ class MovableObject extends DrawableObject {
 
   applyGravity() {
     this.gravityInterval = setInterval(() => {
-      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
       if (this.checkAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;

@@ -29,11 +29,11 @@ class ChickenSmall extends MovableObject {
     if (!window.gameStarted || window.gameOver) return;
 
     this.animationInterval = setInterval(() => {
-      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
       this.playAnimation(this.imagesSmallChickenWalking);
     }, 1000 / 2);
     this.moveInterval = setInterval(() => {
-      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
       this.walkBetweenBoundaries();
     }, 1000 / 60);
   }
@@ -70,11 +70,11 @@ class ChickenBig extends MovableObject {
     if (!window.gameStarted || window.gameOver) return;
 
     this. animationInterval = setInterval(() => {
-      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
       this.playAnimation(this.imagesBigChickenWalking);
     }, 1000 / 2);
     this. moveInterval = setInterval(() => {
-      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
       this.walkBetweenBoundaries();
     }, 1000 / 60);
   }
