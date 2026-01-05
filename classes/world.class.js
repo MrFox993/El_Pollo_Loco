@@ -23,6 +23,7 @@ class World {
   }
 
   startWorld() {
+    window.gameEnding = false
     this.setWorld();
     this.draw();
     // this.run();
@@ -262,6 +263,7 @@ collisionBottleWithEnemies() {
 
   draw() {
     if (!gameStarted) return;
+    if (!window.gameStarted && !window.gameEnding) return;
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -284,7 +286,7 @@ collisionBottleWithEnemies() {
     this.addToMap(this.bottleStatusBar);
     if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
 
-    if (!gamePaused) {
+    if (!gamePaused && !window.gameEnding) {
         this.character.update();
         this.updateCamera();
         this.checkCollisions();
