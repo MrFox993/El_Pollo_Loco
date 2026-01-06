@@ -309,8 +309,6 @@ button:disabled:active {
 
     header h1 {
         font-size: 120px;
-        margin: 50px 0 10px 0;
-
     }
 
     .start-game-button {
@@ -332,7 +330,6 @@ button:disabled:active {
     }
 
     header h1 {
-        margin: 0;
         font-size: 72px;
     }
 
@@ -360,7 +357,6 @@ button:disabled:active {
 
     header h1 {
         font-size: 48px;
-        margin: 16px 0;
     }
 
     .start-game-button {
