@@ -30,7 +30,6 @@ header h1 {
     font-size: 220px;
     font-weight: 400;
     color: #8B0000 ;
-    margin: 100px 0 10px 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
@@ -98,6 +97,11 @@ canvas {
     font-size: 2rem;
     padding: 5px 12px;
     width: max-content;
+    min-width: 200px;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 button {
@@ -305,8 +309,6 @@ button:disabled:active {
 
     header h1 {
         font-size: 120px;
-        margin: 50px 0 10px 0;
-
     }
 
     .start-game-button {
@@ -328,7 +330,6 @@ button:disabled:active {
     }
 
     header h1 {
-        margin: 0;
         font-size: 72px;
     }
 
@@ -356,7 +357,6 @@ button:disabled:active {
 
     header h1 {
         font-size: 48px;
-        margin: 16px 0;
     }
 
     .start-game-button {
