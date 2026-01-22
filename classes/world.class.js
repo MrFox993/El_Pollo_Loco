@@ -23,6 +23,7 @@ class World {
   }
 
   startWorld() {
+    window.gameEnding = false
     this.setWorld();
     this.draw();
     // this.run();
@@ -58,27 +59,27 @@ checkGameOver() {
 }
 
 endGame(result) {
-  window.gameOver = true
-  window.gameStarted = false;
-  this.stop()
-  this.character.stop(); 
-  this.level.enemies.forEach(e => e.stop?.());
-  this.level.endboss?.stop?.();
+  window.gameEnding = true;
 
   window.audioManager.stopAll();
-
   window.audioManager.play(result === 'won' ? 'youWin' : 'gameOver');
+
+  const charAnimMs = (this.character?.imagesDead?.length || 0) * 100; 
+  const bossAnimMs = (this.level.endboss?.imagesDead?.length || 0) * 200;
+  const buffer = 400;
+  
+  const delay = result === 'lost' ? (charAnimMs + buffer) : (bossAnimMs + buffer || 1200);
+
 
   setTimeout(() => {
       window.gameStarted = false;
+      window.gameEnding = false;
+      window.gameOver = true;
+
       window.MobileUI.applyUIState();
       toggleScreen('canvas-screen', 'hide');
-      if (result === "won") {
-        toggleScreen('youWonScreen', 'show');
-      } else {
-        toggleScreen('youLostScreen', 'show');
-      }
-  }, 1000);
+      toggleScreen(result === 'won' ? 'youWonScreen' : 'youLostScreen', 'show');
+  }, delay);
 }
 
   checkCollisions() {
@@ -262,6 +263,7 @@ collisionBottleWithEnemies() {
 
   draw() {
     if (!gameStarted) return;
+    if (!window.gameStarted && !window.gameEnding) return;
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -284,7 +286,7 @@ collisionBottleWithEnemies() {
     this.addToMap(this.bottleStatusBar);
     if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
 
-    if (!gamePaused) {
+    if (!gamePaused && !window.gameEnding) {
         this.character.update();
         this.updateCamera();
         this.checkCollisions();

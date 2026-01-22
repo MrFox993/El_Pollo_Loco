@@ -76,7 +76,7 @@ class Endboss extends MovableObject {
     if (this.animationInterval || this.moveInterval) return;
     if (!window.gameStarted || window.gameOver) return;
     this.animationInterval = setInterval(() => {
-      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
       if (this.isDead()) {
         this.playAnimation(this.imagesDead);
       } else if (this.isHurt()) {
@@ -94,7 +94,7 @@ class Endboss extends MovableObject {
       }
     }, 200);
     this.moveInterval = setInterval(() => {
-      if (!window.gameStarted || window.gamePaused || window.gameOver) return;
+      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
       if (this.isDead() || this.isHurt()) {
         this.stopWalkingSound();
         return;
