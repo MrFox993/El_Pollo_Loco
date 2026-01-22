@@ -393,7 +393,7 @@ button:disabled:active {
         position: fixed;    
 
         h1 {
-        font-size: 48px;
+        font-size: 32px;
         margin: 0;
         }
     }
@@ -403,7 +403,7 @@ button:disabled:active {
     }
 
     .navigation {
-        gap: 8px;
+        gap: 4px;
         flex-direction: column;
         padding-top: 0;
     }
@@ -424,14 +424,36 @@ button:disabled:active {
     }
 
     .menu-screen {
-        gap: 8px;
+        gap: 4px;
         padding: 0;
-        padding-top: 40px;
+        padding-top: 16px;
         flex-direction: column;
     }
 
     button {
         min-height: 40px;
+    }
+
+    .control-box {
+        padding: 4px;
+        margin-top: 20px;
+        border-radius: 30px;
+
+        h2 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        table {
+            th, td {
+                font-size: 12px;
+                padding: 2px;
+            }
+        }
+    }
+
+    .main-screen {
+        width: min-content;
     }
 
 }
