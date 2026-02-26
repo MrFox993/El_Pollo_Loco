@@ -1,3 +1,7 @@
+/**
+ * Represents the main game world, managing rendering, physics, collisions,
+ * camera movement, game progress, and interactions between all game objects.
+ */
 class World {
   character = new Character();
   backgroundImages_1;
@@ -13,6 +17,12 @@ class World {
   throwableObjects = [];
   canThrow = true;
 
+/**
+   * Creates a new World instance.
+   *
+   * @param {HTMLCanvasElement} canvas - The game's main rendering canvas.
+   * @param {Keyboard} keyboard - The global keyboard input handler.
+   */
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -22,6 +32,10 @@ class World {
     this.pauseIcon.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect x="15" y="0" width="20" height="80" fill="white"/><rect x="45" y="0" width="20" height="80" fill="white"/></svg>';
   }
 
+/**
+   * Starts the world by applying world reference to the character,
+   * starting render loops, and initializing enemy animations.
+   */
   startWorld() {
     window.gameEnding = false
     this.setWorld();
@@ -31,11 +45,17 @@ class World {
     if (this.level.endboss) this.level.endboss.startAnimation();
   }
 
+/**
+   * Injects world reference into the character and starts its animation logic.
+   */
   setWorld() {
     this.character.world = this;
     this.character.animate();
   }
 
+/**
+   * Starts the main game logic loop (collision checks, throws, status updates).
+   */
   run() {
     this.intervalId = setInterval(() => {
       if (!gameStarted || gamePaused) return;
@@ -46,10 +66,16 @@ class World {
     }, 200);
   }
 
+/**
+   * Stops all world update intervals.
+   */
   stop() {
     clearInterval(this.intervalId)
   }
 
+/**
+   * Checks if either the player or endboss died and triggers the game end.
+   */
   checkGameOver() {
     if (this.character.isDead()) {
       this.endGame("lost");
@@ -58,11 +84,22 @@ class World {
     }
   }
 
+/**
+   * Plays the appropriate victory or defeat sound.
+   *
+   * @param {'won'|'lost'} result - The outcome of the game.
+   */
   playEndSound(result) {
     window.audioManager.stopAll();
     window.audioManager.play(result === 'won' ? 'youWin':'gameOver');
   }
 
+/**
+   * Computes the delay before showing an end screen, based on animation length.
+   *
+   * @param {'won'|'lost'} result - The game outcome.
+   * @returns {number} Delay in milliseconds.
+   */
   computeEndDelay(result) {
     const charAnim = (this.character?.imagesDead?.length||0)*100;
     const bossAnim = (this.level.endboss?.imagesDead?.length||0)*200;
@@ -70,6 +107,11 @@ class World {
     return result==='lost' ? charAnim+buffer : bossAnim+buffer;
   }
 
+/**
+   * Displays the appropriate end screen and updates UI visibility.
+   *
+   * @param {'won'|'lost'} result - The game outcome.
+   */
   showEndScreen(result) {
     window.gameStarted = false;
     window.gameEnding = false;
@@ -80,6 +122,12 @@ class World {
     if (result==='won') window.updateNextLevelButtonState?.();
   }
 
+/**
+   * Ends the game by triggering sounds, delaying animations,
+   * and finally showing the end screen.
+   *
+   * @param {'won'|'lost'} result - The game outcome.
+   */
   endGame(result) {
     window.gameEnding = true;
     this.playEndSound(result);
@@ -87,6 +135,10 @@ class World {
     setTimeout(() => this.showEndScreen(result), delay);
   }
 
+/**
+   * Performs all collision checks for enemies, bottles, coins,
+   * splash effects, and endboss damage.
+   */
   checkCollisions() {
     this.collisionWithEnemy();
     this.collisionWithBottle();
@@ -99,10 +151,21 @@ class World {
 
   }
 
+/**
+   * Determines whether an enemy is still valid (not dead or already removed).
+   *
+   * @param {MovableObject} enemy - The enemy to check.
+   * @returns {boolean} True if enemy can still be interacted with.
+   */
   isEnemyValid(enemy) {
       return !(enemy.isDead && enemy.isDead());
   }
 
+/**
+   * Handles the visual and logical removal of an enemy after being killed.
+   *
+   * @param {MovableObject} enemy - The enemy to kill.
+   */
   killEnemy(enemy, index) {
       const deadImages = enemy.imagesSmallChickenDead || enemy.imagesDead || enemy.imagesDying;
       enemy.playDeadAnimation(deadImages, ()=> {
@@ -111,6 +174,12 @@ class World {
       });
   }
 
+/**
+   * Handles bottle hitting an enemy: kill enemy, play SFX, trigger splash.
+   *
+   * @param {ThrowableObject} bottle - The thrown bottle.
+   * @param {MovableObject} enemy - The impacted enemy.
+   */
   handleBottleHit(bottle, enemy) {
       this.killEnemy(enemy);
       if (!bottle.hasSfxPlayed) {
@@ -120,6 +189,9 @@ class World {
       bottle.playSplashAnimation();
   }
 
+/**
+   * Checks collisions between character and enemies (jump kill or damage).
+   */
   collisionWithEnemy() {
     for (let i = 0; i < this.level.enemies.length; i++) {
       const enemy = this.level.enemies[i];
@@ -148,6 +220,9 @@ class World {
     }
   }
 
+/**
+   * Checks collisions between character and collectible bottles.
+   */
   collisionWithBottle() {
     this.level.bottles.forEach((bottle, index) => {
       if (this.character.isColliding(bottle)) {
@@ -159,6 +234,9 @@ class World {
     });
   }
 
+/**
+   * Checks collisions between character and collectible coins.
+   */
   collisionWithCoin() {
     this.level.coins.forEach((coin, index) => {
       if (this.character.isColliding(coin)) {
@@ -170,6 +248,9 @@ class World {
     });
   }
 
+/**
+   * Handles collision between thrown bottles and endboss.
+   */
   collisionBottleWithEndboss() {
       if (this.level.endboss && this.throwableObjects.length > 0) {
           this.throwableObjects.forEach((bottle, index) => {
@@ -192,6 +273,9 @@ class World {
       }
   }
 
+/**
+   * Handles bottle collisions with normal enemies.
+   */
 collisionBottleWithEnemies() {
   if (!this.throwableObjects.length) return;
     this.throwableObjects.forEach(bottle=>{
@@ -205,6 +289,9 @@ collisionBottleWithEnemies() {
 }
 
 
+/**
+   * Handles bottle throwing logic, cooldown, and bottle spawning.
+   */
   checkThrowObjects() {
     if (this.keyboard.c && this.character.bottles > 0 && this.canThrow) {
       this.canThrow = false;
@@ -231,12 +318,18 @@ collisionBottleWithEnemies() {
     }
   }
 
+/**
+   * Initializes the endboss health bar once the character reaches its zone.
+   */
   checkEndbossStatusBar() {
     if (!this.endbossStatusBar && this.character.x >= 2000) {
         this.endbossStatusBar = new StatusBar("endboss", this.canvas.width);
     }
   }
 
+/**
+   * Plays bottle splash animation when it hits the ground.
+   */
   bottleSpashAnimation() {
     this.throwableObjects.forEach((bottle) => {
         let splashTriggered = false;
@@ -261,11 +354,17 @@ collisionBottleWithEnemies() {
         this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
   }
   
+/**
+   * Draws the background layers (clouds, mountains, scenery).
+   */
   drawBackground() {
       this.addObjectsToMap(this.level.backgroundObjects);
       this.addObjectsToMap(this.level.clouds);
   }
 
+/**
+   * Draws all gameplay objects such as enemies, coins, bottles, etc.
+   */
   drawGameObjects() {
       this.addObjectsToMap(this.throwableObjects);
       this.addObjectsToMap(this.level.bottles);
@@ -275,6 +374,9 @@ collisionBottleWithEnemies() {
       this.addToMap(this.level.endboss);
   }
 
+/**
+   * Draws all HUD elements (health, bottle, coin, endboss bars).
+   */
   drawHUD() {
       this.addToMap(this.healthStatusBar);
       this.addToMap(this.coinStatusBar);
@@ -282,6 +384,9 @@ collisionBottleWithEnemies() {
       if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
   }
 
+/**
+   * Draws the semi-transparent pause overlay with pause icon.
+   */
   drawPauseOverlay() {
       this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -292,6 +397,9 @@ collisionBottleWithEnemies() {
           iconSize, iconSize);
   }
 
+/**
+   * The main rendering loop. Draws everything and updates world state.
+   */
   draw() {
     if (!gameStarted) return;
     if (!window.gameStarted && !window.gameEnding) return;
@@ -320,6 +428,11 @@ collisionBottleWithEnemies() {
     requestAnimationFrame(() => this.draw());
 }
 
+/**
+   * Draws a single object onto the canvas, including horizontal flipping.
+   *
+   * @param {DrawableObject} mObject - The object to draw.
+   */
   addToMap(mObject) {
     if (!mObject) return;
     if (mObject.otherDirection === true) {
@@ -333,6 +446,11 @@ collisionBottleWithEnemies() {
     }
   }
 
+/**
+   * Draws an array of objects onto the canvas.
+   *
+   * @param {DrawableObject[]} objects - Objects to render.
+   */
   addObjectsToMap(objects) {
     if (!Array.isArray(objects)) return;
     objects.forEach((obj) => {
@@ -340,6 +458,11 @@ collisionBottleWithEnemies() {
     });
   }
 
+/**
+   * Flips a drawable object horizontally before drawing it.
+   *
+   * @param {DrawableObject} mObject - The object to flip.
+   */
   flipImage(mObject) {
     this.ctx.save();
     this.ctx.translate(mObject.x + mObject.width, mObject.y);
@@ -348,21 +471,38 @@ collisionBottleWithEnemies() {
   }
   
 
+/**
+   * Restores canvas state after horizontally flipping an image.
+   */
   flipImageBack() {
     this.ctx.restore();
   }
-  
+
+/**
+   * Computes the desired X position of the camera to follow the character.
+   *
+   * @returns {number} Desired camera X coordinate.
+   */
   calculateDesiredCameraX() {
       const center = this.canvas.width/2;
       const dir = this.character.otherDirection ? -1 : 1;
       return -this.character.x + center - this.character.width/2 - dir*240;
   }
 
+/**
+   * Restricts camera movement to within world boundaries.
+   *
+   * @param {number} x - The desired camera position.
+   * @returns {number} Clamped camera position.
+   */
   clampCamera(x) {
       const minX = -(this.level.level_end_x - this.canvas.width);
       return Math.max(minX, Math.min(0, x));
   }
 
+/**
+   * Smoothly updates the camera position to follow the character.
+   */
   updateCamera() {
     const desired = this.calculateDesiredCameraX();
     const lerp = (this.keyboard.left||this.keyboard.right) ? 0.08 : 0.05;
@@ -370,4 +510,3 @@ collisionBottleWithEnemies() {
     this.camera_x = this.clampCamera(this.camera_x);
   }
 }
-

@@ -1,3 +1,18 @@
+/**
+ * Represents the end boss enemy with multiple states (alert, walk, prepare, attack, hurt, dead),
+ * animations, and a jump-attack behavior. The end boss patrols, prepares and performs attacks with
+ * randomized cooldowns, reacts to damage (hurt/dead), and integrates with a global audio manager
+ * to play/stop walking sounds. Movement and animations pause when the game is paused or ended.
+ *
+ * Extends MovableObject, which provides gravity, movement helpers, and animation playback.
+ *
+ * @class Endboss
+ * @extends MovableObject
+ */
+
+/**
+ * @typedef {'alert'|'walk'|'prepare'|'attack'|'hurt'|'dead'} EndbossState
+ */
 class Endboss extends MovableObject {
   imagesWalking = [
     "./assets/img/4_enemie_boss_chicken/1_walk/G1.png",
@@ -61,7 +76,13 @@ class Endboss extends MovableObject {
   isPreparingAttack = false;
   prepareDuration = 600;
 
-
+  /**
+   * Constructs the Endboss, initializes images and stats, sets up position, size,
+   * movement parameters, and applies gravity. World boundaries are derived from
+   * level settings if available.
+   *
+   * @constructor
+   */
   constructor() {
     super();
     this.initImages();
@@ -77,6 +98,11 @@ class Endboss extends MovableObject {
     this.applyGravity();
   }
   
+  /**
+   * Preloads all animation image sets and sets the initial image for the alert state.
+   *
+   * @returns {void}
+   */
   initImages() {
     this.loadImage(this.imagesAlert[0]);
     this.loadImages(this.imagesWalking);
@@ -86,6 +112,11 @@ class Endboss extends MovableObject {
     this.loadImages(this.imagesDead);
   }
 
+  /**
+   * Initializes combat stats and damage parameters.
+   *
+   * @returns {void}
+   */
   initStats() {
     this.hp = 100;
     this.hitCount = 0;
@@ -93,11 +124,22 @@ class Endboss extends MovableObject {
     this.defaultHitDamage = 34;
   }
 
-  
+  /**
+   * Sets the boss's current high-level state (for external control if needed).
+   *
+   * @param {EndbossState} newState - The state to assign.
+   * @returns {void}
+   */
   setState(newState) {
     this.currentState = newState;
   }
   
+  /**
+   * Chooses the appropriate animation sequence based on current conditions:
+   * - Dead > Hurt > Preparing (alert frames) > Attacking > Walking (if engaged) > Alert.
+   *
+   * @returns {string[]} The image sequence for the current animation.
+   */
   selectAnimation() {
     if (this.isDead()) return this.imagesDead;
     if (this.isHurt()) return this.imagesHurt;
@@ -106,6 +148,14 @@ class Endboss extends MovableObject {
     return this.hitCount >= 1 ? this.imagesWalking : this.imagesAlert;
   }
 
+  /**
+   * Starts the animation and movement loops, if not already running and if the game is active.
+   * - Animation loop: updates frames every 200 ms using selectAnimation.
+   * - Movement loop: 60 FPS; handles dead/hurt states, attack preparation/execution, and walking.
+   * Respects global pause and end-game flags on each tick.
+   *
+   * @returns {void}
+   */
   startAnimation() {
   if (this.animationInterval || this.moveInterval) return;
   if (!window.gameStarted || window.gameOver) return;
@@ -124,6 +174,12 @@ class Endboss extends MovableObject {
     }, 1000/60);
   }
   
+  /**
+   * Handles patrol movement and walking audio while the boss is in a walking-capable state.
+   * Stops walking sound if not eligible to walk (e.g., before first hit or while preparing).
+   *
+   * @returns {void}
+   */
   handleWalking() {
     if (this.hitCount < 1 || this.isPreparingAttack) {
       this.stopWalkingSound();
@@ -133,6 +189,12 @@ class Endboss extends MovableObject {
     this.startWalkingSound();
   }
 
+  /**
+   * Updates boss position during an attack. Moves horizontally at attackSpeedX in the current
+   * facing direction. If the boss lands (no longer above ground), the attack is finished.
+   *
+   * @returns {void}
+   */
   handleAttackMovement() {
     if (!this.isAttacking) return;
     const dir = this.otherDirection ? 1 : -1;
@@ -140,10 +202,20 @@ class Endboss extends MovableObject {
     if (!this.checkAboveGround()) this.finishAttack();
   }
 
+  /**
+   * Ensures walking sound is started if appropriate. Delegates to ensureWalkingSound.
+   *
+   * @returns {void}
+   */
   startWalkingSound() {
     this.ensureWalkingSound();
   }
 
+  /**
+   * Stops the end boss walking sound if it is currently playing, and updates the flag.
+   *
+   * @returns {void}
+   */
   stopWalkingSound() {
     if (this.isWalkingSoundPlaying) {
         window.audioManager.stop('endbossWalking');
@@ -151,10 +223,21 @@ class Endboss extends MovableObject {
     }
   }
   
+  /**
+   * Ensures the correct walking sound state. Currently implemented to ensure the sound is stopped.
+   * Can be extended to start the sound conditionally.
+   *
+   * @returns {void}
+   */
   ensureWalkingSound() {
     this.ensureWalkingSoundStopped();
   }
 
+  /**
+   * Helper to stop the walking sound if it's playing.
+   *
+   * @returns {void}
+   */
   ensureWalkingSoundStopped() {
     if (this.isWalkingSoundPlaying) {
       window.audioManager.stop('endbossWalking');
@@ -162,35 +245,76 @@ class Endboss extends MovableObject {
     }
   }
   
+  /**
+   * Handles actions necessary while in the hurt state (e.g., stopping walking sound).
+   *
+   * @returns {void}
+   */
   handleHurtState() {
     if (this.isHurt()) this.stopWalkingSound();
   }
 
+  /**
+   * Handles actions necessary while in the dead state (e.g., stopping walking sound).
+   *
+   * @returns {void}
+   */
   handleDeadState() {
     if (this.isDead()) this.stopWalkingSound();
   }
 
+  /**
+   * Checks whether the boss is eligible to start a new attack based on its cooldown timer.
+   *
+   * @returns {boolean} True if a new attack can start now.
+   */
   canAttack() {
     return Date.now() > this.nextAttackTime;
   }
 
+  /**
+   * Computes a randomized attack cooldown within the configured min/max bounds.
+   *
+   * @returns {number} Milliseconds until the next attack can start.
+   */
   computeAttackCooldown() {
     return this.attackCooldownMin +
       Math.random() * (this.attackCooldownMax - this.attackCooldownMin);
   }
 
+  /**
+   * Sets the next allowable attack time based on a newly computed cooldown.
+   *
+   * @returns {void}
+   */
   setNextAttackTime() {
     this.nextAttackTime = Date.now() + this.computeAttackCooldown();
   }
 
+  /**
+   * Applies the vertical jump component of the attack by setting the vertical speed.
+   *
+   * @returns {void}
+   */
   applyAttackJump() {
     this.speedY = this.jumpAttackForce;
   }
 
+  /**
+   * Computes and sets the horizontal speed used during the attack movement.
+   *
+   * @returns {void}
+   */
   computeAttackSpeedX() {
     this.attackSpeedX = this.speed * (2.5 + Math.random());
   }
 
+  /**
+   * Initiates the attack: flags attacking state, records the time, schedules the next attack,
+   * applies the jump impulse, and computes horizontal speed for the attack.
+   *
+   * @returns {void}
+   */
   startAttack() {
     this.isAttacking = true;
     this.lastAttackTime = Date.now();
@@ -199,6 +323,12 @@ class Endboss extends MovableObject {
     this.computeAttackSpeedX();
   } 
 
+  /**
+   * Finishes the current attack: clears attacking flags, resets horizontal attack speed,
+   * and slightly increases base speed to ramp difficulty.
+   *
+   * @returns {void}
+   */
   finishAttack() {
     this.isAttacking = false;
     this.attackSpeedX = 0;
@@ -206,6 +336,13 @@ class Endboss extends MovableObject {
     this.speed += 0.1 + Math.random() * 0.2;
   }
   
+  /**
+   * Enters a short preparation phase before attacking: stops walking sound,
+   * zeroes horizontal attack speed, and after prepareDuration triggers startAttack
+   * unless the boss has died in the meantime.
+   *
+   * @returns {void}
+   */
   prepareAttack() {
     this.isPreparingAttack = true;
     this.stopWalkingSound();
@@ -218,6 +355,12 @@ class Endboss extends MovableObject {
     }, this.prepareDuration);
   }
   
+  /**
+   * Stops all boss activity by delegating to the base class and stopping walking sound.
+   * Resets attack and preparation flags to cease ongoing behaviors.
+   *
+   * @returns {void}
+   */
   stop() {
     super.stop();
 

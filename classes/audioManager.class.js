@@ -1,5 +1,10 @@
+/**
+ * Manages background music, sound effects, mute state, keyboard shortcuts,
+ * and optional UI integration for mute toggling.
+ */
 class AudioManager {
     /**
+    *  Creates a new AudioManager instance.
     * @param {Object} definitions
     * @param {Object} [options]
     * @param {string|HTMLElement} [options.muteButton]   
@@ -50,7 +55,12 @@ class AudioManager {
         this._initDomWhenReady();
 }
 
-  // ---------- Persistence ----------
+    /**
+     * Loads persisted mute state from LocalStorage.
+     *
+     * @returns {boolean} True if muted, otherwise false.
+     * @private
+     */
     _loadMuted() {
         try {
         const val = localStorage.getItem(this.storageKey);
@@ -59,6 +69,12 @@ class AudioManager {
         return false;
         }
     }
+    
+    /**
+     * Saves current mute state to LocalStorage.
+     *
+     * @private
+     */
     _saveMuted() {
         try {
         localStorage.setItem(this.storageKey, String(this.isMuted));
@@ -67,7 +83,11 @@ class AudioManager {
         }
     }
 
-  // ---------- Mute ----------
+    /**
+     * Applies current mute state to all audio objects.
+     *
+     * @private
+     */
     _applyMute() {
         const muted = this.isMuted;
         this.audios.forEach(audio => {
@@ -78,12 +98,25 @@ class AudioManager {
         }
         });
     }
+    
+    /**
+     * Toggles between muted and unmuted.
+     *
+     * @returns {void}
+     */
     toggleMute() {
         this.isMuted = !this.isMuted;
         this._applyMute();
         this._saveMuted();
         this._syncMuteButtonUI();
     }
+
+    /**
+     * Sets the global mute state.
+     *
+     * @param {boolean} muted
+     *   If true: mute all sounds. If false: unmute.
+     */
     setMuted(muted) {
         this.isMuted = !!muted;
         this._applyMute();
@@ -91,13 +124,27 @@ class AudioManager {
         this._syncMuteButtonUI();
     }
 
-  // ---------- Playback ----------
+    /**
+     * Plays an audio track by name.
+     *
+     * @param {string} name
+     *   The key from the definitions object.
+     *
+     * @returns {void}
+     */
     play(name) {
         const audio = this.audios.get(name);
         if (!audio) return;
         if (!audio.loop) audio.currentTime = 0;
         audio.play().catch(() => {});
     }
+    
+    /**
+     * Stops an audio track by name and resets its position.
+     *
+     * @param {string} name
+     *   The track to stop.
+     */
     stop(name) {
         const audio = this.audios.get(name);
         if (!audio) return;
@@ -105,29 +152,47 @@ class AudioManager {
         audio.currentTime = 0;
     }
 
+    /**
+     * Stops all audio tracks and resets their positions.
+     */
     stopAll() {
         this.audios.forEach(audio => {
-          audio.pause();
-          audio.currentTime = 0;
+        audio.pause();
+        audio.currentTime = 0;
         });
-      }      
+    }      
 
+    /**
+     * Sets current mode used to determine menu/game background music logic.
+     *
+     * @param {'menu'|'game'} mode
+     */
     setMode(mode) {
         this.mode = mode === 'game' ? 'game' : 'menu';
     }
 
-  // ---------- Convenience ----------
+    /** Plays menu background music. */
     playMenuBgm() { this.play('bgmMenu'); }
+    /** Stops menu background music. */
     stopMenuBgm() { this.stop('bgmMenu'); }
+    /** Plays game background music. */
     playGameBgm() { this.play('bgmGame'); }
+    /** Stops game background music. */
     stopGameBgm() { this.stop('bgmGame'); }
-
+    /** Plays footstep sound effect. */
     playFootsteps() { this.play('footsteps'); }
+    /** Stops footstep sound effect. */
     stopFootsteps() { this.stop('footsteps'); }
+    /** Plays HP lost sound effect. */
     playHpLost()    { this.play('hpLost'); }
+    /** Plays enemy hit sound effect. */
     playEnemyHit()  { this.play('enemyHit'); }
 
-  // ---------- DOM-Ready & Wiring ----------
+    /**
+     * Delays DOM wiring until the document is ready.
+     *
+     * @private
+     */
     _initDomWhenReady() {
         const ready = document.readyState === 'interactive' || document.readyState === 'complete';
         if (ready) {
@@ -136,7 +201,14 @@ class AudioManager {
             document.addEventListener('DOMContentLoaded', () => this._wireDom(), { once: true });
         }
     }
-
+    
+    /**
+     * Attaches DOM event handlers:
+     * - click on mute button
+     * - keyboard shortcut for mute
+     *
+     * @private
+     */
     _wireDom() {
     const btn = typeof this.muteButtonRef === 'string'
         ? document.querySelector(this.muteButtonRef)
@@ -165,6 +237,14 @@ class AudioManager {
     }, false);
     }
 
+    /**
+     * Updates button UI to reflect mute state:
+     * - aria attributes
+     * - tooltip text
+     * - mute/unmute icon
+     *
+     * @private
+     */
     _syncMuteButtonUI() {
         if (!this.muteBtn) return;
 

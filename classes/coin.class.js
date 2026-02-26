@@ -1,4 +1,11 @@
+/**
+ * Represents a collectible coin placed at a random location.
+ * Extends CollectableObject.
+ */
 class Coin extends CollectableObject {
+    /**
+     * Creates a new Coin instance at random X/Y coordinates.
+     */
     constructor() {
         super();
         this.loadImage('./assets/img/8_coin/coin_1.png');
