@@ -263,6 +263,37 @@ collisionBottleWithEnemies() {
 
         this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
   }
+  
+  drawBackground() {
+      this.addObjectsToMap(this.level.backgroundObjects);
+      this.addObjectsToMap(this.level.clouds);
+  }
+
+  drawGameObjects() {
+      this.addObjectsToMap(this.throwableObjects);
+      this.addObjectsToMap(this.level.bottles);
+      this.addObjectsToMap(this.level.coins);
+      this.addObjectsToMap(this.level.enemies);
+      this.addToMap(this.character);
+      this.addToMap(this.level.endboss);
+  }
+
+  drawHUD() {
+      this.addToMap(this.healthStatusBar);
+      this.addToMap(this.coinStatusBar);
+      this.addToMap(this.bottleStatusBar);
+      if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
+  }
+
+  drawPauseOverlay() {
+      this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      const iconSize = 80;
+      this.ctx.drawImage(this.pauseIcon,
+          this.canvas.width/2 - iconSize/2,
+          this.canvas.height/2 - iconSize/2,
+          iconSize, iconSize);
+  }
 
   draw() {
     if (!gameStarted) return;
@@ -273,21 +304,12 @@ collisionBottleWithEnemies() {
     this.ctx.save();
     this.ctx.translate(this.camera_x, 0);
 
-    this.addObjectsToMap(this.level.backgroundObjects);
-    this.addObjectsToMap(this.level.clouds);
-    this.addObjectsToMap(this.throwableObjects);
-    this.addObjectsToMap(this.level.bottles);
-    this.addObjectsToMap(this.level.coins);
-    this.addObjectsToMap(this.level.enemies);
-    this.addToMap(this.character);
-    this.addToMap(this.level.endboss);
-
+    this.drawBackground();
+    this.drawGameObjects();
     this.ctx.restore();
 
-    this.addToMap(this.healthStatusBar);
-    this.addToMap(this.coinStatusBar);
-    this.addToMap(this.bottleStatusBar);
-    if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
+    this.drawHUD();
+    if (gamePaused) this.drawPauseOverlay();
 
     if (!gamePaused && !window.gameEnding) {
         this.character.update();
@@ -296,20 +318,6 @@ collisionBottleWithEnemies() {
         this.checkThrowObjects();
         this.checkEndbossStatusBar();
         this.checkGameOver();
-    }
-
-    if (gamePaused) {
-        this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        const iconSize = 80;
-        this.ctx.drawImage(
-            this.pauseIcon,
-            this.canvas.width / 2 - iconSize / 2,
-            this.canvas.height / 2 - iconSize / 2,
-            iconSize,
-            iconSize
-        );
     }
 
     requestAnimationFrame(() => this.draw());
