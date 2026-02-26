@@ -21,20 +21,24 @@ class MovableObject extends DrawableObject {
     this.img = this.imageCache[imagePath];
     this.currentImageIndex++;
   }
-
   
-  playDeadAnimation(imagesDeadArray, removeCallback) {
-      this.speed = 0; 
+  startDeathAnimation(images) {
+      this.speed = 0;
       this.currentImageIndex = 0;
-      let interval = setInterval(() => {
-        if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
-        this.playAnimation(imagesDeadArray);
-      }, 1000 / 10);
+      return setInterval(() => {
+          if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
+          this.playAnimation(images);
+      }, 100);
+  }
 
-      setTimeout(() => {
-          clearInterval(interval);
-          if (removeCallback) removeCallback();
-      }, 500);
+  finishDeathAnimation(interval, removeCallback) {
+      clearInterval(interval);
+      if (removeCallback) removeCallback();
+  }
+
+  playDeadAnimation(imagesDeadArray, removeCallback) {
+    const interval = this.startDeathAnimation(imagesDeadArray);
+    setTimeout(() => this.finishDeathAnimation(interval, removeCallback), 500);
   }
 
 
@@ -74,30 +78,38 @@ class MovableObject extends DrawableObject {
     this.x -= this.speed;
   }
 
+  shouldTurnLeft() {
+      return !this.otherDirection && this.x <= this.leftBoundary;
+  }
+
+  shouldTurnRight() {
+      return this.otherDirection && this.x >= this.rightBoundary;
+  }
+
+  applyWalkingDirection() {
+      this.otherDirection ? this.moveRight() : this.moveLeft();
+  }
+
   walkBetweenBoundaries() {
-    if (!this.otherDirection && this.x <= this.leftBoundary) {
-      this.otherDirection = true;
-    }
-  
-    if (this.otherDirection && this.x >= this.rightBoundary) {
-      this.otherDirection = false;
-    }
-  
-    if (this.otherDirection) {
-      this.moveRight();
-    } else {
-      this.moveLeft();
-    }
+    if (this.shouldTurnLeft()) this.otherDirection = true;
+    if (this.shouldTurnRight()) this.otherDirection = false;
+    this.applyWalkingDirection();
+  }
+
+  applyVerticalMovement() {
+      this.y -= this.speedY;
+      this.speedY -= this.acceleration;
+  }
+
+  shouldApplyGravity() {
+      return this.checkAboveGround() || this.speedY > 0;
   }
 
   applyGravity() {
     this.gravityInterval = setInterval(() => {
-      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
-      if (this.checkAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
-    }, 1000 / 25);
+        if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
+        if (this.shouldApplyGravity()) this.applyVerticalMovement();
+    }, 40);
   }
 
   stopGravity() {

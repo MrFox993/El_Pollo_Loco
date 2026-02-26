@@ -56,6 +56,17 @@ class Character extends MovableObject {
     "./assets/img/2_character_pepe/4_hurt/H-42.png",
     "./assets/img/2_character_pepe/4_hurt/H-43.png",
   ]  
+  
+  STATES = {
+    IDLE: 'idle',
+    LONG_IDLE: 'long_idle',
+    WALK: 'walk',
+    JUMP: 'jump',
+    HURT: 'hurt',
+    DEAD: 'dead'
+  };
+
+  currentState = 'idle';
 
   world;
   speed = 10;
@@ -78,7 +89,7 @@ class Character extends MovableObject {
     this.height = 300;
     this.bottles = 0;
     this.coins = 0;
-    this.loadImage("./assets/img/2_character_pepe/1_idle/idle/I-1.png");
+    this.loadImage(this.imagesIdle[0]);
     this.loadImages(this.imagesIdle);
     this.loadImages(this.imagesLongIdle);
     this.loadImages(this.imagesWalking);
@@ -86,6 +97,29 @@ class Character extends MovableObject {
     this.loadImages(this.imagesDead);
     this.loadImages(this.imagesHurt);
     this.applyGravity();
+  }
+
+  setState(state) {
+    this.currentState = state;
+  }
+  
+  updateStateFlags() {
+    if (this.isDead()) return this.setState(this.STATES.DEAD);
+    if (this.isHurt()) return this.setState(this.STATES.HURT);
+    if (this.checkAboveGround()) return this.setState(this.STATES.JUMP);
+    if (this.isLongIdling) return this.setState(this.STATES.LONG_IDLE);
+    if (this.world.keyboard.right || this.world.keyboard.left)
+      return this.setState(this.STATES.WALK);
+    this.setState(this.STATES.IDLE);
+  }
+  
+  getAnimationForState() {
+    if (this.isDead()) return this.imagesDead;
+    if (this.isHurt()) return this.imagesHurt;
+    if (this.checkAboveGround()) return this.imagesJumping;
+    if (this.world.keyboard.right || this.world.keyboard.left) return this.imagesWalking;
+    if (this.isLongIdling) return this.imagesLongIdle;
+    return this.imagesIdle;
   }
 
   resetIdleTimer() {
@@ -98,39 +132,21 @@ class Character extends MovableObject {
   animate() {    
     if (this.animationInterval) return; 
     if (!window.gameStarted || window.gameOver) return;
+
     this.animationInterval = setInterval(() => {
       if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
 
-      if (this.isDead()) {
-        this.isLongIdling = false;
-        this.playAnimation(this.imagesDead);
-      } else if (this.isHurt()){
-        this.isLongIdling = false;
-        this.playAnimation(this.imagesHurt);
-        window.audioManager.play('hpLost');
-      } else if (this.checkAboveGround()) {
-        this.isLongIdling = false;
-        this.playAnimation(this.imagesJumping);
-      } else if (this.world.keyboard.right || this.world.keyboard.left) {
-        this.isLongIdling = false;
-        this.playAnimation(this.imagesWalking);
-      } else {
-        const idleDurationMs = Date.now() - this.lastActiveAt;
-        if (idleDurationMs >= this.longIdleThresholdMs) {
-            this.isLongIdling = true;
-            this.playAnimation(this.imagesLongIdle);
-            if (!this.isSnoringPlaying) {
-                window.audioManager.play('snoring');
-                this.isSnoringPlaying = true;
-              }
-    }else {
-          this.isLongIdling = false;
-          this.playAnimation(this.imagesIdle);
-          if (this.isSnoringPlaying) {
-              window.audioManager.stop('snoring');
-              this.isSnoringPlaying = false;
-            }
-        }
+      const animation = this.getAnimationForState();
+      this.playAnimation(animation);
+
+      if (this.isSnoringPlaying && !this.isLongIdling) {
+        window.audioManager.stop('snoring');
+        this.isSnoringPlaying = false;
+      }
+
+      if (this.isLongIdling && !this.isSnoringPlaying) {
+        window.audioManager.play('snoring');
+        this.isSnoringPlaying = true;
       }
     }, 100);
   }
@@ -145,25 +161,36 @@ class Character extends MovableObject {
     this.isSnoringPlaying = false;
   }  
 
+  updateIdleTimer(didAction) {
+    if (didAction) {
+      this.isLongIdling = false;
+      this.lastActiveAt = Date.now();
+      return;
+    }
+    const idleMs = Date.now() - this.lastActiveAt;
+    this.isLongIdling = idleMs >= this.longIdleThresholdMs;
+  }
+
   update() {
     let didAction = false;
-  
+
     if (this.world.keyboard.right && this.x <= this.world.level.level_end_x) {
       this.otherDirection = false;
       this.moveRight();
       didAction = true;
-    } 
-    else if (this.world.keyboard.left && this.x >= 0) {
+    }
+
+    if (this.world.keyboard.left && this.x >= 0) {
       this.otherDirection = true;
       this.moveLeft();
       didAction = true;
     }
-  
+
     if ((this.world.keyboard.up || this.world.keyboard.space) && !this.checkAboveGround()) {
       this.jump();
       didAction = true;
     }
-  
-    if (didAction) this.resetIdleTimer();
+
+    this.updateIdleTimer(didAction);
   }  
 }

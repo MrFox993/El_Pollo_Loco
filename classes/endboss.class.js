@@ -35,6 +35,17 @@ class Endboss extends MovableObject {
     "./assets/img/4_enemie_boss_chicken/5_dead/G25.png",
     "./assets/img/4_enemie_boss_chicken/5_dead/G26.png"
   ]
+  
+  STATES = {
+    ALERT: 'alert',
+    WALK: 'walk',
+    PREPARE: 'prepare',
+    ATTACK: 'attack',
+    HURT: 'hurt',
+    DEAD: 'dead'
+  };
+
+  currentState = 'alert';
 
   hp = 100;
   otherDirection = false;
@@ -53,96 +64,84 @@ class Endboss extends MovableObject {
 
   constructor() {
     super();
+    this.initImages();
+    this.initStats();
+    this.x = 2500;
+    this.y = 100;
+    this.width = 360;
+    this.height = 360;
+    this.speed = 0.5 + Math.random() * 0.5;
+    this.leftBoundary = 0;
+    this.rightBoundary = this.world?.level?.level_end_x - this.width;
+    this.turnAroundOffset = 5;
+    this.applyGravity();
+  }
+  
+  initImages() {
     this.loadImage(this.imagesAlert[0]);
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imagesAlert);
     this.loadImages(this.imagesAttack);
     this.loadImages(this.imagesHurt);
     this.loadImages(this.imagesDead);
-    this.x = 2500;
-    this.y = 100;
-    this.width = 360;
-    this.height = 360;
-    this.speed = 0.5 + Math.random() * 0.5;
+  }
+
+  initStats() {
+    this.hp = 100;
+    this.hitCount = 0;
     this.damageCooldownMs = 600;
     this.defaultHitDamage = 34;
-    this.leftBoundary = 0;
-    this.rightBoundary = this.world?.level?.level_end_x - this.width; 
-    this.turnAroundOffset = 5;
-    this.applyGravity();
+  }
+
+  
+  setState(newState) {
+    this.currentState = newState;
+  }
+  
+  selectAnimation() {
+    if (this.isDead()) return this.imagesDead;
+    if (this.isHurt()) return this.imagesHurt;
+    if (this.isPreparingAttack) return this.imagesAlert;
+    if (this.isAttacking) return this.imagesAttack;
+    return this.hitCount >= 1 ? this.imagesWalking : this.imagesAlert;
   }
 
   startAnimation() {
-    if (this.animationInterval || this.moveInterval) return;
-    if (!window.gameStarted || window.gameOver) return;
-    this.animationInterval = setInterval(() => {
-      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
-      if (this.isDead()) {
-        this.playAnimation(this.imagesDead);
-      } else if (this.isHurt()) {
-        this.playAnimation(this.imagesHurt);
-      } else if (this.isPreparingAttack) {
-        this.playAnimation(this.imagesAlert);
-      } else if (this.isAttacking) {
-        this.playAnimation(this.imagesAttack);
-      } else {
-        if (this.hitCount >= 1) {
-          this.playAnimation(this.imagesWalking);
-        }else {
-        this.playAnimation(this.imagesAlert);
-        }
-      }
-    }, 200);
-    this.moveInterval = setInterval(() => {
-      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
-      if (this.isDead() || this.isHurt()) {
-        this.stopWalkingSound();
-        return;
-      }
-    
-      if (this.hitCount < 1) {
-        this.stopWalkingSound();
-        return;
-      }
-    
-      if (this.isPreparingAttack) {
-        this.stopWalkingSound();
-        return;
-      }
-    
-      if (!this.isAttacking && this.canAttack()) {
-        this.prepareAttack();
-        return;
-      }
-    
-      if (this.isAttacking) {
-        if (this.otherDirection) {
-          this.x += this.attackSpeedX;
-        } else {
-          this.x -= this.attackSpeedX;
-        }
-    
-        if (!this.checkAboveGround()) {
-          this.finishAttack();
-        }
-        return;
-      }
+  if (this.animationInterval || this.moveInterval) return;
+  if (!window.gameStarted || window.gameOver) return;
+  this.animationInterval = setInterval(() => {
+    if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
+    this.playAnimation(this.selectAnimation());
+  }, 200);
 
-      if (!this.isAttacking && !this.isPreparingAttack) {
-        this.walkBetweenBoundaries();
-        this.startWalkingSound();
-      }
-      
-    }, 1000 / 60);
-    
-    
+  this.moveInterval = setInterval(() => {
+    if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
+    if (this.isDead() || this.isHurt()) return this.handleDeadState() || this.handleHurtState();
+    if (this.canAttack() && !this.isAttacking && !this.isPreparingAttack)
+        return this.prepareAttack();
+    this.handleAttackMovement();
+    if (!this.isAttacking) this.handleWalking();
+    }, 1000/60);
+  }
+  
+  handleWalking() {
+    if (this.hitCount < 1 || this.isPreparingAttack) {
+      this.stopWalkingSound();
+      return;
+    }
+    this.walkBetweenBoundaries();
+    this.startWalkingSound();
+  }
+
+  handleAttackMovement() {
+    if (!this.isAttacking) return;
+    const dir = this.otherDirection ? 1 : -1;
+    this.x += this.attackSpeedX * dir;
+    if (!this.checkAboveGround()) this.finishAttack();
   }
 
   startWalkingSound() {
-    if (!this.isWalkingSoundPlaying) {
-        window.audioManager.play('endbossWalking');
-        this.isWalkingSoundPlaying = true;
-    }
+    this.ensureWalkingSound();
   }
 
   stopWalkingSound() {
@@ -151,24 +150,53 @@ class Endboss extends MovableObject {
         this.isWalkingSoundPlaying = false;
     }
   }
+  
+  ensureWalkingSound() {
+    this.ensureWalkingSoundStopped();
+  }
+
+  ensureWalkingSoundStopped() {
+    if (this.isWalkingSoundPlaying) {
+      window.audioManager.stop('endbossWalking');
+      this.isWalkingSoundPlaying = false;
+    }
+  }
+  
+  handleHurtState() {
+    if (this.isHurt()) this.stopWalkingSound();
+  }
+
+  handleDeadState() {
+    if (this.isDead()) this.stopWalkingSound();
+  }
 
   canAttack() {
     return Date.now() > this.nextAttackTime;
   }
 
+  computeAttackCooldown() {
+    return this.attackCooldownMin +
+      Math.random() * (this.attackCooldownMax - this.attackCooldownMin);
+  }
+
+  setNextAttackTime() {
+    this.nextAttackTime = Date.now() + this.computeAttackCooldown();
+  }
+
+  applyAttackJump() {
+    this.speedY = this.jumpAttackForce;
+  }
+
+  computeAttackSpeedX() {
+    this.attackSpeedX = this.speed * (2.5 + Math.random());
+  }
+
   startAttack() {
     this.isAttacking = true;
     this.lastAttackTime = Date.now();
-  
-    const cooldown =
-      this.attackCooldownMin +
-      Math.random() * (this.attackCooldownMax - this.attackCooldownMin);
-  
-    this.nextAttackTime = Date.now() + cooldown;
-  
-    this.speedY = this.jumpAttackForce;
-  
-    this.attackSpeedX = this.speed * (2.5 + Math.random());
+    this.setNextAttackTime();
+    this.applyAttackJump();
+    this.computeAttackSpeedX();
   } 
 
   finishAttack() {
@@ -181,13 +209,12 @@ class Endboss extends MovableObject {
   prepareAttack() {
     this.isPreparingAttack = true;
     this.stopWalkingSound();
-  
     this.attackSpeedX = 0;
-  
     setTimeout(() => {
-      if (this.isDead()) return;
-      this.isPreparingAttack = false;
-      this.startAttack();
+      if (!this.isDead()) {
+        this.isPreparingAttack = false;
+        this.startAttack();
+      }
     }, this.prepareDuration);
   }
   

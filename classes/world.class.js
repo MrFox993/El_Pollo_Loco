@@ -50,40 +50,42 @@ class World {
     clearInterval(this.intervalId)
   }
 
-checkGameOver() {
+  checkGameOver() {
     if (this.character.isDead()) {
       this.endGame("lost");
     } else if (this.level.endboss && this.level.endboss.isDead()) {
       this.endGame("won");
     }
-}
+  }
 
-endGame(result) {
-  window.gameEnding = true;
+  playEndSound(result) {
+    window.audioManager.stopAll();
+    window.audioManager.play(result === 'won' ? 'youWin':'gameOver');
+  }
 
-  window.audioManager.stopAll();
-  window.audioManager.play(result === 'won' ? 'youWin' : 'gameOver');
+  computeEndDelay(result) {
+    const charAnim = (this.character?.imagesDead?.length||0)*100;
+    const bossAnim = (this.level.endboss?.imagesDead?.length||0)*200;
+    const buffer = 400;
+    return result==='lost' ? charAnim+buffer : bossAnim+buffer;
+  }
 
-  const charAnimMs = (this.character?.imagesDead?.length || 0) * 100; 
-  const bossAnimMs = (this.level.endboss?.imagesDead?.length || 0) * 200;
-  const buffer = 400;
-  
-  const delay = result === 'lost' ? (charAnimMs + buffer) : (bossAnimMs + buffer || 1200);
+  showEndScreen(result) {
+    window.gameStarted = false;
+    window.gameEnding = false;
+    window.gameOver = true;
+    window.MobileUI.applyUIState();
+    toggleScreen('.canvas-screen','hide');
+    toggleScreen(result==='won'?'youWonScreen':'youLostScreen','show');
+    if (result==='won') window.updateNextLevelButtonState?.();
+  }
 
-
-  setTimeout(() => {
-      window.gameStarted = false;
-      window.gameEnding = false;
-      window.gameOver = true;
-
-      window.MobileUI.applyUIState();
-      toggleScreen('canvas-screen', 'hide');
-      toggleScreen(result === 'won' ? 'youWonScreen' : 'youLostScreen', 'show');
-      if (result === 'won') {
-        window.updateNextLevelButtonState?.();
-      }
-  }, delay);
-}
+  endGame(result) {
+    window.gameEnding = true;
+    this.playEndSound(result);
+    const delay = this.computeEndDelay(result);
+    setTimeout(() => this.showEndScreen(result), delay);
+  }
 
   checkCollisions() {
     this.collisionWithEnemy();
@@ -95,6 +97,27 @@ endGame(result) {
   
     this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
 
+  }
+
+  isEnemyValid(enemy) {
+      return !(enemy.isDead && enemy.isDead());
+  }
+
+  killEnemy(enemy, index) {
+      const deadImages = enemy.imagesSmallChickenDead || enemy.imagesDead || enemy.imagesDying;
+      enemy.playDeadAnimation(deadImages, ()=> {
+          const idx = this.level.enemies.indexOf(enemy);
+          if (idx >= 0) this.level.enemies.splice(idx,1);
+      });
+  }
+
+  handleBottleHit(bottle, enemy) {
+      this.killEnemy(enemy);
+      if (!bottle.hasSfxPlayed) {
+          window.audioManager.play('bottleShatter');
+          bottle.hasSfxPlayed = true;
+      }
+      bottle.playSplashAnimation();
   }
 
   collisionWithEnemy() {
@@ -170,41 +193,15 @@ endGame(result) {
   }
 
 collisionBottleWithEnemies() {
-  if (!this.throwableObjects.length || !Array.isArray(this.level.enemies)) return;
-
-  for (let b = 0; b < this.throwableObjects.length; b++) {
-    const bottle = this.throwableObjects[b];
-    if (bottle.markForRemoval || bottle.hasSplashed) continue;
-
-    for (let e = 0; e < this.level.enemies.length; e++) {
-      const enemy = this.level.enemies[e];
-
-      if (enemy.isDead && enemy.isDead()) continue;
-
-      if (bottle.isColliding(enemy)) {
-        if (typeof enemy.playDeadAnimation === 'function') {
-          const deadImages =
-            enemy.imagesSmallChickenDead || enemy.imagesDead || enemy.imagesDying;
-
-          enemy.playDeadAnimation(deadImages, () => {
-            const idx = this.level.enemies.indexOf(enemy);
-            if (idx >= 0) this.level.enemies.splice(idx, 1);
-          });
-        } else {
-          enemy.hp = 0;
-          this.level.enemies.splice(e, 1);
-        }
-        if (!bottle.hasSfxPlayed) {
-          window.audioManager.play('bottleShatter');
-          bottle.hasSfxPlayed = true;
-        }
-        bottle.playSplashAnimation();
-        break;
-      }
-    }
-  }
-
-  this.throwableObjects = this.throwableObjects.filter(b => !b.markForRemoval);
+  if (!this.throwableObjects.length) return;
+    this.throwableObjects.forEach(bottle=>{
+        if (bottle.markForRemoval || bottle.hasSplashed) return;
+        this.level.enemies.forEach(enemy=>{
+            if (!this.isEnemyValid(enemy)) return;
+            if (bottle.isColliding(enemy)) this.handleBottleHit(bottle, enemy);
+        });
+    });
+    this.throwableObjects = this.throwableObjects.filter(b=>!b.markForRemoval);
 }
 
 
@@ -263,6 +260,37 @@ collisionBottleWithEnemies() {
 
         this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
   }
+  
+  drawBackground() {
+      this.addObjectsToMap(this.level.backgroundObjects);
+      this.addObjectsToMap(this.level.clouds);
+  }
+
+  drawGameObjects() {
+      this.addObjectsToMap(this.throwableObjects);
+      this.addObjectsToMap(this.level.bottles);
+      this.addObjectsToMap(this.level.coins);
+      this.addObjectsToMap(this.level.enemies);
+      this.addToMap(this.character);
+      this.addToMap(this.level.endboss);
+  }
+
+  drawHUD() {
+      this.addToMap(this.healthStatusBar);
+      this.addToMap(this.coinStatusBar);
+      this.addToMap(this.bottleStatusBar);
+      if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
+  }
+
+  drawPauseOverlay() {
+      this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      const iconSize = 80;
+      this.ctx.drawImage(this.pauseIcon,
+          this.canvas.width/2 - iconSize/2,
+          this.canvas.height/2 - iconSize/2,
+          iconSize, iconSize);
+  }
 
   draw() {
     if (!gameStarted) return;
@@ -273,21 +301,12 @@ collisionBottleWithEnemies() {
     this.ctx.save();
     this.ctx.translate(this.camera_x, 0);
 
-    this.addObjectsToMap(this.level.backgroundObjects);
-    this.addObjectsToMap(this.level.clouds);
-    this.addObjectsToMap(this.throwableObjects);
-    this.addObjectsToMap(this.level.bottles);
-    this.addObjectsToMap(this.level.coins);
-    this.addObjectsToMap(this.level.enemies);
-    this.addToMap(this.character);
-    this.addToMap(this.level.endboss);
-
+    this.drawBackground();
+    this.drawGameObjects();
     this.ctx.restore();
 
-    this.addToMap(this.healthStatusBar);
-    this.addToMap(this.coinStatusBar);
-    this.addToMap(this.bottleStatusBar);
-    if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
+    this.drawHUD();
+    if (gamePaused) this.drawPauseOverlay();
 
     if (!gamePaused && !window.gameEnding) {
         this.character.update();
@@ -296,20 +315,6 @@ collisionBottleWithEnemies() {
         this.checkThrowObjects();
         this.checkEndbossStatusBar();
         this.checkGameOver();
-    }
-
-    if (gamePaused) {
-        this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        const iconSize = 80;
-        this.ctx.drawImage(
-            this.pauseIcon,
-            this.canvas.width / 2 - iconSize / 2,
-            this.canvas.height / 2 - iconSize / 2,
-            iconSize,
-            iconSize
-        );
     }
 
     requestAnimationFrame(() => this.draw());
@@ -346,31 +351,23 @@ collisionBottleWithEnemies() {
   flipImageBack() {
     this.ctx.restore();
   }
+  
+  calculateDesiredCameraX() {
+      const center = this.canvas.width/2;
+      const dir = this.character.otherDirection ? -1 : 1;
+      return -this.character.x + center - this.character.width/2 - dir*240;
+  }
+
+  clampCamera(x) {
+      const minX = -(this.level.level_end_x - this.canvas.width);
+      return Math.max(minX, Math.min(0, x));
+  }
 
   updateCamera() {
-    const canvasCenter = this.canvas.width / 2;
-  
-    const LOOK_AHEAD = 240;
-    const LERP_MOVE = 0.08;
-    const LERP_IDLE = 0.05;
-  
-    const isMoving = this.keyboard.left || this.keyboard.right;
-    const direction = this.character.otherDirection ? -1 : 1;
-  
-    const desiredX =
-      -this.character.x +
-      canvasCenter -
-      this.character.width / 2 -
-      direction * LOOK_AHEAD;
-  
-    this.camera_x += (desiredX - this.camera_x) *
-      (isMoving ? LERP_MOVE : LERP_IDLE);
-  
-    const minX = -(this.level.level_end_x - this.canvas.width);
-    const maxX = 0;
-  
-    this.camera_x = Math.max(minX, Math.min(maxX, this.camera_x));
-  }  
-  
+    const desired = this.calculateDesiredCameraX();
+    const lerp = (this.keyboard.left||this.keyboard.right) ? 0.08 : 0.05;
+    this.camera_x += (desired - this.camera_x)*lerp;
+    this.camera_x = this.clampCamera(this.camera_x);
+  }
 }
 

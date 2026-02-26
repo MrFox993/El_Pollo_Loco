@@ -14,45 +14,48 @@ function hasNextLevel() {
     return window.currentLevelIndex + 1 < window.LEVELS.length;
 }
 
-function startLevel(index) {
-    if (world) {
-        world.stop();
-        world = null;
-    }
+function stopWorld() {
+    if (!world) return;
+    world.stop();
+    world = null
+}
 
+function resetGameState() {
     window.gameStarted = true;
     window.gameOver = false;
     window.gamePaused = false;
+}
 
-    toggleScreen('menuScreen', 'hide');
-    toggleScreen('controlScreen', 'hide');
-    toggleScreen('youWonScreen', 'hide');
-    toggleScreen('youLostScreen', 'hide');
-    toggleScreen('.canvas-screen', 'show');
+function hideAllScreens() {
+    ['menuScreen','controlScreen','youWonScreen','youLostScreen'].forEach(id => hideScreen(id));
+}
 
-    const createLevelFn = window.LEVELS[index];
-    if (!createLevelFn) {
-        console.warn('No level for index:', index);
-        return;
-    }
-
-    const newLevel = createLevelFn();
+function initializeWorld(level) {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
-    world.level = newLevel;
+    world.level = level;
     world.startWorld();
+}
 
-    if (window.MobileUI) {
-        window.MobileUI.bindMobileControls?.(keyboard);
-        window.MobileUI.applyUIState?.();
-    }
+function initializeAudioGameMode() {
+    if (!window.audioManager) return;
+    audioManager.setMode('game');
+    audioManager.stopMenuBgm();
+    audioManager.playGameBgm();
+}
 
-    if (window.audioManager) {
-        audioManager.setMode('game');
-        audioManager.stopMenuBgm();
-        audioManager.playGameBgm();
-    }
+function startLevel(index) {
+    stopWorld();
+    resetGameState();
+    hideAllScreens();
+    showScreen('.canvas-screen');
 
+    const levelFactory = window.LEVELS[index];
+    if (!levelFactory) return
+
+    initializeWorld(levelFactory());
+    initializeAudioGameMode();
+    window.MobileUI?.applyUIState?.();
     updateNextLevelButtonState(); 
 }
 
@@ -80,104 +83,82 @@ function updateNextLevelButtonState() {
     }
 }
 
-function toggleScreen(screenIdOrClass, action) {
-    let element = screenIdOrClass.startsWith('.') 
-        ? document.querySelector(screenIdOrClass) 
-        : document.getElementById(screenIdOrClass);
+function toggleScreen(selector, action) {
+    action === 'show' ? showScreen(selector) : hideScreen(selector);
+}
 
-    if (!element) return;
+function getScreen(selector) {
+    return selector.startsWith('.') ? document.querySelector(selector) : document.getElementById(selector);
+}
 
-    if (action === 'show') {
-        element.classList.add('show-screen');
-        element.classList.remove('hide-screen');
-    } else if (action === 'hide') {
-        element.classList.add('hide-screen');
-        element.classList.remove('show-screen');
-    }
+function showScreen(selector) {
+    const element = getScreen(selector);
+    element?.classList.add('show-screen');
+    element?.classList.remove('hide-screen')
+}
+
+function hideScreen(selector) {
+    const element = getScreen(selector);
+    element?.classList.add('hide-screen');
+    element?.classList.remove('show-screen')
 }
 
 function goToMainMenu() { 
-    if (world) {
-        world.stop();
-        world = null;
-    }
-    
-    if (window.audioManager) {
-        audioManager.setMode('menu');
-        audioManager.stopGameBgm();
-        audioManager.playMenuBgm();
-    }
-
-    window.gameStarted = false;
-    window.gameOver = false;
-    toggleScreen('youWonScreen', 'hide');
-    toggleScreen('youLostScreen', 'hide');
-    toggleScreen('.canvas-screen', 'hide');
-    toggleScreen('menuScreen', 'show');
-
-    const btn = document.getElementById('nextLevelBtn');
-    if (btn) btn.setAttribute('disabled', 'disabled');
-
-    if (window.MobileUI) {
-        window.MobileUI.applyUIState();
-    }
+    stopWorld();
+    initMenuAudio();
+    resetMenuState();
+    showScreen('menuScreen')
+    window.MobileUI?.applyUIState();
 }
 
-    function pauseGame() {
-        if (!gameStarted || gamePaused) return;
-        window.gamePaused = true;
-        window.audioManager?.pauseAll?.();
-    }
+function initMenuAudio() {
+    if (!window.audioManager) return;
+    audioManager.setMode('menu');
+    audioManager.stopGameBgm();
+    audioManager.playMenuBgm();
+}
 
-    function resumeGame() {
-        if (!gamePaused) return;
-        window.gamePaused = false;
-        window.audioManager?.resumeAll?.();
-    }
+function resetMenuState() {
+    window.gameStarted = false;
+    window.gameOver = false;
+    ['youWonScreen','youLostScreen','.canvas-screen'].forEach(hideScreen);
+    document.getElementById('nextLevelBtn')?.setAttribute('disabled','disabled');
+}
 
-window.addEventListener('keydown', (event) => {
-    if (event.keyCode === 65 || event.keyCode === 37) {
-        keyboard.left = true;
-    }
-    if (event.keyCode === 87 || event.keyCode === 38) {
-        keyboard.up = true;
-    }
-    if (event.keyCode === 68 || event.keyCode === 39) {
-        keyboard.right = true;
-    }
-    if (event.keyCode === 83 || event.keyCode === 40) {
-        keyboard.down = true;
-    }
-    if (event.keyCode === 32) {
-        keyboard.space = true;
-    }
-    if (event.keyCode === 67) {
-        keyboard.c = true;
-    }
-    if (event.keyCode === 80) {
-        window.gamePaused ? window.resumeGame() : window.pauseGame();
-    }
-});
+function pauseGame() {
+    if (!gameStarted || gamePaused) return;
+    window.gamePaused = true;
+    window.audioManager?.pauseAll?.();
+}
 
-window.addEventListener('keyup', (event) => {
-    if (event.keyCode === 65 || event.keyCode === 37) {
-        keyboard.left = false;
-    }
-    if (event.keyCode === 87 || event.keyCode === 38) {
-        keyboard.up = false;
-    }
-    if (event.keyCode === 68 || event.keyCode === 39) {
-        keyboard.right = false;
-    }
-    if (event.keyCode === 83 || event.keyCode === 40) {
-        keyboard.down = false;
-    }
-    if (event.keyCode === 32) {
-        keyboard.space = false;
-    }
-    if (event.keyCode === 67) {
-        keyboard.c = false;
-    }
+function resumeGame() {
+    if (!gamePaused) return;
+    window.gamePaused = false;
+    window.audioManager?.resumeAll?.();
+}
+
+const keyMapDown = {
+    65:'left',
+    37:'left',
+    87:'up',
+    38:'up',
+    68:'right',
+    39:'right',
+    83:'down',
+    40:'down',
+    32:'space',
+    67:'c'
+}
+
+window.addEventListener('keydown', e => {
+    const key = keyMapDown[e.keyCode];
+    if (key) keyboard[key] = true;
+    if (e.keyCode === 80) window.gamePaused ? resumeGame() : pauseGame();
+})
+
+window.addEventListener('keyup', e => {
+    const key = keyMapDown[e.keyCode];
+    if (key) keyboard[key] = false;
 });
 
 window.pauseGame = pauseGame;

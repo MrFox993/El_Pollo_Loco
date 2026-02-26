@@ -18,33 +18,42 @@
 
     let keyboardUsed = false;
     window.addEventListener('keydown', () => keyboardUsed = true);
-
-    function applyUIState() {
+    
+    function computeUIFlags() {
         const mobile = isMobileOrEmulated();
         const landscape = isLandscape();
-        const gameStarted = Boolean(window.gameStarted);
-        const gameOver = Boolean(window.gameOver);
-      
-        const showMobile = mobile && !keyboardUsed && landscape && gameStarted;
-        const showRotate = mobile && !landscape;
-        const hideMobile = mobile && landscape && gameOver;
-      
-        mobileControls.style.display = showMobile ? 'flex' : 'none';
-        rotateOverlay.style.display  = showRotate ? 'flex' : 'none';
-        mobileControls.style.display = hideMobile ? 'none' : mobileControls.style.display;
-      
-        mobileControls.setAttribute('aria-hidden', String(!showMobile));
-        rotateOverlay.setAttribute('aria-hidden', String(!showRotate));
-      
-        canvasScreen.classList.toggle('blocked', showRotate);
-      
-        if (showRotate && gameStarted) {
-          window.pauseGame?.();
-        } else if (!showRotate && gameStarted) {
-          window.resumeGame?.();
-        }
-      }
-      
+        return {
+            showMobile: mobile && !keyboardUsed && landscape && window.gameStarted,
+            showRotate: mobile && !landscape,
+            hideMobile: mobile && landscape && window.gameOver
+        };
+    }
+
+    function updateMobileVisibility(flags) {
+        mobileControls.style.display = flags.showMobile ? 'flex' : 'none';
+        if (flags.hideMobile) mobileControls.style.display = 'none';
+        mobileControls.setAttribute('aria-hidden', String(!flags.showMobile));
+    }
+
+    function updateRotateOverlay(flags) {
+        rotateOverlay.style.display = flags.showRotate ? 'flex' : 'none';
+        rotateOverlay.setAttribute('aria-hidden', String(!flags.showRotate));
+        canvasScreen.classList.toggle('blocked', flags.showRotate);
+    }
+
+    function updatePauseState(flags) {
+        if (!window.gameStarted) return;
+        if (flags.showRotate) window.pauseGame?.();
+        else window.resumeGame?.();
+    }
+
+
+    function applyUIState() {
+        const flags = computeUIFlags();
+        updateMobileVisibility(flags);
+        updateRotateOverlay(flags);
+        updatePauseState(flags);
+    }
 
     window.addEventListener('resize', applyUIState);
     if (window.screen && window.screen.orientation) {
@@ -55,49 +64,54 @@
     ['contextmenu'].forEach(evt => {
         mobileControls.addEventListener(evt, e => e.preventDefault(), { passive: false });
     });
-
-    const pauseBtn = document.querySelector('#btnPause');
-    if (pauseBtn) {
-        pauseBtn.addEventListener('pointerdown', (e) => {
+    
+    function setupPauseButton() {
+        const pauseBtn = document.querySelector('#btnPause');
+        if (!pauseBtn) return;
+        pauseBtn.addEventListener('pointerdown', e => {
             e.preventDefault();
             window.gamePaused ? window.resumeGame() : window.pauseGame();
             pauseBtn.classList.add('pressed');
         });
-        pauseBtn.addEventListener('pointerup', (e) => {
+        pauseBtn.addEventListener('pointerup', e => {
             e.preventDefault();
             pauseBtn.classList.remove('pressed');
         });
     }
-
-    function bindMobileControls(keyboard) {
-        const bindings = [
-        { sel: '#btnLeft',  key: 'left'  },
-        { sel: '#btnRight', key: 'right' },
-        { sel: '#btnJump',  key: 'up'    },
-        { sel: '#btnThrow', key: 'c' },
-        ];
-
-    bindings.forEach(({ sel, key }) => {
-        const el = document.querySelector(sel);
-        if (!el) return;
-
-        const down = (e) => {
+    
+    function createPointerHandlers(el, key, keyboard) {
+        const press = e => {
             e.preventDefault();
-            e.stopPropagation();
-            if (keyboard[key] !== undefined) keyboard[key] = true;
+            keyboard[key] = true;
             el.classList.add('pressed');
         };
-        const up = (e) => {
+        const release = e => {
             e.preventDefault();
-            e.stopPropagation();
-            if (keyboard[key] !== undefined) keyboard[key] = false;
+            keyboard[key] = false;
             el.classList.remove('pressed');
         };
+        return { press, release };
+    }
 
-        el.addEventListener('pointerdown', down, { passive: false });
-        el.addEventListener('pointerup', up, { passive: false });
-        el.addEventListener('pointercancel', up, { passive: false });
-        el.addEventListener('pointerleave', up, { passive: false });
+    function attachControlEvents(el, handlers) {
+        el.addEventListener('pointerdown', handlers.press, { passive: false });
+        el.addEventListener('pointerup', handlers.release, { passive: false });
+        el.addEventListener('pointercancel', handlers.release, { passive: false });
+        el.addEventListener('pointerleave', handlers.release, { passive: false });
+    }
+    
+    function bindMobileControls(keyboard) {
+        const bindings = [
+            { sel: '#btnLeft', key: 'left' },
+            { sel: '#btnRight', key: 'right' },
+            { sel: '#btnJump', key: 'up' },
+            { sel: '#btnThrow', key: 'c' }
+        ];
+        bindings.forEach(b => {
+            const el = document.querySelector(b.sel);
+            if (!el) return;
+            const handlers = createPointerHandlers(el, b.key, keyboard);
+            attachControlEvents(el, handlers);
         });
     }
 
@@ -109,4 +123,5 @@
         applyUIState,
         bindMobileControls
     };
+    setupPauseButton();
 })();
