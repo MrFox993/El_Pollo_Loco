@@ -125,15 +125,12 @@ function goToMainMenu() {
         window.gamePaused = true;
         window.audioManager?.pauseAll?.();
     }
-  
 
     function resumeGame() {
         if (!gamePaused) return;
         window.gamePaused = false;
         window.audioManager?.resumeAll?.();
     }
-  
-
 
 window.addEventListener('keydown', (event) => {
     if (event.keyCode === 65 || event.keyCode === 37) {
@@ -182,3 +179,5 @@ window.addEventListener('keyup', (event) => {
 
 window.pauseGame = pauseGame;
 window.resumeGame = resumeGame;
+window.startNextLevel = startNextLevel;
+window.updateNextLevelButtonState = updateNextLevelButtonState;
