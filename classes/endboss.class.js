@@ -35,6 +35,17 @@ class Endboss extends MovableObject {
     "./assets/img/4_enemie_boss_chicken/5_dead/G25.png",
     "./assets/img/4_enemie_boss_chicken/5_dead/G26.png"
   ]
+  
+  STATES = {
+    ALERT: 'alert',
+    WALK: 'walk',
+    PREPARE: 'prepare',
+    ATTACK: 'attack',
+    HURT: 'hurt',
+    DEAD: 'dead'
+  };
+
+  currentState = 'alert';
 
   hp = 100;
   otherDirection = false;
@@ -71,28 +82,27 @@ class Endboss extends MovableObject {
     this.turnAroundOffset = 5;
     this.applyGravity();
   }
+  
+  setState(newState) {
+    this.currentState = newState;
+  }
+  
+  selectAnimation() {
+    if (this.isDead()) return this.imagesDead;
+    if (this.isHurt()) return this.imagesHurt;
+    if (this.isPreparingAttack) return this.imagesAlert;
+    if (this.isAttacking) return this.imagesAttack;
+    return this.hitCount >= 1 ? this.imagesWalking : this.imagesAlert;
+  }
 
   startAnimation() {
-    if (this.animationInterval || this.moveInterval) return;
-    if (!window.gameStarted || window.gameOver) return;
-    this.animationInterval = setInterval(() => {
-      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
-      if (this.isDead()) {
-        this.playAnimation(this.imagesDead);
-      } else if (this.isHurt()) {
-        this.playAnimation(this.imagesHurt);
-      } else if (this.isPreparingAttack) {
-        this.playAnimation(this.imagesAlert);
-      } else if (this.isAttacking) {
-        this.playAnimation(this.imagesAttack);
-      } else {
-        if (this.hitCount >= 1) {
-          this.playAnimation(this.imagesWalking);
-        }else {
-        this.playAnimation(this.imagesAlert);
-        }
-      }
-    }, 200);
+  if (this.animationInterval || this.moveInterval) return;
+  if (!window.gameStarted || window.gameOver) return;
+  this.animationInterval = setInterval(() => {
+    if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
+    this.playAnimation(this.selectAnimation());
+  }, 200);
+
     this.moveInterval = setInterval(() => {
       if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
       if (this.isDead() || this.isHurt()) {
