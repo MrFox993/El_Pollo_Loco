@@ -1,3 +1,8 @@
+/**
+ * Creates and returns Level 2 configuration.
+ *
+ * @returns {Level} A fully constructed Level instance.
+ */
 function createLevel2() {
     return new Level({
         enemies: [
