@@ -78,20 +78,22 @@ class MovableObject extends DrawableObject {
     this.x -= this.speed;
   }
 
+  shouldTurnLeft() {
+      return !this.otherDirection && this.x <= this.leftBoundary;
+  }
+
+  shouldTurnRight() {
+      return this.otherDirection && this.x >= this.rightBoundary;
+  }
+
+  applyWalkingDirection() {
+      this.otherDirection ? this.moveRight() : this.moveLeft();
+  }
+
   walkBetweenBoundaries() {
-    if (!this.otherDirection && this.x <= this.leftBoundary) {
-      this.otherDirection = true;
-    }
-  
-    if (this.otherDirection && this.x >= this.rightBoundary) {
-      this.otherDirection = false;
-    }
-  
-    if (this.otherDirection) {
-      this.moveRight();
-    } else {
-      this.moveLeft();
-    }
+    if (this.shouldTurnLeft()) this.otherDirection = true;
+    if (this.shouldTurnRight()) this.otherDirection = false;
+    this.applyWalkingDirection();
   }
 
   applyVerticalMovement() {
