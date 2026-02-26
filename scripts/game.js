@@ -57,31 +57,8 @@ function startLevel(index) {
 }
 
 function startNewGame() {
-    window.gameStarted = true;
-    window.gameOver = false;
-    toggleScreen('menuScreen', 'hide');
-    toggleScreen('controlScreen', 'hide');
-    toggleScreen('youWonScreen', 'hide');
-    toggleScreen('youLostScreen', 'hide');
-    toggleScreen('.canvas-screen', 'show');
-
-    newLevel = createLevel1();
-    canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard);
-    world.level = newLevel;
-    world.startWorld();
-
-    if (window.MobileUI) {
-            window.MobileUI.bindMobileControls(keyboard);
-            window.MobileUI.applyUIState();
-        }
-
-    if (window.audioManager) {
-        audioManager.setMode('game');
-        audioManager.stopMenuBgm();
-        audioManager.playGameBgm();
-    }
-
+    window.currentLevelIndex = 0;
+    startLevel(window.currentLevelIndex)
 }
 
 function toggleScreen(screenIdOrClass, action) {
