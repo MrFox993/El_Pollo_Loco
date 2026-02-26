@@ -18,33 +18,42 @@
 
     let keyboardUsed = false;
     window.addEventListener('keydown', () => keyboardUsed = true);
-
-    function applyUIState() {
+    
+    function computeUIFlags() {
         const mobile = isMobileOrEmulated();
         const landscape = isLandscape();
-        const gameStarted = Boolean(window.gameStarted);
-        const gameOver = Boolean(window.gameOver);
-      
-        const showMobile = mobile && !keyboardUsed && landscape && gameStarted;
-        const showRotate = mobile && !landscape;
-        const hideMobile = mobile && landscape && gameOver;
-      
-        mobileControls.style.display = showMobile ? 'flex' : 'none';
-        rotateOverlay.style.display  = showRotate ? 'flex' : 'none';
-        mobileControls.style.display = hideMobile ? 'none' : mobileControls.style.display;
-      
-        mobileControls.setAttribute('aria-hidden', String(!showMobile));
-        rotateOverlay.setAttribute('aria-hidden', String(!showRotate));
-      
-        canvasScreen.classList.toggle('blocked', showRotate);
-      
-        if (showRotate && gameStarted) {
-          window.pauseGame?.();
-        } else if (!showRotate && gameStarted) {
-          window.resumeGame?.();
-        }
-      }
-      
+        return {
+            showMobile: mobile && !keyboardUsed && landscape && window.gameStarted,
+            showRotate: mobile && !landscape,
+            hideMobile: mobile && landscape && window.gameOver
+        };
+    }
+
+    function updateMobileVisibility(flags) {
+        mobileControls.style.display = flags.showMobile ? 'flex' : 'none';
+        if (flags.hideMobile) mobileControls.style.display = 'none';
+        mobileControls.setAttribute('aria-hidden', String(!flags.showMobile));
+    }
+
+    function updateRotateOverlay(flags) {
+        rotateOverlay.style.display = flags.showRotate ? 'flex' : 'none';
+        rotateOverlay.setAttribute('aria-hidden', String(!flags.showRotate));
+        canvasScreen.classList.toggle('blocked', flags.showRotate);
+    }
+
+    function updatePauseState(flags) {
+        if (!window.gameStarted) return;
+        if (flags.showRotate) window.pauseGame?.();
+        else window.resumeGame?.();
+    }
+
+
+    function applyUIState() {
+        const flags = computeUIFlags();
+        updateMobileVisibility(flags);
+        updateRotateOverlay(flags);
+        updatePauseState(flags);
+    }
 
     window.addEventListener('resize', applyUIState);
     if (window.screen && window.screen.orientation) {
