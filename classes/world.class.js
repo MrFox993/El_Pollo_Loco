@@ -351,31 +351,23 @@ collisionBottleWithEnemies() {
   flipImageBack() {
     this.ctx.restore();
   }
+  
+  calculateDesiredCameraX() {
+      const center = this.canvas.width/2;
+      const dir = this.character.otherDirection ? -1 : 1;
+      return -this.character.x + center - this.character.width/2 - dir*240;
+  }
+
+  clampCamera(x) {
+      const minX = -(this.level.level_end_x - this.canvas.width);
+      return Math.max(minX, Math.min(0, x));
+  }
 
   updateCamera() {
-    const canvasCenter = this.canvas.width / 2;
-  
-    const LOOK_AHEAD = 240;
-    const LERP_MOVE = 0.08;
-    const LERP_IDLE = 0.05;
-  
-    const isMoving = this.keyboard.left || this.keyboard.right;
-    const direction = this.character.otherDirection ? -1 : 1;
-  
-    const desiredX =
-      -this.character.x +
-      canvasCenter -
-      this.character.width / 2 -
-      direction * LOOK_AHEAD;
-  
-    this.camera_x += (desiredX - this.camera_x) *
-      (isMoving ? LERP_MOVE : LERP_IDLE);
-  
-    const minX = -(this.level.level_end_x - this.canvas.width);
-    const maxX = 0;
-  
-    this.camera_x = Math.max(minX, Math.min(maxX, this.camera_x));
-  }  
-  
+    const desired = this.calculateDesiredCameraX();
+    const lerp = (this.keyboard.left||this.keyboard.right) ? 0.08 : 0.05;
+    this.camera_x += (desired - this.camera_x)*lerp;
+    this.camera_x = this.clampCamera(this.camera_x);
+  }
 }
 
