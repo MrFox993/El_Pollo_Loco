@@ -64,24 +64,35 @@ class Endboss extends MovableObject {
 
   constructor() {
     super();
+    this.initImages();
+    this.initStats();
+    this.x = 2500;
+    this.y = 100;
+    this.width = 360;
+    this.height = 360;
+    this.speed = 0.5 + Math.random() * 0.5;
+    this.leftBoundary = 0;
+    this.rightBoundary = this.world?.level?.level_end_x - this.width;
+    this.turnAroundOffset = 5;
+    this.applyGravity();
+  }
+  
+  initImages() {
     this.loadImage(this.imagesAlert[0]);
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imagesAlert);
     this.loadImages(this.imagesAttack);
     this.loadImages(this.imagesHurt);
     this.loadImages(this.imagesDead);
-    this.x = 2500;
-    this.y = 100;
-    this.width = 360;
-    this.height = 360;
-    this.speed = 0.5 + Math.random() * 0.5;
+  }
+
+  initStats() {
+    this.hp = 100;
+    this.hitCount = 0;
     this.damageCooldownMs = 600;
     this.defaultHitDamage = 34;
-    this.leftBoundary = 0;
-    this.rightBoundary = this.world?.level?.level_end_x - this.width; 
-    this.turnAroundOffset = 5;
-    this.applyGravity();
   }
+
   
   setState(newState) {
     this.currentState = newState;
