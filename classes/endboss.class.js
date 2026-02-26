@@ -105,7 +105,7 @@ class Endboss extends MovableObject {
 
   this.moveInterval = setInterval(() => {
     if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
-    if (this.isDead() || this.isHurt()) return this.stopWalkingSound();
+    if (this.isDead() || this.isHurt()) return this.handleDeadState() || this.handleHurtState();
     if (this.canAttack() && !this.isAttacking && !this.isPreparingAttack)
         return this.prepareAttack();
     this.handleAttackMovement();
@@ -141,6 +141,14 @@ class Endboss extends MovableObject {
         window.audioManager.stop('endbossWalking');
         this.isWalkingSoundPlaying = false;
     }
+  }
+  
+  handleHurtState() {
+    if (this.isHurt()) this.stopWalkingSound();
+  }
+
+  handleDeadState() {
+    if (this.isDead()) this.stopWalkingSound();
   }
 
   canAttack() {
