@@ -50,40 +50,42 @@ class World {
     clearInterval(this.intervalId)
   }
 
-checkGameOver() {
+  checkGameOver() {
     if (this.character.isDead()) {
       this.endGame("lost");
     } else if (this.level.endboss && this.level.endboss.isDead()) {
       this.endGame("won");
     }
-}
+  }
 
-endGame(result) {
-  window.gameEnding = true;
+  playEndSound(result) {
+    window.audioManager.stopAll();
+    window.audioManager.play(result === 'won' ? 'youWin':'gameOver');
+  }
 
-  window.audioManager.stopAll();
-  window.audioManager.play(result === 'won' ? 'youWin' : 'gameOver');
+  computeEndDelay(result) {
+    const charAnim = (this.character?.imagesDead?.length||0)*100;
+    const bossAnim = (this.level.endboss?.imagesDead?.length||0)*200;
+    const buffer = 400;
+    return result==='lost' ? charAnim+buffer : bossAnim+buffer;
+  }
 
-  const charAnimMs = (this.character?.imagesDead?.length || 0) * 100; 
-  const bossAnimMs = (this.level.endboss?.imagesDead?.length || 0) * 200;
-  const buffer = 400;
-  
-  const delay = result === 'lost' ? (charAnimMs + buffer) : (bossAnimMs + buffer || 1200);
+  showEndScreen(result) {
+    window.gameStarted = false;
+    window.gameEnding = false;
+    window.gameOver = true;
+    window.MobileUI.applyUIState();
+    toggleScreen('.canvas-screen','hide');
+    toggleScreen(result==='won'?'youWonScreen':'youLostScreen','show');
+    if (result==='won') window.updateNextLevelButtonState?.();
+  }
 
-
-  setTimeout(() => {
-      window.gameStarted = false;
-      window.gameEnding = false;
-      window.gameOver = true;
-
-      window.MobileUI.applyUIState();
-      toggleScreen('canvas-screen', 'hide');
-      toggleScreen(result === 'won' ? 'youWonScreen' : 'youLostScreen', 'show');
-      if (result === 'won') {
-        window.updateNextLevelButtonState?.();
-      }
-  }, delay);
-}
+  endGame(result) {
+    window.gameEnding = true;
+    this.playEndSound(result);
+    const delay = this.computeEndDelay(result);
+    setTimeout(() => this.showEndScreen(result), delay);
+  }
 
   checkCollisions() {
     this.collisionWithEnemy();
