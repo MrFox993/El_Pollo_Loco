@@ -65,7 +65,19 @@ function startNextLevel() {
     if (!hasNextLevel()) return;
     window.currentLevelIndex++;
     startLevel(window.currentLevelIndex);
+}
 
+function updateNextLevelButtonState() {
+    const btn = document.getElementById('nextLevelBtn');
+    if (!btn) return;
+
+    if (hasNextLevel()) {
+        btn.removeAttribute('disabled');
+        btn.title = '';
+    } else {
+        btn.setAttribute('disabled', 'disabled');
+        btn.title = 'no further level available';
+    }
 }
 
 function toggleScreen(screenIdOrClass, action) {
