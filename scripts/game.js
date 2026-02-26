@@ -115,6 +115,9 @@ function goToMainMenu() {
     toggleScreen('.canvas-screen', 'hide');
     toggleScreen('menuScreen', 'show');
 
+    const btn = document.getElementById('nextLevelBtn');
+    if (btn) btn.setAttribute('disabled', 'disabled');
+
     if (window.MobileUI) {
         window.MobileUI.applyUIState();
     }
