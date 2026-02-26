@@ -21,20 +21,24 @@ class MovableObject extends DrawableObject {
     this.img = this.imageCache[imagePath];
     this.currentImageIndex++;
   }
-
   
-  playDeadAnimation(imagesDeadArray, removeCallback) {
-      this.speed = 0; 
+  startDeathAnimation(images) {
+      this.speed = 0;
       this.currentImageIndex = 0;
-      let interval = setInterval(() => {
-        if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
-        this.playAnimation(imagesDeadArray);
-      }, 1000 / 10);
+      return setInterval(() => {
+          if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
+          this.playAnimation(images);
+      }, 100);
+  }
 
-      setTimeout(() => {
-          clearInterval(interval);
-          if (removeCallback) removeCallback();
-      }, 500);
+  finishDeathAnimation(interval, removeCallback) {
+      clearInterval(interval);
+      if (removeCallback) removeCallback();
+  }
+
+  playDeadAnimation(imagesDeadArray, removeCallback) {
+    const interval = this.startDeathAnimation(imagesDeadArray);
+    setTimeout(() => this.finishDeathAnimation(interval, removeCallback), 500);
   }
 
 
