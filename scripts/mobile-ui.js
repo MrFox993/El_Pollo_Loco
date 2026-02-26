@@ -64,15 +64,16 @@
     ['contextmenu'].forEach(evt => {
         mobileControls.addEventListener(evt, e => e.preventDefault(), { passive: false });
     });
-
-    const pauseBtn = document.querySelector('#btnPause');
-    if (pauseBtn) {
-        pauseBtn.addEventListener('pointerdown', (e) => {
+    
+    function setupPauseButton() {
+        const pauseBtn = document.querySelector('#btnPause');
+        if (!pauseBtn) return;
+        pauseBtn.addEventListener('pointerdown', e => {
             e.preventDefault();
             window.gamePaused ? window.resumeGame() : window.pauseGame();
             pauseBtn.classList.add('pressed');
         });
-        pauseBtn.addEventListener('pointerup', (e) => {
+        pauseBtn.addEventListener('pointerup', e => {
             e.preventDefault();
             pauseBtn.classList.remove('pressed');
         });
@@ -122,4 +123,5 @@
         applyUIState,
         bindMobileControls
     };
+    setupPauseButton();
 })();
