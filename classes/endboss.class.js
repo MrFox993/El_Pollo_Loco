@@ -103,49 +103,30 @@ class Endboss extends MovableObject {
     this.playAnimation(this.selectAnimation());
   }, 200);
 
-    this.moveInterval = setInterval(() => {
-      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
-      if (this.isDead() || this.isHurt()) {
-        this.stopWalkingSound();
-        return;
-      }
-    
-      if (this.hitCount < 1) {
-        this.stopWalkingSound();
-        return;
-      }
-    
-      if (this.isPreparingAttack) {
-        this.stopWalkingSound();
-        return;
-      }
-    
-      if (!this.isAttacking && this.canAttack()) {
-        this.prepareAttack();
-        return;
-      }
-    
-      if (this.isAttacking) {
-        if (this.otherDirection) {
-          this.x += this.attackSpeedX;
-        } else {
-          this.x -= this.attackSpeedX;
-        }
-    
-        if (!this.checkAboveGround()) {
-          this.finishAttack();
-        }
-        return;
-      }
+  this.moveInterval = setInterval(() => {
+    if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
+    if (this.isDead() || this.isHurt()) return this.stopWalkingSound();
+    if (this.canAttack() && !this.isAttacking && !this.isPreparingAttack)
+        return this.prepareAttack();
+    this.handleAttackMovement();
+    if (!this.isAttacking) this.handleWalking();
+    }, 1000/60);
+  }
+  
+  handleWalking() {
+    if (this.hitCount < 1 || this.isPreparingAttack) {
+      this.stopWalkingSound();
+      return;
+    }
+    this.walkBetweenBoundaries();
+    this.startWalkingSound();
+  }
 
-      if (!this.isAttacking && !this.isPreparingAttack) {
-        this.walkBetweenBoundaries();
-        this.startWalkingSound();
-      }
-      
-    }, 1000 / 60);
-    
-    
+  handleAttackMovement() {
+    if (!this.isAttacking) return;
+    const dir = this.otherDirection ? 1 : -1;
+    this.x += this.attackSpeedX * dir;
+    if (!this.checkAboveGround()) this.finishAttack();
   }
 
   startWalkingSound() {
