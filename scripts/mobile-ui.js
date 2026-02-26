@@ -77,36 +77,40 @@
             pauseBtn.classList.remove('pressed');
         });
     }
-
-    function bindMobileControls(keyboard) {
-        const bindings = [
-        { sel: '#btnLeft',  key: 'left'  },
-        { sel: '#btnRight', key: 'right' },
-        { sel: '#btnJump',  key: 'up'    },
-        { sel: '#btnThrow', key: 'c' },
-        ];
-
-    bindings.forEach(({ sel, key }) => {
-        const el = document.querySelector(sel);
-        if (!el) return;
-
-        const down = (e) => {
+    
+    function createPointerHandlers(el, key, keyboard) {
+        const press = e => {
             e.preventDefault();
-            e.stopPropagation();
-            if (keyboard[key] !== undefined) keyboard[key] = true;
+            keyboard[key] = true;
             el.classList.add('pressed');
         };
-        const up = (e) => {
+        const release = e => {
             e.preventDefault();
-            e.stopPropagation();
-            if (keyboard[key] !== undefined) keyboard[key] = false;
+            keyboard[key] = false;
             el.classList.remove('pressed');
         };
+        return { press, release };
+    }
 
-        el.addEventListener('pointerdown', down, { passive: false });
-        el.addEventListener('pointerup', up, { passive: false });
-        el.addEventListener('pointercancel', up, { passive: false });
-        el.addEventListener('pointerleave', up, { passive: false });
+    function attachControlEvents(el, handlers) {
+        el.addEventListener('pointerdown', handlers.press, { passive: false });
+        el.addEventListener('pointerup', handlers.release, { passive: false });
+        el.addEventListener('pointercancel', handlers.release, { passive: false });
+        el.addEventListener('pointerleave', handlers.release, { passive: false });
+    }
+    
+    function bindMobileControls(keyboard) {
+        const bindings = [
+            { sel: '#btnLeft', key: 'left' },
+            { sel: '#btnRight', key: 'right' },
+            { sel: '#btnJump', key: 'up' },
+            { sel: '#btnThrow', key: 'c' }
+        ];
+        bindings.forEach(b => {
+            const el = document.querySelector(b.sel);
+            if (!el) return;
+            const handlers = createPointerHandlers(el, b.key, keyboard);
+            attachControlEvents(el, handlers);
         });
     }
 
