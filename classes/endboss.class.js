@@ -147,19 +147,29 @@ class Endboss extends MovableObject {
     return Date.now() > this.nextAttackTime;
   }
 
+  computeAttackCooldown() {
+    return this.attackCooldownMin +
+      Math.random() * (this.attackCooldownMax - this.attackCooldownMin);
+  }
+
+  setNextAttackTime() {
+    this.nextAttackTime = Date.now() + this.computeAttackCooldown();
+  }
+
+  applyAttackJump() {
+    this.speedY = this.jumpAttackForce;
+  }
+
+  computeAttackSpeedX() {
+    this.attackSpeedX = this.speed * (2.5 + Math.random());
+  }
+
   startAttack() {
     this.isAttacking = true;
     this.lastAttackTime = Date.now();
-  
-    const cooldown =
-      this.attackCooldownMin +
-      Math.random() * (this.attackCooldownMax - this.attackCooldownMin);
-  
-    this.nextAttackTime = Date.now() + cooldown;
-  
-    this.speedY = this.jumpAttackForce;
-  
-    this.attackSpeedX = this.speed * (2.5 + Math.random());
+    this.setNextAttackTime();
+    this.applyAttackJump();
+    this.computeAttackSpeedX();
   } 
 
   finishAttack() {
@@ -172,13 +182,12 @@ class Endboss extends MovableObject {
   prepareAttack() {
     this.isPreparingAttack = true;
     this.stopWalkingSound();
-  
     this.attackSpeedX = 0;
-  
     setTimeout(() => {
-      if (this.isDead()) return;
-      this.isPreparingAttack = false;
-      this.startAttack();
+      if (!this.isDead()) {
+        this.isPreparingAttack = false;
+        this.startAttack();
+      }
     }, this.prepareDuration);
   }
   
