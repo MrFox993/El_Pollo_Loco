@@ -56,6 +56,17 @@ class Character extends MovableObject {
     "./assets/img/2_character_pepe/4_hurt/H-42.png",
     "./assets/img/2_character_pepe/4_hurt/H-43.png",
   ]  
+  
+  STATES = {
+    IDLE: 'idle',
+    LONG_IDLE: 'long_idle',
+    WALK: 'walk',
+    JUMP: 'jump',
+    HURT: 'hurt',
+    DEAD: 'dead'
+  };
+
+  currentState = 'idle';
 
   world;
   speed = 10;
@@ -88,6 +99,19 @@ class Character extends MovableObject {
     this.applyGravity();
   }
 
+  setState(state) {
+    this.currentState = state;
+  }
+  
+  getAnimationForState() {
+    if (this.isDead()) return this.imagesDead;
+    if (this.isHurt()) return this.imagesHurt;
+    if (this.checkAboveGround()) return this.imagesJumping;
+    if (this.world.keyboard.right || this.world.keyboard.left) return this.imagesWalking;
+    if (this.isLongIdling) return this.imagesLongIdle;
+    return this.imagesIdle;
+  }
+
   resetIdleTimer() {
     this.lastActiveAt = Date.now();
     if (this.isLongIdling) {
@@ -98,39 +122,21 @@ class Character extends MovableObject {
   animate() {    
     if (this.animationInterval) return; 
     if (!window.gameStarted || window.gameOver) return;
+
     this.animationInterval = setInterval(() => {
       if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
 
-      if (this.isDead()) {
-        this.isLongIdling = false;
-        this.playAnimation(this.imagesDead);
-      } else if (this.isHurt()){
-        this.isLongIdling = false;
-        this.playAnimation(this.imagesHurt);
-        window.audioManager.play('hpLost');
-      } else if (this.checkAboveGround()) {
-        this.isLongIdling = false;
-        this.playAnimation(this.imagesJumping);
-      } else if (this.world.keyboard.right || this.world.keyboard.left) {
-        this.isLongIdling = false;
-        this.playAnimation(this.imagesWalking);
-      } else {
-        const idleDurationMs = Date.now() - this.lastActiveAt;
-        if (idleDurationMs >= this.longIdleThresholdMs) {
-            this.isLongIdling = true;
-            this.playAnimation(this.imagesLongIdle);
-            if (!this.isSnoringPlaying) {
-                window.audioManager.play('snoring');
-                this.isSnoringPlaying = true;
-              }
-    }else {
-          this.isLongIdling = false;
-          this.playAnimation(this.imagesIdle);
-          if (this.isSnoringPlaying) {
-              window.audioManager.stop('snoring');
-              this.isSnoringPlaying = false;
-            }
-        }
+      const animation = this.getAnimationForState();
+      this.playAnimation(animation);
+
+      if (this.isSnoringPlaying && !this.isLongIdling) {
+        window.audioManager.stop('snoring');
+        this.isSnoringPlaying = false;
+      }
+
+      if (this.isLongIdling && !this.isSnoringPlaying) {
+        window.audioManager.play('snoring');
+        this.isSnoringPlaying = true;
       }
     }, 100);
   }
