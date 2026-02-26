@@ -14,45 +14,48 @@ function hasNextLevel() {
     return window.currentLevelIndex + 1 < window.LEVELS.length;
 }
 
-function startLevel(index) {
-    if (world) {
-        world.stop();
-        world = null;
-    }
+function stopWorld() {
+    if (!world) return;
+    world.stop();
+    world = null
+}
 
+function resetGameState() {
     window.gameStarted = true;
     window.gameOver = false;
     window.gamePaused = false;
+}
 
-    toggleScreen('menuScreen', 'hide');
-    toggleScreen('controlScreen', 'hide');
-    toggleScreen('youWonScreen', 'hide');
-    toggleScreen('youLostScreen', 'hide');
-    toggleScreen('.canvas-screen', 'show');
+function hideAllScreens() {
+    ['menuScreen','controlScreen','youWonScreen','youLostScreen'].forEach(id => hideScreen(id));
+}
 
-    const createLevelFn = window.LEVELS[index];
-    if (!createLevelFn) {
-        console.warn('No level for index:', index);
-        return;
-    }
-
-    const newLevel = createLevelFn();
+function initializeWorld(level) {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
-    world.level = newLevel;
+    world.level = level;
     world.startWorld();
+}
 
-    if (window.MobileUI) {
-        window.MobileUI.bindMobileControls?.(keyboard);
-        window.MobileUI.applyUIState?.();
-    }
+function initializeAudioGameMode() {
+    if (!window.audioManager) return;
+    audioManager.setMode('game');
+    audioManager.stopMenuBgm();
+    audioManager.playGameBgm();
+}
 
-    if (window.audioManager) {
-        audioManager.setMode('game');
-        audioManager.stopMenuBgm();
-        audioManager.playGameBgm();
-    }
+function startLevel(index) {
+    stopWorld();
+    resetGameState();
+    hideAllScreens();
+    showScreen('.canvas-screen');
 
+    const levelFactory = window.LEVELS[index];
+    if (!levelFactory) return
+
+    initializeWorld(levelFactory());
+    initializeAudioGameMode();
+    window.MobileUI?.applyUIState?.();
     updateNextLevelButtonState(); 
 }
 
@@ -80,20 +83,24 @@ function updateNextLevelButtonState() {
     }
 }
 
-function toggleScreen(screenIdOrClass, action) {
-    let element = screenIdOrClass.startsWith('.') 
-        ? document.querySelector(screenIdOrClass) 
-        : document.getElementById(screenIdOrClass);
+function toggleScreen(selector, action) {
+    action === 'show' ? showScreen(selector) : hideScreen(selector);
+}
 
-    if (!element) return;
+function getScreen(selector) {
+    return selector.startsWith('.') ? document.querySelector(selector) : document.getElementById(selector);
+}
 
-    if (action === 'show') {
-        element.classList.add('show-screen');
-        element.classList.remove('hide-screen');
-    } else if (action === 'hide') {
-        element.classList.add('hide-screen');
-        element.classList.remove('show-screen');
-    }
+function showScreen(selector) {
+    const element = getScreen(selector);
+    element?.classList.add('show-screen');
+    element?.classList.remove('hide-screen')
+}
+
+function hideScreen(selector) {
+    const element = getScreen(selector);
+    element?.classList.add('hide-screen');
+    element?.classList.remove('show-screen')
 }
 
 function goToMainMenu() { 
