@@ -14,6 +14,48 @@ function hasNextLevel() {
     return window.currentLevelIndex + 1 < window.LEVELS.length;
 }
 
+function startLevel(index) {
+    if (world) {
+        world.stop();
+        world = null;
+    }
+
+    window.gameStarted = true;
+    window.gameOver = false;
+    window.gamePaused = false;
+
+    toggleScreen('menuScreen', 'hide');
+    toggleScreen('controlScreen', 'hide');
+    toggleScreen('youWonScreen', 'hide');
+    toggleScreen('youLostScreen', 'hide');
+    toggleScreen('.canvas-screen', 'show');
+
+    const createLevelFn = window.LEVELS[index];
+    if (!createLevelFn) {
+        console.warn('No level for index:', index);
+        return;
+    }
+
+    const newLevel = createLevelFn();
+    canvas = document.getElementById('canvas');
+    world = new World(canvas, keyboard);
+    world.level = newLevel;
+    world.startWorld();
+
+    if (window.MobileUI) {
+        window.MobileUI.bindMobileControls?.(keyboard);
+        window.MobileUI.applyUIState?.();
+    }
+
+    if (window.audioManager) {
+        audioManager.setMode('game');
+        audioManager.stopMenuBgm();
+        audioManager.playGameBgm();
+    }
+
+    updateNextLevelButtonState(); 
+}
+
 function startNewGame() {
     window.gameStarted = true;
     window.gameOver = false;
