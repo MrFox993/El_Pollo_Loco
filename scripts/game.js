@@ -58,7 +58,14 @@ function startLevel(index) {
 
 function startNewGame() {
     window.currentLevelIndex = 0;
-    startLevel(window.currentLevelIndex)
+    startLevel(window.currentLevelIndex);
+}
+
+function startNextLevel() {
+    if (!hasNextLevel()) return;
+    window.currentLevelIndex++;
+    startLevel(window.currentLevelIndex);
+
 }
 
 function toggleScreen(screenIdOrClass, action) {
