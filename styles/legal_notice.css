@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    background-image: url('../assets/img/5_background/main_background_image_ai.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+main{
+    border: 4px solid #8B4513;
+    corner-shape: squircle;
+    background-color: #F4A460;
+    border-radius: 60px;
+    padding: 24px;
+}
+
+.legal_notice {
+    border: 4px solid #8B4513;
+    corner-shape: squircle;
+    background-color: #F4A44C;
+    border-radius: 60px;
+    padding: 24px;
+}
+
+th, td {
+    text-align: left;
+}
+
+th {
+    padding-right: 16px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+p {
+    margin-bottom: 16px;
+}
