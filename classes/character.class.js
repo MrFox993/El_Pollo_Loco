@@ -89,7 +89,7 @@ class Character extends MovableObject {
     this.height = 300;
     this.bottles = 0;
     this.coins = 0;
-    this.loadImage("./assets/img/2_character_pepe/1_idle/idle/I-1.png");
+    this.loadImage(this.imagesIdle[0]);
     this.loadImages(this.imagesIdle);
     this.loadImages(this.imagesLongIdle);
     this.loadImages(this.imagesWalking);
@@ -101,6 +101,16 @@ class Character extends MovableObject {
 
   setState(state) {
     this.currentState = state;
+  }
+  
+  updateStateFlags() {
+    if (this.isDead()) return this.setState(this.STATES.DEAD);
+    if (this.isHurt()) return this.setState(this.STATES.HURT);
+    if (this.checkAboveGround()) return this.setState(this.STATES.JUMP);
+    if (this.isLongIdling) return this.setState(this.STATES.LONG_IDLE);
+    if (this.world.keyboard.right || this.world.keyboard.left)
+      return this.setState(this.STATES.WALK);
+    this.setState(this.STATES.IDLE);
   }
   
   getAnimationForState() {
@@ -151,25 +161,36 @@ class Character extends MovableObject {
     this.isSnoringPlaying = false;
   }  
 
+  updateIdleTimer(didAction) {
+    if (didAction) {
+      this.isLongIdling = false;
+      this.lastActiveAt = Date.now();
+      return;
+    }
+    const idleMs = Date.now() - this.lastActiveAt;
+    this.isLongIdling = idleMs >= this.longIdleThresholdMs;
+  }
+
   update() {
     let didAction = false;
-  
+
     if (this.world.keyboard.right && this.x <= this.world.level.level_end_x) {
       this.otherDirection = false;
       this.moveRight();
       didAction = true;
-    } 
-    else if (this.world.keyboard.left && this.x >= 0) {
+    }
+
+    if (this.world.keyboard.left && this.x >= 0) {
       this.otherDirection = true;
       this.moveLeft();
       didAction = true;
     }
-  
+
     if ((this.world.keyboard.up || this.world.keyboard.space) && !this.checkAboveGround()) {
       this.jump();
       didAction = true;
     }
-  
-    if (didAction) this.resetIdleTimer();
+
+    this.updateIdleTimer(didAction);
   }  
 }
