@@ -130,16 +130,24 @@ class Endboss extends MovableObject {
   }
 
   startWalkingSound() {
-    if (!this.isWalkingSoundPlaying) {
-        window.audioManager.play('endbossWalking');
-        this.isWalkingSoundPlaying = true;
-    }
+    this.ensureWalkingSound();
   }
 
   stopWalkingSound() {
     if (this.isWalkingSoundPlaying) {
         window.audioManager.stop('endbossWalking');
         this.isWalkingSoundPlaying = false;
+    }
+  }
+  
+  ensureWalkingSound() {
+    this.ensureWalkingSoundStopped();
+  }
+
+  ensureWalkingSoundStopped() {
+    if (this.isWalkingSoundPlaying) {
+      window.audioManager.stop('endbossWalking');
+      this.isWalkingSoundPlaying = false;
     }
   }
   
