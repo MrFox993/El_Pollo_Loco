@@ -137,49 +137,28 @@ function resumeGame() {
     window.audioManager?.resumeAll?.();
 }
 
-window.addEventListener('keydown', (event) => {
-    if (event.keyCode === 65 || event.keyCode === 37) {
-        keyboard.left = true;
-    }
-    if (event.keyCode === 87 || event.keyCode === 38) {
-        keyboard.up = true;
-    }
-    if (event.keyCode === 68 || event.keyCode === 39) {
-        keyboard.right = true;
-    }
-    if (event.keyCode === 83 || event.keyCode === 40) {
-        keyboard.down = true;
-    }
-    if (event.keyCode === 32) {
-        keyboard.space = true;
-    }
-    if (event.keyCode === 67) {
-        keyboard.c = true;
-    }
-    if (event.keyCode === 80) {
-        window.gamePaused ? window.resumeGame() : window.pauseGame();
-    }
-});
+const keyMapDown = {
+    65:'left',
+    37:'left',
+    87:'up',
+    38:'up',
+    68:'right',
+    39:'right',
+    83:'down',
+    40:'down',
+    32:'space',
+    67:'c'
+}
 
-window.addEventListener('keyup', (event) => {
-    if (event.keyCode === 65 || event.keyCode === 37) {
-        keyboard.left = false;
-    }
-    if (event.keyCode === 87 || event.keyCode === 38) {
-        keyboard.up = false;
-    }
-    if (event.keyCode === 68 || event.keyCode === 39) {
-        keyboard.right = false;
-    }
-    if (event.keyCode === 83 || event.keyCode === 40) {
-        keyboard.down = false;
-    }
-    if (event.keyCode === 32) {
-        keyboard.space = false;
-    }
-    if (event.keyCode === 67) {
-        keyboard.c = false;
-    }
+window.addEventListener('keydown', e => {
+    const key = keyMapDown[e.keyCode];
+    if (key) keyboard[key] = true;
+    if (e.keyCode === 80) window.gamePaused ? resumeGame() : pauseGame();
+})
+
+window.addEventListener('keyup', e => {
+    const key = keyMapDown[e.keyCode];
+    if (key) keyboard[key] = false;
 });
 
 window.pauseGame = pauseGame;
