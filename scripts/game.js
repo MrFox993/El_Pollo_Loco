@@ -4,26 +4,48 @@ let keyboard = new Keyboard();
 window.gameStarted = false;
 window.gameOver = false;
 window.gamePaused = false;
+window.LEVELS = [
+    typeof createLevel1 === 'function' ? createLevel1 : null,
+    typeof createLevel2 === 'function' ? createLevel2 : null
+]. filter(Boolean)
 
-function startNewGame() {
+
+function hasNextLevel() {
+    return window.currentLevelIndex + 1 < window.LEVELS.length;
+}
+
+function startLevel(index) {
+    if (world) {
+        world.stop();
+        world = null;
+    }
+
     window.gameStarted = true;
     window.gameOver = false;
+    window.gamePaused = false;
+
     toggleScreen('menuScreen', 'hide');
     toggleScreen('controlScreen', 'hide');
     toggleScreen('youWonScreen', 'hide');
     toggleScreen('youLostScreen', 'hide');
     toggleScreen('.canvas-screen', 'show');
 
-    newLevel = createLevel1();
+    const createLevelFn = window.LEVELS[index];
+    if (!createLevelFn) {
+        console.warn('No level for index:', index);
+        return;
+    }
+
+    const newLevel = createLevelFn();
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
     world.level = newLevel;
     world.startWorld();
 
     if (window.MobileUI) {
-            window.MobileUI.bindMobileControls(keyboard);
-            window.MobileUI.applyUIState();
-        }
+        window.MobileUI.bindMobileControls?.(keyboard);
+        window.MobileUI.applyUIState?.();
+    }
 
     if (window.audioManager) {
         audioManager.setMode('game');
@@ -31,6 +53,31 @@ function startNewGame() {
         audioManager.playGameBgm();
     }
 
+    updateNextLevelButtonState(); 
+}
+
+function startNewGame() {
+    window.currentLevelIndex = 0;
+    startLevel(window.currentLevelIndex);
+}
+
+function startNextLevel() {
+    if (!hasNextLevel()) return;
+    window.currentLevelIndex++;
+    startLevel(window.currentLevelIndex);
+}
+
+function updateNextLevelButtonState() {
+    const btn = document.getElementById('nextLevelBtn');
+    if (!btn) return;
+
+    if (hasNextLevel()) {
+        btn.removeAttribute('disabled');
+        btn.title = '';
+    } else {
+        btn.setAttribute('disabled', 'disabled');
+        btn.title = 'no further level available';
+    }
 }
 
 function toggleScreen(screenIdOrClass, action) {
@@ -68,6 +115,9 @@ function goToMainMenu() {
     toggleScreen('.canvas-screen', 'hide');
     toggleScreen('menuScreen', 'show');
 
+    const btn = document.getElementById('nextLevelBtn');
+    if (btn) btn.setAttribute('disabled', 'disabled');
+
     if (window.MobileUI) {
         window.MobileUI.applyUIState();
     }
@@ -78,15 +128,12 @@ function goToMainMenu() {
         window.gamePaused = true;
         window.audioManager?.pauseAll?.();
     }
-  
 
     function resumeGame() {
         if (!gamePaused) return;
         window.gamePaused = false;
         window.audioManager?.resumeAll?.();
     }
-  
-
 
 window.addEventListener('keydown', (event) => {
     if (event.keyCode === 65 || event.keyCode === 37) {
@@ -135,3 +182,5 @@ window.addEventListener('keyup', (event) => {
 
 window.pauseGame = pauseGame;
 window.resumeGame = resumeGame;
+window.startNextLevel = startNextLevel;
+window.updateNextLevelButtonState = updateNextLevelButtonState;
