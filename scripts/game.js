@@ -4,6 +4,15 @@ let keyboard = new Keyboard();
 window.gameStarted = false;
 window.gameOver = false;
 window.gamePaused = false;
+window.LEVELS = [
+    typeof createLevel1 === 'function' ? createLevel1 : null,
+    typeof createLevel2 === 'function' ? createLevel2 : null
+]. filter(Boolean)
+
+
+function hasNextLevel() {
+    return window.currentLevelIndex + 1 < window.LEVELS.length;
+}
 
 function startNewGame() {
     window.gameStarted = true;
