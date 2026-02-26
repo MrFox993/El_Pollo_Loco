@@ -79,6 +79,9 @@ endGame(result) {
       window.MobileUI.applyUIState();
       toggleScreen('canvas-screen', 'hide');
       toggleScreen(result === 'won' ? 'youWonScreen' : 'youLostScreen', 'show');
+      if (result === 'won') {
+        window.updateNextLevelButtonState?.();
+      }
   }, delay);
 }
 
