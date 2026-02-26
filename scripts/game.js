@@ -104,43 +104,38 @@ function hideScreen(selector) {
 }
 
 function goToMainMenu() { 
-    if (world) {
-        world.stop();
-        world = null;
-    }
-    
-    if (window.audioManager) {
-        audioManager.setMode('menu');
-        audioManager.stopGameBgm();
-        audioManager.playMenuBgm();
-    }
-
-    window.gameStarted = false;
-    window.gameOver = false;
-    toggleScreen('youWonScreen', 'hide');
-    toggleScreen('youLostScreen', 'hide');
-    toggleScreen('.canvas-screen', 'hide');
-    toggleScreen('menuScreen', 'show');
-
-    const btn = document.getElementById('nextLevelBtn');
-    if (btn) btn.setAttribute('disabled', 'disabled');
-
-    if (window.MobileUI) {
-        window.MobileUI.applyUIState();
-    }
+    stopWorld();
+    initMenuAudio();
+    resetMenuState();
+    showScreen('menuScreen')
+    window.MobileUI?.applyUIState();
 }
 
-    function pauseGame() {
-        if (!gameStarted || gamePaused) return;
-        window.gamePaused = true;
-        window.audioManager?.pauseAll?.();
-    }
+function initMenuAudio() {
+    if (!window.audioManager) return;
+    audioManager.setMode('menu');
+    audioManager.stopGameBgm();
+    audioManager.playMenuBgm();
+}
 
-    function resumeGame() {
-        if (!gamePaused) return;
-        window.gamePaused = false;
-        window.audioManager?.resumeAll?.();
-    }
+function resetMenuState() {
+    window.gameStarted = false;
+    window.gameOver = false;
+    ['youWonScreen','youLostScreen','.canvas-screen'].forEach(hideScreen);
+    document.getElementById('nextLevelBtn')?.setAttribute('disabled','disabled');
+}
+
+function pauseGame() {
+    if (!gameStarted || gamePaused) return;
+    window.gamePaused = true;
+    window.audioManager?.pauseAll?.();
+}
+
+function resumeGame() {
+    if (!gamePaused) return;
+    window.gamePaused = false;
+    window.audioManager?.resumeAll?.();
+}
 
 window.addEventListener('keydown', (event) => {
     if (event.keyCode === 65 || event.keyCode === 37) {
