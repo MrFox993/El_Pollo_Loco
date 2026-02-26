@@ -1,0 +1,27 @@
+
+/* --- Sancreek Regular --- */
+@font-face {
+    font-family: "Sancreek";
+    src: url("../assets/fonts/sancreek/sancreek-v27-latin-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap; 
+}
+
+/* --- BioRhyme Regular --- */
+@font-face {
+    font-family: "BioRhyme";
+    src: url("../assets/fonts/biorhyme/biorhyme-v21-latin-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* --- BioRhyme Bold --- */
+@font-face {
+    font-family: "BioRhyme";
+    src: url("../assets/fonts/biorhyme/biorhyme-v21-latin-700.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
