@@ -97,6 +97,27 @@ endGame(result) {
 
   }
 
+  isEnemyValid(enemy) {
+      return !(enemy.isDead && enemy.isDead());
+  }
+
+  killEnemy(enemy, index) {
+      const deadImages = enemy.imagesSmallChickenDead || enemy.imagesDead || enemy.imagesDying;
+      enemy.playDeadAnimation(deadImages, ()=> {
+          const idx = this.level.enemies.indexOf(enemy);
+          if (idx >= 0) this.level.enemies.splice(idx,1);
+      });
+  }
+
+  handleBottleHit(bottle, enemy) {
+      this.killEnemy(enemy);
+      if (!bottle.hasSfxPlayed) {
+          window.audioManager.play('bottleShatter');
+          bottle.hasSfxPlayed = true;
+      }
+      bottle.playSplashAnimation();
+  }
+
   collisionWithEnemy() {
     for (let i = 0; i < this.level.enemies.length; i++) {
       const enemy = this.level.enemies[i];
@@ -170,41 +191,15 @@ endGame(result) {
   }
 
 collisionBottleWithEnemies() {
-  if (!this.throwableObjects.length || !Array.isArray(this.level.enemies)) return;
-
-  for (let b = 0; b < this.throwableObjects.length; b++) {
-    const bottle = this.throwableObjects[b];
-    if (bottle.markForRemoval || bottle.hasSplashed) continue;
-
-    for (let e = 0; e < this.level.enemies.length; e++) {
-      const enemy = this.level.enemies[e];
-
-      if (enemy.isDead && enemy.isDead()) continue;
-
-      if (bottle.isColliding(enemy)) {
-        if (typeof enemy.playDeadAnimation === 'function') {
-          const deadImages =
-            enemy.imagesSmallChickenDead || enemy.imagesDead || enemy.imagesDying;
-
-          enemy.playDeadAnimation(deadImages, () => {
-            const idx = this.level.enemies.indexOf(enemy);
-            if (idx >= 0) this.level.enemies.splice(idx, 1);
-          });
-        } else {
-          enemy.hp = 0;
-          this.level.enemies.splice(e, 1);
-        }
-        if (!bottle.hasSfxPlayed) {
-          window.audioManager.play('bottleShatter');
-          bottle.hasSfxPlayed = true;
-        }
-        bottle.playSplashAnimation();
-        break;
-      }
-    }
-  }
-
-  this.throwableObjects = this.throwableObjects.filter(b => !b.markForRemoval);
+  if (!this.throwableObjects.length) return;
+    this.throwableObjects.forEach(bottle=>{
+        if (bottle.markForRemoval || bottle.hasSplashed) return;
+        this.level.enemies.forEach(enemy=>{
+            if (!this.isEnemyValid(enemy)) return;
+            if (bottle.isColliding(enemy)) this.handleBottleHit(bottle, enemy);
+        });
+    });
+    this.throwableObjects = this.throwableObjects.filter(b=>!b.markForRemoval);
 }
 
 
