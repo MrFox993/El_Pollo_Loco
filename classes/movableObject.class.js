@@ -94,14 +94,20 @@ class MovableObject extends DrawableObject {
     }
   }
 
+  applyVerticalMovement() {
+      this.y -= this.speedY;
+      this.speedY -= this.acceleration;
+  }
+
+  shouldApplyGravity() {
+      return this.checkAboveGround() || this.speedY > 0;
+  }
+
   applyGravity() {
     this.gravityInterval = setInterval(() => {
-      if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
-      if (this.checkAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
-    }, 1000 / 25);
+        if (window.gamePaused || (!window.gameStarted && !window.gameEnding)) return;
+        if (this.shouldApplyGravity()) this.applyVerticalMovement();
+    }, 40);
   }
 
   stopGravity() {
