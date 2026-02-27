@@ -87,12 +87,27 @@ class AudioManager {
         });
     }
 
+    /**
+     * Attempts to autoplay the appropriate background track for the current mode.
+     * Picks 'bgmGame' when in 'game' mode, otherwise 'bgmMenu'. If the selected
+     * track is not defined, no action is taken.
+     * @private
+     * @returns {void}
+     */
     _autoplayForCurrentMode() {
         const track = this.mode === 'game' ? 'bgmGame' : 'bgmMenu';
         if (!this.audios.has(track)) return; 
         this._playAutoplaySafe(track); 
     }
 
+    /**
+     * Tries to start playback of the given track immediately. If the browser blocks
+     * autoplay (common when audio is not muted), a one-time fallback is registered
+     * to start playback on the first user interaction (click or keydown).
+     * @private
+     * @param {string} name - The key of the audio track in this.audios 
+     * @returns {void}
+     */
     _playAutoplaySafe(name) { 
         const audio = this.audios.get(name); 
         if (!audio) return;
@@ -107,6 +122,13 @@ class AudioManager {
         } 
     }
 
+    /**
+     * Registers a one-time fallback to start the specified track on first user interaction.
+     * The listeners (click/keydown) are automatically removed after the initial trigger.
+     * @private
+     * @param {string} name  - The key of the audio track to start on interaction.
+     * @returns {void}
+     */
     _setupAutoplayFallback(name) { 
         const handler = () => { 
             const a = this.audios.get(name); 
@@ -183,9 +205,15 @@ class AudioManager {
 
     /**
      * Sets current mode used to determine menu/game background music logic.
-     *
-     * @param {'menu'|'game'} mode
-     */
+     * Side effects:
+     *  - Updates the internal mode state.
+     *  - Attempts to start the new mode’s background music immediately.
+     *  - If the browser blocks autoplay (due to policies), a one-time
+     *    fallback will start playback on the first user interaction.  
+     * 
+     * @param {'menu'|'game'} mode - Target mode for background music behavior.
+     * @returns {void} 
+     */ 
     setMode(mode) { 
         const newMode = mode === 'game' ? 'game' : 'menu'; 
         if (this.mode === newMode) return; 
