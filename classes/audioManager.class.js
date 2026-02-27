@@ -37,18 +37,18 @@ class AudioManager {
     });
 
     this._applyMute();
-
-
-    // BGM after first User-Interaction 
     
-        if (this.audios.has('bgmMenu')) {
-        const startMenuIfNeeded = () => {
-            if (this.mode !== 'menu') return;
-            this.play('bgmMenu');
-        };
-        document.addEventListener('click',   startMenuIfNeeded, { once: true });
-        document.addEventListener('keydown', startMenuIfNeeded, { once: true });
-        }
+
+    // // BGM after first User-Interaction 
+    
+    //     if (this.audios.has('bgmMenu')) {
+    //     const startMenuIfNeeded = () => {
+    //         if (this.mode !== 'menu') return;
+    //         this.play('bgmMenu');
+    //     };
+    //     document.addEventListener('click',   startMenuIfNeeded, { once: true });
+    //     document.addEventListener('keydown', startMenuIfNeeded, { once: true });
+    //     }
 
 
         // DOM-Wiring, if DOM is ready
