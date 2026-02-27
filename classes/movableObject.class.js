@@ -119,10 +119,11 @@ class MovableObject extends DrawableObject {
         this.x + this.width - this.offset.right > mObject.x - mObject.offset.left &&
         this.x + this.offset.left < mObject.x + mObject.width - mObject.offset.right;
 
-    const isFromTop =
-        charBottom >= enemyTop && charTop < enemyTop && this.speedY < 0;
+    const isFromTop = charBottom >= enemyTop && charTop < enemyTop;
+    const isFalling = this.speedY < 0; 
+    const isAirborne = this.checkAboveGround();
 
-    return isHorizontalOverlap && isFromTop;
+    return isHorizontalOverlap && isFromTop && isFalling && isAirborne;
   }
 
   /**
