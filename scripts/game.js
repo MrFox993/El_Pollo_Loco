@@ -1,6 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+window.keyboard = keyboard;
 window.gameStarted = false;
 window.gameOver = false;
 window.gamePaused = false;
