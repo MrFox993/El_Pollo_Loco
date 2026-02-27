@@ -75,6 +75,12 @@ class Endboss extends MovableObject {
   attackSpeedX = 0;
   isPreparingAttack = false;
   prepareDuration = 600;
+  offset = { 
+    top: 40, 
+    bottom: 20, 
+    left: 70, 
+    right: 70 
+  };
 
   /**
    * Constructs the Endboss, initializes images and stats, sets up position, size,
@@ -97,8 +103,8 @@ class Endboss extends MovableObject {
     this.height = 360;
     this.baseSpeed = 0.5 + Math.random() * 0.5;
     this.speed = options.speed ?? this.baseSpeed;
-    if (options.speedMultiplier && options.speed == null) { this.speed = baseSpeed * options.speedMultiplier; }
-    if (typeof options.defaultHitDamage === 'number') { this.defaultHitDamage = options.defaultHitDamage; }
+    if (options.speedMultiplier && options.speed == null) { this.speed = this.baseSpeed * options.speedMultiplier };
+    if (typeof options.defaultHitDamage === 'number') { this.defaultHitDamage = options.defaultHitDamage };
     this.leftBoundary = 0;
     this.rightBoundary = this.world?.level?.level_end_x - this.width;
     this.turnAroundOffset = 5;
