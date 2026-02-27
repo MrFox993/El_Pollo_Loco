@@ -37,7 +37,7 @@ class AudioManager {
     });
 
     this._applyMute();
-    
+    this._autoplayForCurrentMode();
 
     // // BGM after first User-Interaction 
     
@@ -97,6 +97,37 @@ class AudioManager {
             audio.currentTime = 0;
         }
         });
+    }
+
+    _autoplayForCurrentMode() {
+        const track = this.mode === 'game' ? 'bgmGame' : 'bgmMenu';
+        if (!this.audios.has(track)) return; 
+        this._playAutoplaySafe(track); 
+    }
+
+    _playAutoplaySafe(name) { 
+        const audio = this.audios.get(name); 
+        if (!audio) return;
+
+        try {
+            const p = audio.play(); 
+            if (p && typeof p.catch === 'function') {
+                p.catch(() => this._setupAutoplayFallback(name)); 
+            } 
+        } catch { 
+            this._setupAutoplayFallback(name); 
+        } 
+    }
+
+    _setupAutoplayFallback(name) { 
+        const handler = () => { 
+            const a = this.audios.get(name); 
+            if (a) a.play().catch(() => {}); 
+            document.removeEventListener('click', handler); 
+            document.removeEventListener('keydown', handler); 
+        }; 
+        document.addEventListener('click', handler, { once: true }); 
+        document.addEventListener('keydown', handler, { once: true }); 
     }
     
     /**
