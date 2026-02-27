@@ -28,28 +28,16 @@ class AudioManager {
         this.isMuted = this._loadMuted();
         this.audios  = new Map();
 
-    Object.entries(definitions).forEach(([name, cfg]) => {
-        const audio = new Audio(cfg.src);
-        audio.loop = !!cfg.loop;
-        audio.volume = typeof cfg.volume === 'number' ? cfg.volume : 1.0;
-        audio.preload = 'auto';
-        this.audios.set(name, audio);
-    });
+        Object.entries(definitions).forEach(([name, cfg]) => {
+            const audio = new Audio(cfg.src);
+            audio.loop = !!cfg.loop;
+            audio.volume = typeof cfg.volume === 'number' ? cfg.volume : 1.0;
+            audio.preload = 'auto';
+            this.audios.set(name, audio);
+        });
 
-    this._applyMute();
-    this._autoplayForCurrentMode();
-
-    // // BGM after first User-Interaction 
-    
-    //     if (this.audios.has('bgmMenu')) {
-    //     const startMenuIfNeeded = () => {
-    //         if (this.mode !== 'menu') return;
-    //         this.play('bgmMenu');
-    //     };
-    //     document.addEventListener('click',   startMenuIfNeeded, { once: true });
-    //     document.addEventListener('keydown', startMenuIfNeeded, { once: true });
-    //     }
-
+        this._applyMute();
+        this._autoplayForCurrentMode();
 
         // DOM-Wiring, if DOM is ready
         this._initDomWhenReady();
@@ -198,8 +186,16 @@ class AudioManager {
      *
      * @param {'menu'|'game'} mode
      */
-    setMode(mode) {
-        this.mode = mode === 'game' ? 'game' : 'menu';
+    setMode(mode) { 
+        const newMode = mode === 'game' ? 'game' : 'menu'; 
+        if (this.mode === newMode) return; 
+        this.mode = newMode;
+        if (newMode === 'game') { 
+            this.stopMenuBgm(); 
+        } else { 
+            this.stopGameBgm(); 
+        }
+        this._autoplayForCurrentMode(); 
     }
 
     /** Plays menu background music. */
