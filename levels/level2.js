@@ -15,7 +15,7 @@ function createLevel2() {
             new ChickenBig(),
             new ChickenBig()
         ],
-        endboss: new Endboss(),
+        endboss:  new Endboss({ defaultHitDamage: 20, speed: 1.2 }),
         clouds: [
             new Cloud(),
             new Cloud(),
