@@ -15,12 +15,6 @@ class MovableObject extends DrawableObject {
   otherDirection = false;
   speedY = 0;
   acceleration = 2;
-  offset = {
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  }
   hp = 100;
   lastHit = 0;
   damageCooldownMs = 500;
@@ -93,15 +87,10 @@ class MovableObject extends DrawableObject {
    * @returns {boolean} True if bounding boxes overlap, else false.
    */
   isColliding(mObject) { 
-    const myOff = this.offset || { top:0, bottom:0, left:0, right:0 }; 
-    const otherOff = (mObject && mObject.offset) ? mObject.offset : { top:0, bottom:0, left:0, right:0 };
-
-    return ( 
-      this.x + this.width - myOff.right > mObject.x - otherOff.left &&
-      this.x + myOff.left < mObject.x + mObject.width - otherOff.right &&
-      this.y + this.height - myOff.bottom > mObject.y + otherOff.top && 
-      this.y + myOff.top < mObject.y + mObject.height - otherOff.bottom 
-    ); 
+    if (!mObject || typeof mObject.getBounds !== 'function') return false;
+    const a = this.getBounds();
+    const b = mObject.getBounds();
+    return a.right > b.left && a.left < b.right && a.bottom > b.top && a.top < b.bottom;
   }
 
   /**
