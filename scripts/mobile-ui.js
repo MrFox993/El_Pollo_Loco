@@ -13,13 +13,21 @@
         Math.abs(window.innerWidth) > Math.abs(window.innerHeight);
 
 /**
+ * Determines whether the device reports a coarse pointer (e.g., touch).
+ * @returns {boolean}
+ */
+    const isCoarsePointer = () => 
+        typeof window.matchMedia === 'function' && window.matchMedia('(any-pointer: coarse)').matches;
+
+/**
  * Determines whether the device has touch capability.
  *
  * @returns {boolean} True for touch-capable devices, false otherwise.
  */
     const isTouchLike = () =>
         'ontouchstart' in window ||
-        navigator.maxTouchPoints > 0;
+        (navigator.maxTouchPoints || 0) > 0 ||
+        isCoarsePointer();
         
 /**
  * Checks whether the viewport size qualifies as mobile.
@@ -27,7 +35,7 @@
  * @returns {boolean} True if the viewport is small enough to be considered mobile.
  */
     const isMobileViewport = () =>
-    Math.min(window.innerWidth, window.innerHeight) <= 900;
+    Math.min(window.innerWidth, window.innerHeight) <= 1024;
     
 /**
  * Determines whether the device is mobile or emulating mobile behavior.
