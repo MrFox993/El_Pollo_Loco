@@ -102,17 +102,13 @@ class MovableObject extends DrawableObject {
    * @returns {boolean} True if colliding from above, else false.
    */
   isCollidingFromTop(mObject) {
-    const charBottom = this.y + this.height - this.offset.bottom;
-    const charTop = this.y + this.offset.top;
-    const enemyTop = mObject.y + mObject.offset.top;
-    const enemyBottom = mObject.y + mObject.height - mObject.offset.bottom;
+    if (!mObject || typeof mObject.getBounds !== 'function') return false;
+    const a = this.getBounds();
+    const b = mObject.getBounds();
 
-    const isHorizontalOverlap =
-        this.x + this.width - this.offset.right > mObject.x - mObject.offset.left &&
-        this.x + this.offset.left < mObject.x + mObject.width - mObject.offset.right;
-
-    const isFromTop = charBottom >= enemyTop && charTop < enemyTop;
-    const isFalling = this.speedY < 0; 
+    const isHorizontalOverlap = a.right > b.left && a.left < b.right;
+    const isFromTop = a.bottom >= b.top && a.top < b.top;
+    const isFalling = this.speedY < 0;
     const isAirborne = this.checkAboveGround();
 
     return isHorizontalOverlap && isFromTop && isFalling && isAirborne;
