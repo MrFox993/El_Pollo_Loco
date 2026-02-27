@@ -4,6 +4,7 @@
  * Extends CollectableObject.
  */
 class Bottle extends CollectableObject {
+    offset = { top: 20, bottom: 20, left: 15, right: 15 };
     /**
      * Paths used for the bottle rotation animation.
      * @type {string[]}

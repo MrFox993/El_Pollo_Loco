@@ -3,6 +3,7 @@
  * Extends CollectableObject.
  */
 class Coin extends CollectableObject {
+    offset = { top: 10, bottom: 10, left: 10, right: 10 };
     /**
      * Creates a new Coin instance at random X/Y coordinates.
      */
