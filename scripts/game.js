@@ -83,6 +83,7 @@ function startLevel(index) {
 
     initializeWorld(levelFactory());
     initializeAudioGameMode();
+    window.MobileUI?.bindMobileControls?.(keyboard);
     window.MobileUI?.applyUIState?.();
     updateNextLevelButtonState(); 
 }
