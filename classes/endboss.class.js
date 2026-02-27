@@ -82,8 +82,12 @@ class Endboss extends MovableObject {
    * level settings if available.
    *
    * @constructor
+   * @param {Object} [options]
+   * @param {number} [options.defaultHitDamage] - Damage the boss takes per hit (lower = tougher).
+   * @param {number} [options.speed] - Base walking speed (higher = faster).
+   * @param {number} [options.speedMultiplier] - Multiplier applied to the random base speed if speed is not provided.
    */
-  constructor() {
+  constructor(options = {}) {
     super();
     this.initImages();
     this.initStats();
@@ -91,7 +95,10 @@ class Endboss extends MovableObject {
     this.y = 130;
     this.width = 360;
     this.height = 360;
-    this.speed = 0.5 + Math.random() * 0.5;
+    this.baseSpeed = 0.5 + Math.random() * 0.5;
+    this.speed = options.speed ?? this.baseSpeed;
+    if (options.speedMultiplier && options.speed == null) { this.speed = baseSpeed * options.speedMultiplier; }
+    if (typeof options.defaultHitDamage === 'number') { this.defaultHitDamage = options.defaultHitDamage; }
     this.leftBoundary = 0;
     this.rightBoundary = this.world?.level?.level_end_x - this.width;
     this.turnAroundOffset = 5;
