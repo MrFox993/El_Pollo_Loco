@@ -25,24 +25,16 @@ header {
 
 header h1 {
     font-family: "Sancreek", serif;
-    font-size: 220px;
+    font-size: 10rem;
     font-weight: 400;
     color: #8B0000 ;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 canvas {
-    width: 100%;
     max-width: 90vw;
     aspect-ratio: 3 / 2;   /* 720 / 480 */
     height: auto;
-
     background-color: black;
     border-radius: 12px;
 }
@@ -56,6 +48,8 @@ canvas {
 
 .canvas-wrapper {
     width: min(90vw, 1600px);
+    display: flex;
+    justify-content: center;
 }
 
 .show-screen {
@@ -135,7 +129,7 @@ button:disabled:active {
 
     h2 {
         font-family: "Sancreek", serif;
-        font-size: 120px;
+        font-size: 6rem;
         font-weight: 400;
         color: #8B0000 ;
         margin-bottom: 12px;
