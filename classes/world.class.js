@@ -50,6 +50,9 @@ class World {
    */
   setWorld() {
     this.character.world = this;
+    if (this.level?.endboss) {
+      this.level.endboss.world = this;
+    }
     this.character.animate();
   }
 
