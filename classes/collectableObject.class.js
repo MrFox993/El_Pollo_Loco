@@ -7,12 +7,6 @@ class CollectableObject extends DrawableObject {
      * Collision offset to shrink or expand the hitbox.
      * @type {{top:number, bottom:number, left:number, right:number}}
      */
-    offset = {
-        top: 10,
-        bottom: 10,
-        left: 10,
-        right: 10,
-    };
 
     constructor() {
         super();
