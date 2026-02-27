@@ -148,6 +148,7 @@ class World {
     this.collisionWithCoin();
     this.collisionBottleWithEndboss();
     this.collisionBottleWithEnemies();
+    this.collisionCharacterWithEndboss();
     this.bottleSpashAnimation();
   
     this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
@@ -251,6 +252,19 @@ class World {
     });
   }
 
+/**
+ * Handles the collision between character and endboss
+ * Reduces the characters health bar
+ */
+  collisionCharacterWithEndboss() {
+    const endboss = this.level?.endboss;
+    if (!endboss) return
+    if (this.character.isColliding(endboss)) {
+      const dmg = endboss.defaultHitDamage || 34;
+      this.character.hit(dmg);
+      this.healthStatusBar.setHealthBarPercentage(this.character.hp);
+    }
+  }
 /**
    * Handles collision between thrown bottles and endboss.
    */
