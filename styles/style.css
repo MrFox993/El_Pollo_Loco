@@ -434,7 +434,6 @@ button:disabled:active {
     .menu-screen {
         gap: 10px;
         padding: 0;
-        /* padding-top: 16px; */
         flex-direction: column;
     }
 
@@ -459,9 +458,5 @@ button:disabled:active {
             }
         }
     }
-
-    /* .main-screen {
-        width: min-content;
-    } */
 
 }
