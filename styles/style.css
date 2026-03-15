@@ -432,7 +432,7 @@ button:disabled:active {
     }
 
     .menu-screen {
-        gap: 20px;
+        gap: 10px;
         padding: 0;
         /* padding-top: 16px; */
         flex-direction: column;
@@ -444,17 +444,17 @@ button:disabled:active {
 
     .control-box {
         padding: 4px;
-        margin-top: 20px;
+        margin-top: 2px;
         border-radius: 30px;
 
         h2 {
-            font-size: 24px;
+            font-size: 20px;
             margin: 0;
         }
 
         table {
             th, td {
-                font-size: 12px;
+                font-size: 16px;
                 padding: 2px;
             }
         }
