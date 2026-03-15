@@ -387,7 +387,8 @@ button:disabled:active {
 
     header {
         top: 0;
-        position: fixed;    
+        position: fixed;  
+        display: none;  
 
         h1 {
         font-size: 32px;
