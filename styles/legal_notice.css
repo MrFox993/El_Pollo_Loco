@@ -153,4 +153,8 @@ a {
     main {
         padding: 10px;
     }
+
+    #English {
+        display: none;
+    }
 }
