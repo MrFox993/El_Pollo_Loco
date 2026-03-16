@@ -9,7 +9,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     background-image: url('../assets/img/5_background/main_background_image_ai.png');
     background-size: cover;
     background-position: center;
@@ -61,21 +61,6 @@ a:hover {
 
 p {
     margin-bottom: 16px;
-}
-
-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: auto;
-}
-
-header h1 {
-    font-family: "Sancreek", serif;
-    font-size: 10rem;
-    font-weight: 400;
-    color: #8B0000 ;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 h2 {
