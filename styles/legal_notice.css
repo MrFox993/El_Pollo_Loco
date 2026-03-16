@@ -9,11 +9,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     background-image: url('../assets/img/5_background/main_background_image_ai.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    gap: 24px;
+    font-size: min(16px, 0.5rem) !important;
 }
 
 main{
@@ -24,12 +26,21 @@ main{
     padding: 24px;
 }
 
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: auto;
+}
+
 .legal_notice {
     border: 4px solid #8B4513;
     corner-shape: squircle;
     background-color: #F4A44C;
     border-radius: 60px;
     padding: 24px;
+    font-size: 3rem;
 }
 
 th, td {
@@ -51,4 +62,99 @@ a:hover {
 
 p {
     margin-bottom: 16px;
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-family: "BioRhyme", serif;
+    font-size: 4rem;
+    font-weight: 400;
+    color: #8B0000 ;
+    margin-bottom: 12px;
+}
+
+h3 {
+    font-size: 4rem;
+}
+
+a {
+    font-size: 3rem;
+}
+
+@media (max-width: 1920px) {
+    .legal_notice {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 2.5rem;
+    }
+
+    h3 {
+        font-size: 2rem;
+    }
+
+    a {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 1400px) {
+    .legal_notice {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    a {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 560px) {
+    .legal_notice {
+        font-size: 0.75rem;
+        padding: 4px;
+        border: 2px solid #8B4513;
+    }
+
+    p {
+        font-size: 0.5rem;
+        margin-bottom: 2px;
+    }
+
+    h2 {
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+
+    h3 {
+        font-size: 0.75rem;
+    }
+
+    a {
+        font-size: 0.5rem;
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    #English {
+        display: none;
+    }
 }

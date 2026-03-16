@@ -377,7 +377,17 @@ button:disabled:active {
 /* mobile devices --> (hover: none) and (pointer: coarse) */
 @media (hover: none) and (pointer: coarse) {
     canvas {
-        max-height: 60vh;
+        max-height: 66dvh;
+        max-width: 100dvw;
+        width: -webkit-fill-available;
+    }
+
+    .canvas-screen {
+        padding-bottom: 50px;
+    }
+
+    .canvas-wrapper {
+        width: min(99vw, 1600px);
     }
 
     .mobile-controls {
@@ -387,7 +397,8 @@ button:disabled:active {
 
     header {
         top: 0;
-        position: fixed;    
+        position: fixed;  
+        display: none;  
 
         h1 {
         font-size: 32px;
@@ -421,9 +432,8 @@ button:disabled:active {
     }
 
     .menu-screen {
-        gap: 4px;
+        gap: 10px;
         padding: 0;
-        padding-top: 16px;
         flex-direction: column;
     }
 
@@ -433,24 +443,20 @@ button:disabled:active {
 
     .control-box {
         padding: 4px;
-        margin-top: 20px;
+        margin-top: 2px;
         border-radius: 30px;
 
         h2 {
-            font-size: 24px;
+            font-size: 20px;
             margin: 0;
         }
 
         table {
             th, td {
-                font-size: 12px;
+                font-size: 16px;
                 padding: 2px;
             }
         }
-    }
-
-    .main-screen {
-        width: min-content;
     }
 
 }
