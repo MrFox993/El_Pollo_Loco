@@ -339,7 +339,7 @@ collisionBottleWithEnemies() {
    * Initializes the endboss health bar once the character reaches its zone.
    */
   checkEndbossStatusBar() {
-    if (!this.endbossStatusBar && this.character.x >= 2000) {
+    if (!this.endbossStatusBar && this.character.x >= 1800) {
         this.endbossStatusBar = new StatusBar("endboss", this.canvas.width);
     }
   }
