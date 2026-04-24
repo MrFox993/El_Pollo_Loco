@@ -255,7 +255,7 @@ class Character extends MovableObject {
   update() {
     let didAction = false;
 
-    if (this.world.keyboard.right && this.x <= this.world.level.level_end_x) {
+    if (this.world.keyboard.right && this.x <= (this.world.level.level_end_x - this.width)) {
       this.otherDirection = false;
       this.moveRight();
       didAction = true;

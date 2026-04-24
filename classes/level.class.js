@@ -18,7 +18,7 @@ class Level {
      * World end coordinate.
      * @type {number}
      */
-    level_end_x = 2700;
+    level_end_x = 2800;
 
     /**
      * Creates a new Level instance with all required objects.
