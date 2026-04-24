@@ -89,12 +89,12 @@ class Character extends MovableObject {
   currentState = 'idle';
 
   world;
-  speed = 10;
+  speed = 5;
   offset = {
-    top: 120,
+    top: 160,
     bottom: 20,
-    left: 30,
-    right: 30,
+    left: 50,
+    right: 50,
   }
   lastActiveAt = Date.now();
   isLongIdling = false;

@@ -52,6 +52,7 @@ class DrawableObject {
         const isDebuggable =
             this instanceof Character ||
             this instanceof ChickenSmall ||
+            this instanceof ChickenBig ||
             this instanceof Endboss ||
             this instanceof Bottle ||
             this instanceof Coin;

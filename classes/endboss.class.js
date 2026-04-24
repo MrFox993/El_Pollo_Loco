@@ -96,7 +96,7 @@ class Endboss extends MovableObject {
     this.width = 360;
     this.height = 360;
     this.offset = { 
-      top: 100, 
+      top: 140, 
       bottom: 50, 
       left: 50, 
       right: 70 

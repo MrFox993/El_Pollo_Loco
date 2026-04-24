@@ -19,6 +19,12 @@ class ChickenSmall extends MovableObject {
     "./assets/img/3_enemies_chicken/chicken_small/2_dead/dead.png"
   ]
   speed = 0.5;
+  offset = {
+    top: 10,
+    bottom: 10,
+    left: 10,
+    right: 10,
+  }
   imagesDead = this.imagesSmallChickenDead;
 
   /**
@@ -88,6 +94,12 @@ class ChickenBig extends MovableObject {
     "./assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png"
   ]
   speed = 0.5;
+  offset = {
+    top: 10,
+    bottom: 10,
+    left: 10,
+    right: 10,
+  }
   imagesDead = this.imagesBigChickenDead;
 
   /**
