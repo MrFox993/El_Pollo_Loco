@@ -9,6 +9,18 @@ window.LEVELS = [
     typeof createLevel1 === 'function' ? createLevel1 : null,
     typeof createLevel2 === 'function' ? createLevel2 : null
 ]. filter(Boolean)
+const keyMapDown = {
+    65:'left',
+    37:'left',
+    87:'up',
+    38:'up',
+    68:'right',
+    39:'right',
+    83:'down',
+    40:'down',
+    32:'space',
+    67:'c'
+}
 
 
 /**
@@ -210,19 +222,6 @@ function resumeGame() {
     if (!gamePaused) return;
     window.gamePaused = false;
     window.audioManager?.resumeAll?.();
-}
-
-const keyMapDown = {
-    65:'left',
-    37:'left',
-    87:'up',
-    38:'up',
-    68:'right',
-    39:'right',
-    83:'down',
-    40:'down',
-    32:'space',
-    67:'c'
 }
 
 window.addEventListener('keydown', e => {
