@@ -224,17 +224,26 @@ function resumeGame() {
     window.audioManager?.resumeAll?.();
 }
 
+/**
+ * Global key event listeners for game controls and pausing.
+ */
 window.addEventListener('keydown', e => {
     const key = keyMapDown[e.keyCode];
     if (key) keyboard[key] = true;
     if (e.keyCode === 80) window.gamePaused ? resumeGame() : pauseGame();
 })
 
+/**
+ * Global key event listener for key releases to update keyboard state.
+ */
 window.addEventListener('keyup', e => {
     const key = keyMapDown[e.keyCode];
     if (key) keyboard[key] = false;
 });
 
+/**
+ * Makes the functions globally accessible for UI buttons and other scripts.
+ */
 window.pauseGame = pauseGame;
 window.resumeGame = resumeGame;
 window.startNextLevel = startNextLevel;
