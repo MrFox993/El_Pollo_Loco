@@ -26,3 +26,15 @@ function getSvgUnmutedIcon () {
         </svg>
     `;
 }
+
+function getSvgPauseIcon () {
+    return `
+        data:image/svg+xml;utf8,
+        <svg xmlns="http://www.w3.org/2000/svg"
+            width="80" 
+            height="80">
+            <rect x="15" y="0" width="20" height="80" fill="white"/>
+            <rect x="45" y="0" width="20" height="80" fill="white"/>
+        </svg>
+    `;
+}
