@@ -1,8 +1,14 @@
+/**
+ * Handles all available collisions in world
+ */
 class CollisionManager {
     constructor(world) {
         this.world = world;
     }
 
+    /**
+     * Frequently running the task in world
+     */
     checkAll() {
         this.collisionWithEnemy();
         this.collisionWithBottle();
