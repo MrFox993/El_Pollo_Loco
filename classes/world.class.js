@@ -30,6 +30,7 @@ class World {
     this.collisionManager = new CollisionManager(this);
     this.cameraController = new CameraController(this);
     this.renderer = new WorldRenderer(this);
+    this.gameStateManager = new GameStateManager(this);
 
     this.pauseIcon = new Image();
     this.pauseIcon.src = getSvgPauseIcon();
@@ -43,7 +44,6 @@ class World {
     window.gameEnding = false
     this.setWorld();
     this.draw();
-    // this.run();
     this.level.enemies.forEach(enemy => enemy.startAnimation());
     if (this.level.endboss) this.level.endboss.startAnimation();
   }
@@ -89,23 +89,23 @@ class World {
 /**
    * Checks if either the player or endboss died and triggers the game end.
    */
-  checkGameOver() {
-    if (this.character.isDead()) {
-      this.endGame("lost");
-    } else if (this.level.endboss && this.level.endboss.isDead()) {
-      this.endGame("won");
-    }
-  }
+  // checkGameOver() {
+  //   if (this.character.isDead()) {
+  //     this.endGame("lost");
+  //   } else if (this.level.endboss && this.level.endboss.isDead()) {
+  //     this.endGame("won");
+  //   }
+  // }
 
 /**
    * Plays the appropriate victory or defeat sound.
    *
    * @param {'won'|'lost'} result - The outcome of the game.
    */
-  playEndSound(result) {
-    window.audioManager.stopAll();
-    window.audioManager.play(result === 'won' ? 'youWin':'gameOver');
-  }
+  // playEndSound(result) {
+  //   window.audioManager.stopAll();
+  //   window.audioManager.play(result === 'won' ? 'youWin':'gameOver');
+  // }
 
 /**
    * Computes the delay before showing an end screen, based on animation length.
@@ -113,27 +113,27 @@ class World {
    * @param {'won'|'lost'} result - The game outcome.
    * @returns {number} Delay in milliseconds.
    */
-  computeEndDelay(result) {
-    const charAnim = (this.character?.imagesDead?.length||0)*100;
-    const bossAnim = (this.level.endboss?.imagesDead?.length||0)*200;
-    const buffer = 400;
-    return result==='lost' ? charAnim+buffer : bossAnim+buffer;
-  }
+  // computeEndDelay(result) {
+  //   const charAnim = (this.character?.imagesDead?.length||0)*100;
+  //   const bossAnim = (this.level.endboss?.imagesDead?.length||0)*200;
+  //   const buffer = 400;
+  //   return result==='lost' ? charAnim+buffer : bossAnim+buffer;
+  // }
 
 /**
    * Displays the appropriate end screen and updates UI visibility.
    *
    * @param {'won'|'lost'} result - The game outcome.
    */
-  showEndScreen(result) {
-    window.gameStarted = false;
-    window.gameEnding = false;
-    window.gameOver = true;
-    window.MobileUI.applyUIState();
-    toggleScreen('.canvas-screen','hide');
-    toggleScreen(result==='won'?'youWonScreen':'youLostScreen','show');
-    if (result==='won') window.updateNextLevelButtonState?.();
-  }
+  // showEndScreen(result) {
+  //   window.gameStarted = false;
+  //   window.gameEnding = false;
+  //   window.gameOver = true;
+  //   window.MobileUI.applyUIState();
+  //   toggleScreen('.canvas-screen','hide');
+  //   toggleScreen(result==='won'?'youWonScreen':'youLostScreen','show');
+  //   if (result==='won') window.updateNextLevelButtonState?.();
+  // }
 
 /**
    * Ends the game by triggering sounds, delaying animations,
@@ -141,12 +141,12 @@ class World {
    *
    * @param {'won'|'lost'} result - The game outcome.
    */
-  endGame(result) {
-    window.gameEnding = true;
-    this.playEndSound(result);
-    const delay = this.computeEndDelay(result);
-    setTimeout(() => this.showEndScreen(result), delay);
-  }
+  // endGame(result) {
+  //   window.gameEnding = true;
+  //   this.playEndSound(result);
+  //   const delay = this.computeEndDelay(result);
+  //   setTimeout(() => this.showEndScreen(result), delay);
+  // }
 
 /**
    * Determines whether an enemy is still valid (not dead or already removed).
@@ -238,7 +238,7 @@ class World {
       this.checkCollisions();
       this.checkThrowObjects();
       this.checkEndbossStatusBar();
-      this.checkGameOver();
+      this.gameStateManager.checkGameOver();
     }
 
     requestAnimationFrame(() => this.draw());
