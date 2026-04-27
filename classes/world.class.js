@@ -328,12 +328,4 @@ class World {
     this.ctx.translate(-mObject.x, -mObject.y);
   }
   
-
-/**
-   * Restores canvas state after horizontally flipping an image.
-   */
-  flipImageBack() {
-    this.ctx.restore();
-  }
-
 }
