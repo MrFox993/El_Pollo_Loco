@@ -315,17 +315,5 @@ class World {
       this.addToMap(obj);
     });
   }
-
-/**
-   * Flips a drawable object horizontally before drawing it.
-   *
-   * @param {DrawableObject} mObject - The object to flip.
-   */
-  flipImage(mObject) {
-    this.ctx.save();
-    this.ctx.translate(mObject.x + mObject.width, mObject.y);
-    this.ctx.scale(-1, 1);
-    this.ctx.translate(-mObject.x, -mObject.y);
-  }
   
 }
