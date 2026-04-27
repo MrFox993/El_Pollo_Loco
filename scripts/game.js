@@ -9,6 +9,18 @@ window.LEVELS = [
     typeof createLevel1 === 'function' ? createLevel1 : null,
     typeof createLevel2 === 'function' ? createLevel2 : null
 ]. filter(Boolean)
+const keyMapDown = {
+    65:'left',
+    37:'left',
+    87:'up',
+    38:'up',
+    68:'right',
+    39:'right',
+    83:'down',
+    40:'down',
+    32:'space',
+    67:'c'
+}
 
 
 /**
@@ -212,30 +224,26 @@ function resumeGame() {
     window.audioManager?.resumeAll?.();
 }
 
-const keyMapDown = {
-    65:'left',
-    37:'left',
-    87:'up',
-    38:'up',
-    68:'right',
-    39:'right',
-    83:'down',
-    40:'down',
-    32:'space',
-    67:'c'
-}
-
+/**
+ * Global key event listeners for game controls and pausing.
+ */
 window.addEventListener('keydown', e => {
     const key = keyMapDown[e.keyCode];
     if (key) keyboard[key] = true;
     if (e.keyCode === 80) window.gamePaused ? resumeGame() : pauseGame();
 })
 
+/**
+ * Global key event listener for key releases to update keyboard state.
+ */
 window.addEventListener('keyup', e => {
     const key = keyMapDown[e.keyCode];
     if (key) keyboard[key] = false;
 });
 
+/**
+ * Makes the functions globally accessible for UI buttons and other scripts.
+ */
 window.pauseGame = pauseGame;
 window.resumeGame = resumeGame;
 window.startNextLevel = startNextLevel;
