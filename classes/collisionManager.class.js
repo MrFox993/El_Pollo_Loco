@@ -50,6 +50,7 @@ class CollisionManager {
    * Checks collisions between character and collectible bottles.
    */
     collisionWithBottle() {
+        const { world } = this;
         world.level.bottles.forEach((bottle, index) => {
         if (world.character.isColliding(bottle)) {
             world.character.bottles++;
@@ -64,6 +65,7 @@ class CollisionManager {
    * Checks collisions between character and collectible coins.
    */
     collisionWithCoin() {
+        const { world } = this;
         world.level.coins.forEach((coin, index) => {
         if (world.character.isColliding(coin)) {
             world.character.coins++;
@@ -79,6 +81,7 @@ class CollisionManager {
      * Reduces the characters health bar
      */
     collisionCharacterWithEndboss() {
+        const { world } = this;
         const endboss = world.level?.endboss;
         if (!endboss) return
         if (world.character.isColliding(endboss)) {
@@ -92,6 +95,7 @@ class CollisionManager {
      * Handles collision between thrown bottles and endboss.
      */
     collisionBottleWithEndboss() {
+        const { world } = this;
         if (world.level.endboss && world.throwableObjects.length > 0) {
             world.throwableObjects.forEach((bottle, index) => {
                 if (bottle.isColliding(world.level.endboss) && !bottle.markForRemoval) {
@@ -117,6 +121,7 @@ class CollisionManager {
      * Handles bottle collisions with normal enemies.
      */
     collisionBottleWithEnemies() {
+        const { world } = this;
     if (!world.throwableObjects.length) return;
         world.throwableObjects.forEach(bottle=>{
             if (bottle.markForRemoval || bottle.hasSplashed) return;
@@ -132,6 +137,7 @@ class CollisionManager {
    * Plays bottle splash animation when it hits the ground.
    */
     bottleSplashAnimation() {
+        const { world } = this;
         world.throwableObjects.forEach((bottle) => {
             let splashTriggered = false;
 
@@ -154,5 +160,4 @@ class CollisionManager {
 
             world.throwableObjects = world.throwableObjects.filter(bottle => !bottle.markForRemoval);
     }
-
 }
