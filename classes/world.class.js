@@ -27,6 +27,7 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.collisionManager = new CollisionManager(this);
 
     this.pauseIcon = new Image();
     this.pauseIcon.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect x="15" y="0" width="20" height="80" fill="white"/><rect x="45" y="0" width="20" height="80" fill="white"/></svg>';
@@ -54,6 +55,10 @@ class World {
       this.level.endboss.world = this;
     }
     this.character.animate();
+  }
+
+  checkCollisions() {
+    this.collisionManager.checkAll();
   }
 
 /**
@@ -139,23 +144,6 @@ class World {
   }
 
 /**
-   * Performs all collision checks for enemies, bottles, coins,
-   * splash effects, and endboss damage.
-   */
-  checkCollisions() {
-    this.collisionWithEnemy();
-    this.collisionWithBottle();
-    this.collisionWithCoin();
-    this.collisionBottleWithEndboss();
-    this.collisionBottleWithEnemies();
-    this.collisionCharacterWithEndboss();
-    this.bottleSpashAnimation();
-  
-    this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
-
-  }
-
-/**
    * Determines whether an enemy is still valid (not dead or already removed).
    *
    * @param {MovableObject} enemy - The enemy to check.
@@ -194,119 +182,6 @@ class World {
   }
 
 /**
-   * Checks collisions between character and enemies (jump kill or damage).
-   */
-  collisionWithEnemy() {
-    for (let i = 0; i < this.level.enemies.length; i++) {
-      const enemy = this.level.enemies[i];
-  
-      if (enemy.isDeadFlag) continue;
-  
-      if (this.character.isCollidingFromTop(enemy)) {
-        enemy.isDeadFlag = true;
-        enemy.hp = 0;
-  
-        enemy.playDeadAnimation(enemy.imagesDead, () => {
-          const idx = this.level.enemies.indexOf(enemy);
-          if (idx >= 0) this.level.enemies.splice(idx, 1);
-        });
-  
-        window.audioManager.play('enemyHit');
-        this.character.jump();
-        return;
-      }
-  
-      if (this.character.isColliding(enemy)) {
-        this.character.hit();
-        this.healthStatusBar.setHealthBarPercentage(this.character.hp);
-        return;
-      }
-    }
-  }
-
-/**
-   * Checks collisions between character and collectible bottles.
-   */
-  collisionWithBottle() {
-    this.level.bottles.forEach((bottle, index) => {
-      if (this.character.isColliding(bottle)) {
-        this.character.bottles++;
-        this.level.bottles.splice(index, 1);
-        this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
-        window.audioManager.play('bottleCollect');
-      }
-    });
-  }
-
-/**
-   * Checks collisions between character and collectible coins.
-   */
-  collisionWithCoin() {
-    this.level.coins.forEach((coin, index) => {
-      if (this.character.isColliding(coin)) {
-        this.character.coins++;
-        this.level.coins.splice(index, 1);
-        this.coinStatusBar.setCoinBarPercentage(this.character.coins);
-        window.audioManager.play('coin');
-      }
-    });
-  }
-
-/**
- * Handles the collision between character and endboss
- * Reduces the characters health bar
- */
-  collisionCharacterWithEndboss() {
-    const endboss = this.level?.endboss;
-    if (!endboss) return
-    if (this.character.isColliding(endboss)) {
-      const dmg = endboss.defaultHitDamage || 34;
-      this.character.hit(dmg);
-      this.healthStatusBar.setHealthBarPercentage(this.character.hp);
-    }
-  }
-/**
-   * Handles collision between thrown bottles and endboss.
-   */
-  collisionBottleWithEndboss() {
-      if (this.level.endboss && this.throwableObjects.length > 0) {
-          this.throwableObjects.forEach((bottle, index) => {
-              if (bottle.isColliding(this.level.endboss) && !bottle.markForRemoval) {
-                this.level.endboss.hit();
-                this.level.endboss.hitCount ++;
-                if (this.endbossStatusBar) {
-                    this.endbossStatusBar.setEndbossHealthBarPercentage(this.level.endboss.hp);
-                }
-                bottle.stopThrow();
-                bottle.stopGravity();
-                if (!bottle.hasSfxPlayed) {
-                        window.audioManager.play('bottleShatter');
-                        bottle.hasSfxPlayed = true;
-                      }
-                window.audioManager.play('endbossHit');
-                bottle.playSplashAnimation();
-              }
-          });
-      }
-  }
-
-/**
-   * Handles bottle collisions with normal enemies.
-   */
-collisionBottleWithEnemies() {
-  if (!this.throwableObjects.length) return;
-    this.throwableObjects.forEach(bottle=>{
-        if (bottle.markForRemoval || bottle.hasSplashed) return;
-        this.level.enemies.forEach(enemy=>{
-            if (!this.isEnemyValid(enemy)) return;
-            if (bottle.isColliding(enemy)) this.handleBottleHit(bottle, enemy);
-        });
-    });
-    this.throwableObjects = this.throwableObjects.filter(b=>!b.markForRemoval);
-}
-
-
-/**
    * Handles bottle throwing logic, cooldown, and bottle spawning.
    */
   checkThrowObjects() {
@@ -342,33 +217,6 @@ collisionBottleWithEnemies() {
     if (!this.endbossStatusBar && this.character.x >= 1800) {
         this.endbossStatusBar = new StatusBar("endboss", this.canvas.width);
     }
-  }
-
-/**
-   * Plays bottle splash animation when it hits the ground.
-   */
-  bottleSpashAnimation() {
-    this.throwableObjects.forEach((bottle) => {
-        let splashTriggered = false;
-
-        if (bottle.hasSplashed || bottle.markForRemoval) {
-            return;
-        }
-
-        splashTriggered= bottle.y >= 350;
-
-        if (splashTriggered && !bottle.markForRemoval) {
-            bottle.stopThrow();
-            bottle.stopGravity();
-            if (!bottle.hasSfxPlayed) {
-              window.audioManager.play('bottleShatter');
-              bottle.hasSfxPlayed = true;
-            }
-            bottle.playSplashAnimation();
-        }
-            });
-
-        this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
   }
   
 /**
@@ -456,7 +304,7 @@ collisionBottleWithEnemies() {
       this.flipImage(mObject);
     }
     mObject.draw(this.ctx);
-    mObject.drawFrame(this.ctx);
+    // mObject.drawFrame(this.ctx);
 
     if (mObject.otherDirection) {
       this.flipImageBack(mObject);
