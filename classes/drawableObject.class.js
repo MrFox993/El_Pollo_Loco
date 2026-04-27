@@ -87,4 +87,19 @@ class DrawableObject {
         this.imageCache[path] = img;
         });
     }
+
+    drawWithOrientation(ctx) {
+        if (this.otherDirection) {
+            ctx.save();
+            ctx.translate(this.x + this.width, this.y);
+            ctx.scale(-1, 1);
+            ctx.translate(-this.x, -this.y);
+        }
+
+        this.draw(ctx);
+
+        if (this.otherDirection) {
+            ctx.restore();
+        }
+    }
 }

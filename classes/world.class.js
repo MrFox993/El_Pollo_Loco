@@ -301,15 +301,7 @@ class World {
    */
   addToMap(mObject) {
     if (!mObject) return;
-    if (mObject.otherDirection === true) {
-      this.flipImage(mObject);
-    }
-    mObject.draw(this.ctx);
-    // mObject.drawFrame(this.ctx);
-
-    if (mObject.otherDirection) {
-      this.flipImageBack(mObject);
-    }
+    mObject.drawWithOrientation(this.ctx);
   }
 
 /**
