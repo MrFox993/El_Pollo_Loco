@@ -28,6 +28,7 @@ class World {
     this.canvas = canvas;
     this.keyboard = keyboard;
     this.collisionManager = new CollisionManager(this);
+    this.cameraController = new CameraController(this);
 
     this.pauseIcon = new Image();
     this.pauseIcon.src = getSvgPauseIcon();
@@ -282,12 +283,12 @@ class World {
     if (gamePaused) this.drawPauseOverlay();
 
     if (!gamePaused && !window.gameEnding) {
-        this.character.update();
-        this.updateCamera();
-        this.checkCollisions();
-        this.checkThrowObjects();
-        this.checkEndbossStatusBar();
-        this.checkGameOver();
+      this.character.update();
+      this.cameraController.update();
+      this.checkCollisions();
+      this.checkThrowObjects();
+      this.checkEndbossStatusBar();
+      this.checkGameOver();
     }
 
     requestAnimationFrame(() => this.draw());
@@ -343,35 +344,4 @@ class World {
     this.ctx.restore();
   }
 
-/**
-   * Computes the desired X position of the camera to follow the character.
-   *
-   * @returns {number} Desired camera X coordinate.
-   */
-  calculateDesiredCameraX() {
-      const center = this.canvas.width/2;
-      const dir = this.character.otherDirection ? -1 : 1;
-      return -this.character.x + center - this.character.width/2 - dir*240;
-  }
-
-/**
-   * Restricts camera movement to within world boundaries.
-   *
-   * @param {number} x - The desired camera position.
-   * @returns {number} Clamped camera position.
-   */
-  clampCamera(x) {
-      const minX = -(this.level.level_end_x - this.canvas.width);
-      return Math.max(minX, Math.min(0, x));
-  }
-
-/**
-   * Smoothly updates the camera position to follow the character.
-   */
-  updateCamera() {
-    const desired = this.calculateDesiredCameraX();
-    const lerp = (this.keyboard.left||this.keyboard.right) ? 0.08 : 0.05;
-    this.camera_x += (desired - this.camera_x)*lerp;
-    this.camera_x = this.clampCamera(this.camera_x);
-  }
 }
