@@ -12,7 +12,6 @@ class CollisionManager {
         this.collisionCharacterWithEndboss();
         this.bottleSplashAnimation();
 
-        // this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
     }
 
     /**
