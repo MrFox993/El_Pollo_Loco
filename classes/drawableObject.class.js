@@ -88,6 +88,12 @@ class DrawableObject {
         });
     }
 
+    /**
+     * Draws the object while respecting its horizontal facing direction.
+     * 
+     * @param {CanvasRenderingContext2D} ctx - The 2D canvas rendering context.
+     * @returns {void} 
+     */
     drawWithOrientation(ctx) {
         if (this.otherDirection) {
             ctx.save();
