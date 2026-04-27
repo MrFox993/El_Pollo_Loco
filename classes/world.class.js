@@ -29,6 +29,7 @@ class World {
     this.keyboard = keyboard;
     this.collisionManager = new CollisionManager(this);
     this.cameraController = new CameraController(this);
+    this.renderer = new WorldRenderer(this);
 
     this.pauseIcon = new Image();
     this.pauseIcon.src = getSvgPauseIcon();
@@ -58,6 +59,9 @@ class World {
     this.character.animate();
   }
 
+/**
+ * Calls the collision check of the collisionManager class.
+ */
   checkCollisions() {
     this.collisionManager.checkAll();
   }
@@ -219,70 +223,16 @@ class World {
         this.endbossStatusBar = new StatusBar("endboss", this.canvas.width);
     }
   }
-  
-/**
-   * Draws the background layers (clouds, mountains, scenery).
-   */
-  drawBackground() {
-      this.addObjectsToMap(this.level.backgroundObjects);
-      this.addObjectsToMap(this.level.clouds);
-  }
-
-/**
-   * Draws all gameplay objects such as enemies, coins, bottles, etc.
-   */
-  drawGameObjects() {
-      this.addObjectsToMap(this.throwableObjects);
-      this.addObjectsToMap(this.level.bottles);
-      this.addObjectsToMap(this.level.coins);
-      this.addObjectsToMap(this.level.enemies);
-      this.addToMap(this.character);
-      this.addToMap(this.level.endboss);
-  }
-
-/**
-   * Draws all HUD elements (health, bottle, coin, endboss bars).
-   */
-  drawHUD() {
-      this.addToMap(this.healthStatusBar);
-      this.addToMap(this.coinStatusBar);
-      this.addToMap(this.bottleStatusBar);
-      if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
-  }
-
-/**
-   * Draws the semi-transparent pause overlay with pause icon.
-   */
-  drawPauseOverlay() {
-      this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      const iconSize = 80;
-      this.ctx.drawImage(this.pauseIcon,
-          this.canvas.width/2 - iconSize/2,
-          this.canvas.height/2 - iconSize/2,
-          iconSize, iconSize);
-  }
 
 /**
    * The main rendering loop. Draws everything and updates world state.
    */
   draw() {
-    if (!gameStarted) return;
     if (!window.gameStarted && !window.gameEnding) return;
 
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.renderer.render();
 
-    this.ctx.save();
-    this.ctx.translate(this.camera_x, 0);
-
-    this.drawBackground();
-    this.drawGameObjects();
-    this.ctx.restore();
-
-    this.drawHUD();
-    if (gamePaused) this.drawPauseOverlay();
-
-    if (!gamePaused && !window.gameEnding) {
+    if (!window.gamePaused && !window.gameEnding) {
       this.character.update();
       this.cameraController.update();
       this.checkCollisions();
@@ -292,28 +242,5 @@ class World {
     }
 
     requestAnimationFrame(() => this.draw());
-}
-
-/**
-   * Draws a single object onto the canvas, including horizontal flipping.
-   *
-   * @param {DrawableObject} mObject - The object to draw.
-   */
-  addToMap(mObject) {
-    if (!mObject) return;
-    mObject.drawWithOrientation(this.ctx);
   }
-
-/**
-   * Draws an array of objects onto the canvas.
-   *
-   * @param {DrawableObject[]} objects - Objects to render.
-   */
-  addObjectsToMap(objects) {
-    if (!Array.isArray(objects)) return;
-    objects.forEach((obj) => {
-      this.addToMap(obj);
-    });
-  }
-  
 }
