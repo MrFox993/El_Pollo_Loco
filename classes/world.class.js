@@ -27,9 +27,13 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.collisionManager = new CollisionManager(this);
+    this.cameraController = new CameraController(this);
+    this.renderer = new WorldRenderer(this);
+    this.gameStateManager = new GameStateManager(this);
 
     this.pauseIcon = new Image();
-    this.pauseIcon.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect x="15" y="0" width="20" height="80" fill="white"/><rect x="45" y="0" width="20" height="80" fill="white"/></svg>';
+    this.pauseIcon.src = getSvgPauseIcon();
   }
 
 /**
@@ -40,7 +44,6 @@ class World {
     window.gameEnding = false
     this.setWorld();
     this.draw();
-    // this.run();
     this.level.enemies.forEach(enemy => enemy.startAnimation());
     if (this.level.endboss) this.level.endboss.startAnimation();
   }
@@ -54,6 +57,13 @@ class World {
       this.level.endboss.world = this;
     }
     this.character.animate();
+  }
+
+/**
+ * Calls the collision check of the collisionManager class.
+ */
+  checkCollisions() {
+    this.collisionManager.checkAll();
   }
 
 /**
@@ -74,85 +84,6 @@ class World {
    */
   stop() {
     clearInterval(this.intervalId)
-  }
-
-/**
-   * Checks if either the player or endboss died and triggers the game end.
-   */
-  checkGameOver() {
-    if (this.character.isDead()) {
-      this.endGame("lost");
-    } else if (this.level.endboss && this.level.endboss.isDead()) {
-      this.endGame("won");
-    }
-  }
-
-/**
-   * Plays the appropriate victory or defeat sound.
-   *
-   * @param {'won'|'lost'} result - The outcome of the game.
-   */
-  playEndSound(result) {
-    window.audioManager.stopAll();
-    window.audioManager.play(result === 'won' ? 'youWin':'gameOver');
-  }
-
-/**
-   * Computes the delay before showing an end screen, based on animation length.
-   *
-   * @param {'won'|'lost'} result - The game outcome.
-   * @returns {number} Delay in milliseconds.
-   */
-  computeEndDelay(result) {
-    const charAnim = (this.character?.imagesDead?.length||0)*100;
-    const bossAnim = (this.level.endboss?.imagesDead?.length||0)*200;
-    const buffer = 400;
-    return result==='lost' ? charAnim+buffer : bossAnim+buffer;
-  }
-
-/**
-   * Displays the appropriate end screen and updates UI visibility.
-   *
-   * @param {'won'|'lost'} result - The game outcome.
-   */
-  showEndScreen(result) {
-    window.gameStarted = false;
-    window.gameEnding = false;
-    window.gameOver = true;
-    window.MobileUI.applyUIState();
-    toggleScreen('.canvas-screen','hide');
-    toggleScreen(result==='won'?'youWonScreen':'youLostScreen','show');
-    if (result==='won') window.updateNextLevelButtonState?.();
-  }
-
-/**
-   * Ends the game by triggering sounds, delaying animations,
-   * and finally showing the end screen.
-   *
-   * @param {'won'|'lost'} result - The game outcome.
-   */
-  endGame(result) {
-    window.gameEnding = true;
-    this.playEndSound(result);
-    const delay = this.computeEndDelay(result);
-    setTimeout(() => this.showEndScreen(result), delay);
-  }
-
-/**
-   * Performs all collision checks for enemies, bottles, coins,
-   * splash effects, and endboss damage.
-   */
-  checkCollisions() {
-    this.collisionWithEnemy();
-    this.collisionWithBottle();
-    this.collisionWithCoin();
-    this.collisionBottleWithEndboss();
-    this.collisionBottleWithEnemies();
-    this.collisionCharacterWithEndboss();
-    this.bottleSpashAnimation();
-  
-    this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
-
   }
 
 /**
@@ -194,119 +125,6 @@ class World {
   }
 
 /**
-   * Checks collisions between character and enemies (jump kill or damage).
-   */
-  collisionWithEnemy() {
-    for (let i = 0; i < this.level.enemies.length; i++) {
-      const enemy = this.level.enemies[i];
-  
-      if (enemy.isDeadFlag) continue;
-  
-      if (this.character.isCollidingFromTop(enemy)) {
-        enemy.isDeadFlag = true;
-        enemy.hp = 0;
-  
-        enemy.playDeadAnimation(enemy.imagesDead, () => {
-          const idx = this.level.enemies.indexOf(enemy);
-          if (idx >= 0) this.level.enemies.splice(idx, 1);
-        });
-  
-        window.audioManager.play('enemyHit');
-        this.character.jump();
-        return;
-      }
-  
-      if (this.character.isColliding(enemy)) {
-        this.character.hit();
-        this.healthStatusBar.setHealthBarPercentage(this.character.hp);
-        return;
-      }
-    }
-  }
-
-/**
-   * Checks collisions between character and collectible bottles.
-   */
-  collisionWithBottle() {
-    this.level.bottles.forEach((bottle, index) => {
-      if (this.character.isColliding(bottle)) {
-        this.character.bottles++;
-        this.level.bottles.splice(index, 1);
-        this.bottleStatusBar.setBottleBarPercentage(this.character.bottles);
-        window.audioManager.play('bottleCollect');
-      }
-    });
-  }
-
-/**
-   * Checks collisions between character and collectible coins.
-   */
-  collisionWithCoin() {
-    this.level.coins.forEach((coin, index) => {
-      if (this.character.isColliding(coin)) {
-        this.character.coins++;
-        this.level.coins.splice(index, 1);
-        this.coinStatusBar.setCoinBarPercentage(this.character.coins);
-        window.audioManager.play('coin');
-      }
-    });
-  }
-
-/**
- * Handles the collision between character and endboss
- * Reduces the characters health bar
- */
-  collisionCharacterWithEndboss() {
-    const endboss = this.level?.endboss;
-    if (!endboss) return
-    if (this.character.isColliding(endboss)) {
-      const dmg = endboss.defaultHitDamage || 34;
-      this.character.hit(dmg);
-      this.healthStatusBar.setHealthBarPercentage(this.character.hp);
-    }
-  }
-/**
-   * Handles collision between thrown bottles and endboss.
-   */
-  collisionBottleWithEndboss() {
-      if (this.level.endboss && this.throwableObjects.length > 0) {
-          this.throwableObjects.forEach((bottle, index) => {
-              if (bottle.isColliding(this.level.endboss) && !bottle.markForRemoval) {
-                this.level.endboss.hit();
-                this.level.endboss.hitCount ++;
-                if (this.endbossStatusBar) {
-                    this.endbossStatusBar.setEndbossHealthBarPercentage(this.level.endboss.hp);
-                }
-                bottle.stopThrow();
-                bottle.stopGravity();
-                if (!bottle.hasSfxPlayed) {
-                        window.audioManager.play('bottleShatter');
-                        bottle.hasSfxPlayed = true;
-                      }
-                window.audioManager.play('endbossHit');
-                bottle.playSplashAnimation();
-              }
-          });
-      }
-  }
-
-/**
-   * Handles bottle collisions with normal enemies.
-   */
-collisionBottleWithEnemies() {
-  if (!this.throwableObjects.length) return;
-    this.throwableObjects.forEach(bottle=>{
-        if (bottle.markForRemoval || bottle.hasSplashed) return;
-        this.level.enemies.forEach(enemy=>{
-            if (!this.isEnemyValid(enemy)) return;
-            if (bottle.isColliding(enemy)) this.handleBottleHit(bottle, enemy);
-        });
-    });
-    this.throwableObjects = this.throwableObjects.filter(b=>!b.markForRemoval);
-}
-
-
-/**
    * Handles bottle throwing logic, cooldown, and bottle spawning.
    */
   checkThrowObjects() {
@@ -345,185 +163,22 @@ collisionBottleWithEnemies() {
   }
 
 /**
-   * Plays bottle splash animation when it hits the ground.
-   */
-  bottleSpashAnimation() {
-    this.throwableObjects.forEach((bottle) => {
-        let splashTriggered = false;
-
-        if (bottle.hasSplashed || bottle.markForRemoval) {
-            return;
-        }
-
-        splashTriggered= bottle.y >= 350;
-
-        if (splashTriggered && !bottle.markForRemoval) {
-            bottle.stopThrow();
-            bottle.stopGravity();
-            if (!bottle.hasSfxPlayed) {
-              window.audioManager.play('bottleShatter');
-              bottle.hasSfxPlayed = true;
-            }
-            bottle.playSplashAnimation();
-        }
-            });
-
-        this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.markForRemoval);
-  }
-  
-/**
-   * Draws the background layers (clouds, mountains, scenery).
-   */
-  drawBackground() {
-      this.addObjectsToMap(this.level.backgroundObjects);
-      this.addObjectsToMap(this.level.clouds);
-  }
-
-/**
-   * Draws all gameplay objects such as enemies, coins, bottles, etc.
-   */
-  drawGameObjects() {
-      this.addObjectsToMap(this.throwableObjects);
-      this.addObjectsToMap(this.level.bottles);
-      this.addObjectsToMap(this.level.coins);
-      this.addObjectsToMap(this.level.enemies);
-      this.addToMap(this.character);
-      this.addToMap(this.level.endboss);
-  }
-
-/**
-   * Draws all HUD elements (health, bottle, coin, endboss bars).
-   */
-  drawHUD() {
-      this.addToMap(this.healthStatusBar);
-      this.addToMap(this.coinStatusBar);
-      this.addToMap(this.bottleStatusBar);
-      if (this.endbossStatusBar) this.addToMap(this.endbossStatusBar);
-  }
-
-/**
-   * Draws the semi-transparent pause overlay with pause icon.
-   */
-  drawPauseOverlay() {
-      this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      const iconSize = 80;
-      this.ctx.drawImage(this.pauseIcon,
-          this.canvas.width/2 - iconSize/2,
-          this.canvas.height/2 - iconSize/2,
-          iconSize, iconSize);
-  }
-
-/**
    * The main rendering loop. Draws everything and updates world state.
    */
   draw() {
-    if (!gameStarted) return;
     if (!window.gameStarted && !window.gameEnding) return;
 
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.renderer.render();
 
-    this.ctx.save();
-    this.ctx.translate(this.camera_x, 0);
-
-    this.drawBackground();
-    this.drawGameObjects();
-    this.ctx.restore();
-
-    this.drawHUD();
-    if (gamePaused) this.drawPauseOverlay();
-
-    if (!gamePaused && !window.gameEnding) {
-        this.character.update();
-        this.updateCamera();
-        this.checkCollisions();
-        this.checkThrowObjects();
-        this.checkEndbossStatusBar();
-        this.checkGameOver();
+    if (!window.gamePaused && !window.gameEnding) {
+      this.character.update();
+      this.cameraController.update();
+      this.checkCollisions();
+      this.checkThrowObjects();
+      this.checkEndbossStatusBar();
+      this.gameStateManager.checkGameOver();
     }
 
     requestAnimationFrame(() => this.draw());
-}
-
-/**
-   * Draws a single object onto the canvas, including horizontal flipping.
-   *
-   * @param {DrawableObject} mObject - The object to draw.
-   */
-  addToMap(mObject) {
-    if (!mObject) return;
-    if (mObject.otherDirection === true) {
-      this.flipImage(mObject);
-    }
-    mObject.draw(this.ctx);
-    // mObject.drawFrame(this.ctx);
-
-    if (mObject.otherDirection) {
-      this.flipImageBack(mObject);
-    }
-  }
-
-/**
-   * Draws an array of objects onto the canvas.
-   *
-   * @param {DrawableObject[]} objects - Objects to render.
-   */
-  addObjectsToMap(objects) {
-    if (!Array.isArray(objects)) return;
-    objects.forEach((obj) => {
-      this.addToMap(obj);
-    });
-  }
-
-/**
-   * Flips a drawable object horizontally before drawing it.
-   *
-   * @param {DrawableObject} mObject - The object to flip.
-   */
-  flipImage(mObject) {
-    this.ctx.save();
-    this.ctx.translate(mObject.x + mObject.width, mObject.y);
-    this.ctx.scale(-1, 1);
-    this.ctx.translate(-mObject.x, -mObject.y);
-  }
-  
-
-/**
-   * Restores canvas state after horizontally flipping an image.
-   */
-  flipImageBack() {
-    this.ctx.restore();
-  }
-
-/**
-   * Computes the desired X position of the camera to follow the character.
-   *
-   * @returns {number} Desired camera X coordinate.
-   */
-  calculateDesiredCameraX() {
-      const center = this.canvas.width/2;
-      const dir = this.character.otherDirection ? -1 : 1;
-      return -this.character.x + center - this.character.width/2 - dir*240;
-  }
-
-/**
-   * Restricts camera movement to within world boundaries.
-   *
-   * @param {number} x - The desired camera position.
-   * @returns {number} Clamped camera position.
-   */
-  clampCamera(x) {
-      const minX = -(this.level.level_end_x - this.canvas.width);
-      return Math.max(minX, Math.min(0, x));
-  }
-
-/**
-   * Smoothly updates the camera position to follow the character.
-   */
-  updateCamera() {
-    const desired = this.calculateDesiredCameraX();
-    const lerp = (this.keyboard.left||this.keyboard.right) ? 0.08 : 0.05;
-    this.camera_x += (desired - this.camera_x)*lerp;
-    this.camera_x = this.clampCamera(this.camera_x);
   }
 }
