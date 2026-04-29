@@ -54,7 +54,7 @@ function resetGameState() {
  * Hides all menu or game UI screens.
  */
 function hideAllScreens() {
-    ['menuScreen','controlScreen','youWonScreen','youLostScreen'].forEach(id => hideScreen(id));
+    ['menuScreen','controlScreen','youWonScreen','youLostScreen','legalNotice'].forEach(id => hideScreen(id));
 }
 
 /**
