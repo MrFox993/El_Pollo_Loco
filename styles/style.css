@@ -283,7 +283,7 @@ button:disabled:active {
     background-color: #F4A44C;
     border-radius: 60px;
     padding: 24px;
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 th, td {
@@ -397,6 +397,32 @@ h3 {
 
     #muteBtn img {
         width: 25px;
+    }
+
+    .content-legal-notice {
+        padding: 16px;
+    }
+
+    .legal-notice-header {
+        margin-bottom: 4px;
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 0.8rem;
+    }
+
+    .legal_notice {
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+
+    a {
+        font-size: 0.8rem;
     }
 }
 
