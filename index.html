@@ -70,7 +70,7 @@
           <button type="button" class="start-game-button" onclick="startNewGame()">Start New Game</button>
           <div class="navigation">
             <button type="button" class="navigation-buttons" onclick="toggleScreen('menuScreen', 'hide'), toggleScreen('controlScreen', 'show')">Controls</button>
-            <button type="button" class="navigation-buttons"><a href="./legal-notice.html" target="_blank">Legal Notice</a></button>
+            <button type="button" class="navigation-buttons" onclick="toggleScreen('menuScreen', 'hide'), toggleScreen('legalNotice', 'show')">Legal Notice</button>
             <button type="button" id="muteBtn" class="navigation-buttons" aria-pressed="false" title="Mute/Unmute (Key M)">
               <img id="muteIcon" src="./assets/icons/volume_off.svg" alt="mute">
               <span class="visually-hidden">Sound</span>
@@ -109,6 +109,35 @@
           </div>
           <div class="navigation">
             <button type="button" class="navigation-buttons" onclick="toggleScreen('controlScreen', 'hide'), toggleScreen('menuScreen', 'show')">Back</button>
+            <button type="button" class="navigation-buttons" onclick="startNewGame()">Start New Game</button>
+          </div>
+        </div>
+        <div class="menu-screen hide-screen" id="legalNotice">
+          <div class="content-legal-notice" id="English">
+                <h2 class="legal-notice-header">Legal Notice</h2>
+                <p>Information pursuant to Section 5 of the German Digital Services Act (DDG):</p>
+                    <table class="legal_notice">
+                        <tr>
+                            <th>name</th><td>Marcel Fuchs</td>
+                        </tr>
+                        <tr>
+                            <th>street</th><td>Köhnenbergsweg 5</td>
+                        </tr>
+                        <tr>
+                        <th>address</th><td>32683 Barntrup</td>
+                        </tr>
+                        <tr>
+                            <th>state</th><td>North Rhine-Westphalia</td>
+                        </tr>
+                        <tr>
+                            <th>country</th><td>Germany</td>
+                        </tr>
+                    </table>
+                <h3>Contact</h3>
+                <a href="mailto:marcel.fuchs.1@gmx.de">marcel.fuchs.1@gmx.de</a>
+            </div>
+          <div class="navigation">
+            <button type="button" class="navigation-buttons" onclick="toggleScreen('legalNotice', 'hide'), toggleScreen('menuScreen', 'show')">Back</button>
             <button type="button" class="navigation-buttons" onclick="startNewGame()">Start New Game</button>
           </div>
         </div>
