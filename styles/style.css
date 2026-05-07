@@ -401,6 +401,14 @@ h3 {
 
     .content-legal-notice {
         padding: 16px;
+
+        h3 {
+        font-size: 1.5rem;
+        }
+
+        a {
+            font-size: 0.8rem;
+        }
     }
 
     .legal-notice-header {
@@ -417,13 +425,6 @@ h3 {
         padding: 12px;
     }
 
-    h3 {
-        font-size: 1.5rem;
-    }
-
-    a {
-        font-size: 0.8rem;
-    }
 }
 
 @media (hover: hover) and (pointer: fine) and (max-width: 768px) {
@@ -497,8 +498,9 @@ h3 {
 
     .navigation {
         gap: 4px;
-        flex-direction: column;
+        flex-direction: row;
         padding-top: 0;
+        margin-top: -8px;
     }
 
     .navigation-buttons {
@@ -506,6 +508,7 @@ h3 {
         width: max-content;
         gap: 12px;
         min-height: 40px;
+        min-width: 0;
     }
 
     #muteBtn img {
@@ -539,9 +542,42 @@ h3 {
         table {
             th, td {
                 font-size: 16px;
-                padding: 2px;
+                padding: 0px;
             }
         }
     }
 
+    .content-legal-notice {
+        padding: 0;
+        border-radius: 30px;
+
+        p {
+            font-size: 1rem;
+            margin-left: 2px;
+        }
+
+        h3 {
+            font-size: 1rem;
+            margin-left: 10px;
+        }
+
+        a {
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+    }
+
+    .legal-notice-header {
+        margin-bottom: 0;
+        font-size: 1.5rem;
+        margin-left: 2px;
+        align-self: center;
+    }
+
+    .legal_notice {
+        padding: 0;
+        font-size: 1rem;
+        border-radius: 30px;
+        margin-left: 2px;
+    }
 }
