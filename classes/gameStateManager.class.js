@@ -76,6 +76,7 @@ class GameStateManager {
 
         window.MobileUI.applyUIState();
         toggleScreen('.canvas-screen', 'hide');
+        toggleScreen('.in-game-controls', 'hide');
         toggleScreen(
         result === 'won' ? 'youWonScreen' : 'youLostScreen',
         'show'
