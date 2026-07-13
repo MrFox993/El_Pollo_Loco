@@ -54,7 +54,7 @@ function resetGameState() {
  * Hides all menu or game UI screens.
  */
 function hideAllScreens() {
-    ['menuScreen','controlScreen','youWonScreen','youLostScreen','legalNotice'].forEach(id => hideScreen(id));
+    ['menuScreen','controlScreen','youWonScreen','youLostScreen','legalNotice','.in-game-controls'].forEach(id => hideScreen(id));
 }
 
 /**
@@ -89,6 +89,7 @@ function startLevel(index) {
     resetGameState();
     hideAllScreens();
     showScreen('.canvas-screen');
+    showScreen('.in-game-controls');
 
     const levelFactory = window.LEVELS[index];
     if (!levelFactory) return
@@ -202,7 +203,7 @@ function initMenuAudio() {
 function resetMenuState() {
     window.gameStarted = false;
     window.gameOver = false;
-    ['youWonScreen','youLostScreen','.canvas-screen'].forEach(hideScreen);
+    ['youWonScreen','youLostScreen','.canvas-screen', '.in-game-controls'].forEach(hideScreen);
     document.getElementById('nextLevelBtn')?.setAttribute('disabled','disabled');
 }
 

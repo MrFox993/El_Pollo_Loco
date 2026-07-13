@@ -21,7 +21,7 @@ class AudioManager {
         this.iconMode      = options.iconMode    || 'img';
         this.iconOn        = options.iconOn      || 'assets/icons/volume_on.svg';
         this.iconOff       = options.iconOff     || 'assets/icons/volume_off.svg';
-        this.muteButtonRef = options.muteButton  || null;
+        this.muteButtonRefs = [options.muteButton].flat().filter(Boolean)  || null;
         this.mode = 'menu';
 
         // ---- Condition & Audio-Objects ----
@@ -265,31 +265,42 @@ class AudioManager {
      * @private
      */
     _wireDom() {
-    const btn = typeof this.muteButtonRef === 'string'
-        ? document.querySelector(this.muteButtonRef)
-        : this.muteButtonRef;
+        let btns = [];
 
-    this.muteBtn = btn || null;
+        this.muteButtonRefs.forEach(ref => {
+            if (typeof ref === 'string') {
+                document.querySelectorAll(ref).forEach(node => btns.push(node));
+            } else if (ref instanceof HTMLElement) {
+                btns.push(ref);
+            }
+        });
+        // Additionally: always find by #muteBtn and #muteBtnInGame for robustness
+        ['#muteBtn', '#muteBtnInGame', '.mobileMuteBtn'].forEach(sel => {
+            document.querySelectorAll(sel).forEach(node => {
+                if (!btns.includes(node)) btns.push(node)
+            })
+        });
+        this.muteBtns = btns;
 
-    // UI-Sync (Icon/ARIA/Title) 
-    this._syncMuteButtonUI();
+        // UI-Sync (Icon/ARIA/Title) 
+        this._syncMuteButtonUI();
 
-    if (this.muteBtn) {
-        this.muteBtn.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        this.toggleMute();
+        this.muteBtns.forEach(btn => {
+            btn.addEventListener('click', ev => {
+                ev.preventDefault();
+                this.toggleMute();
+            });
+        });
+
+        // Shortcut (Taste 'm'),ignore auto-repeat
+        window.addEventListener('keydown', (ev) => {
+            const key = (ev.key || '').toLowerCase();
+            if (key === this.shortcutKey) {
+            if (ev.repeat) return;
+            ev.preventDefault();
+            this.toggleMute();
+            }
         }, false);
-    }
-
-    // Shortcut (Taste 'm'),ignore auto-repeat
-    window.addEventListener('keydown', (ev) => {
-        const key = (ev.key || '').toLowerCase();
-        if (key === this.shortcutKey) {
-        if (ev.repeat) return;
-        ev.preventDefault();
-        this.toggleMute();
-        }
-    }, false);
     }
 
     /**
@@ -301,35 +312,34 @@ class AudioManager {
      * @private
      */
     _syncMuteButtonUI() {
-        if (!this.muteBtn) return;
-
-    // ARIA / Title
-    this.muteBtn.setAttribute('aria-pressed', String(this.isMuted));
-    this.muteBtn.title = this.isMuted ? 'Sound on (Key M)' : 'Sound off (Key M)';
-
-    if (this.iconMode === 'img') {
-        let img = this.muteBtn.querySelector('#muteIcon');
-        if (!img) {
-        img = document.createElement('img');
-        img.id = 'muteIcon';
-        img.width = 24; img.height = 24;
-        img.alt = '';
-        this.muteBtn.prepend(img);
-        }
-        img.src = this.isMuted ? this.iconOff : this.iconOn;
-
-    } else {
-        let iconSpan = this.muteBtn.querySelector('#muteIcon');
-        if (!iconSpan) {
-        iconSpan = document.createElement('span');
-        iconSpan.id = 'muteIcon';
-        iconSpan.setAttribute('aria-hidden', 'true');
-        this.muteBtn.prepend(iconSpan);
-        }
-        iconSpan.innerHTML = this.isMuted
-            ? getSvgMutedicon()
-            : getSvgUnmutedIcon();
-    }
+        if (!this.muteBtns || !this.muteBtns.length) return;
+        this.muteBtns.forEach(btn => {
+            btn.setAttribute('aria-pressed', String(this.isMuted));
+            btn.title = this.isMuted ? 'Sound on (Key M)' : 'Sound off (Key M)';
+            // Icon:
+            if (this.iconMode === 'img') {
+                let img = btn.querySelector('#muteIcon');
+                if (!img) {
+                    img = document.createElement('img');
+                    img.id = 'muteIcon';
+                    img.width = 24; img.height = 24;
+                    img.alt = '';
+                    btn.prepend(img);
+                }
+                img.src = this.isMuted ? this.iconOff : this.iconOn;
+            } else {
+                let iconSpan = btn.querySelector('#muteIcon');
+                if (!iconSpan) {
+                    iconSpan = document.createElement('span');
+                    iconSpan.id = 'muteIcon';
+                    iconSpan.setAttribute('aria-hidden', 'true');
+                    btn.prepend(iconSpan);
+                }
+                iconSpan.innerHTML = this.isMuted
+                    ? getSvgMutedicon()
+                    : getSvgUnmutedIcon();
+            }
+        });
     }
 }
 
