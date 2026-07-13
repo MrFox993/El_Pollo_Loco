@@ -55,12 +55,14 @@ canvas {
 .in-game-controls {
     display: flex;
     justify-content: flex-end;
+    width: 935px;
 }
 
 .in-game-mute-btn {
     border-radius: 90px;
     min-width: fit-content !important;
-    height:fit-content
+    height:fit-content;
+    min-height: 50px !important;
 }
 
 .show-screen {
@@ -244,8 +246,8 @@ button:disabled:active {
 
 .control-btn {
     flex: 1;
-    min-width: 56px;
-    min-height: 56px;
+    min-width: 50px;
+    min-height: 50px;
     border-radius: 12px;
     border: 2px solid #333;
     background: #f9d27c;
@@ -488,8 +490,8 @@ h3 {
     }
 
     .mobile-controls {
-        padding: 8px;
-        gap: 0.35rem;
+        padding: 2px;
+        gap: 0.05rem;
     }
 
     header {
