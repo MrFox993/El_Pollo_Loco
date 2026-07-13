@@ -51,7 +51,7 @@
       gameOver: { src: 'assets/audio/cartoon-trombone-sound-effect-241387.mp3', volume: 0.8 },
       youWin: { src: 'assets/audio/you-win-sfx-442128.mp3', volume: 0.8 }
     }, {
-      muteButton: '#muteBtn',                 
+      muteButton: ['#muteBtn', '#muteBtnInGame'],                 
       iconMode:   'img',                      
       iconOn:     'assets/icons/volume_on.svg',
       iconOff:    'assets/icons/volume_off.svg',
@@ -142,8 +142,8 @@
           </div>
         </div>
       </section>
-      <section class="in-game-controls">
-        <button type="button" id="muteBtn" class="navigation-buttons in-game-mute-btn" aria-pressed="false" title="Mute/Unmute (Key M)">
+      <section class="in-game-controls hide-screen">
+        <button type="button" id="muteBtnInGame" class="navigation-buttons in-game-mute-btn" aria-pressed="false" title="Mute/Unmute (Key M)">
           <img id="muteIcon" src="./assets/icons/volume_off.svg" alt="mute">
           <span class="visually-hidden">Sound</span>
         </button>
