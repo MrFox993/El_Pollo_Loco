@@ -2,6 +2,8 @@
     const mobileControls = document.getElementById('mobileControls');
     const rotateOverlay  = document.getElementById('rotateOverlay');
     const canvasScreen   = document.querySelector('.canvas-screen');
+    const inGameControls = document.querySelector('.in-game-controls');
+
 
 /**
  * Determines whether the current device orientation is landscape.
@@ -70,6 +72,11 @@
  */
     function updateMobileVisibility(flags) {
         mobileControls.style.display = flags.showMobile ? 'flex' : 'none';
+        if (flags.showMobile) {
+                inGameControls.classList.add('hide-screen');
+            } else {
+                inGameControls.classList.remove('show-screen');
+            }        
         if (flags.hideMobile) mobileControls.style.display = 'none';
         mobileControls.setAttribute('aria-hidden', String(!flags.showMobile));
     }
