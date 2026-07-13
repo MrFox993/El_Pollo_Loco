@@ -247,11 +247,11 @@ button:disabled:active {
 .control-btn {
     flex: 1;
     min-width: 50px;
-    min-height: 50px;
+    min-height: 25px;
     border-radius: 12px;
     border: 2px solid #333;
     background: #f9d27c;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 700;
     box-shadow: 0 2px 0 #333;
     display: flex;
@@ -286,7 +286,7 @@ button:disabled:active {
 }
 
 .mobile-btn-bottle {
-    height: 40px;
+    height: 25px;
     width: 70px;
 }
 
@@ -476,9 +476,11 @@ h3 {
 /* mobile devices --> (hover: none) and (pointer: coarse) */
 @media (hover: none) and (pointer: coarse) {
     canvas {
-        max-height: 66dvh;
-        max-width: 100dvw;
-        width: -webkit-fill-available;
+        display: block;
+        width: 100dvw;
+        height: 100dvh;
+        max-width: max-content;
+        aspect-ratio: unset;
     }
 
     .canvas-screen {
