@@ -51,7 +51,7 @@
       gameOver: { src: 'assets/audio/cartoon-trombone-sound-effect-241387.mp3', volume: 0.8 },
       youWin: { src: 'assets/audio/you-win-sfx-442128.mp3', volume: 0.8 }
     }, {
-      muteButton: ['#muteBtn', '#muteBtnInGame'],                 
+      muteButton: ['#muteBtn', '#muteBtnInGame', '#mobileMuteBtn'],                 
       iconMode:   'img',                      
       iconOn:     'assets/icons/volume_on.svg',
       iconOff:    'assets/icons/volume_off.svg',
@@ -182,7 +182,12 @@
         <button id="btnRight" class="control-btn" aria-label="Nach rechts" title="Rechts">⟶</button>
         <button id="btnJump"  class="control-btn" aria-label="Springen" title="Springen">⤴︎</button>
         <button id="btnThrow" class="control-btn" aria-label="Werfen"  title="Werfen"><img src="./assets/img/6_salsa_bottle/salsa_bottle.png" alt="salsa_bottle" class="mobile-btn-bottle"></button>
-        <button id="btnPause" class="pause-btn" aria-label="Pause" title="Pause">⏸</button>
+        <button id="btnPause" class="control-btn" aria-label="Pause" title="Pause">⏸</button>
+        <button type="button" id="mobileMuteBtn" class="control-btn" aria-pressed="false" title="Mute/Unmute (Key M)">
+          <img id="muteIcon" src="./assets/icons/volume_off.svg" alt="mute">
+          <span class="visually-hidden">Sound</span>
+        </button>
+
       </div>
 
     </main>
