@@ -57,7 +57,7 @@ class WorldRenderer {
         world.ctx.clearRect(0, 0, world.canvas.width, world.canvas.height);
 
         world.ctx.save();
-        world.ctx.translate(world.camera_x, 0);
+        world.ctx.translate(Math.round(world.camera_x), 0);
 
         this.drawBackground();
         this.drawGameObjects();
