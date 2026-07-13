@@ -275,7 +275,7 @@ class AudioManager {
             }
         });
         // Additionally: always find by #muteBtn and #muteBtnInGame for robustness
-        ['#muteBtn', '#muteBtnInGame'].forEach(sel => {
+        ['#muteBtn', '#muteBtnInGame', '.mobileMuteBtn'].forEach(sel => {
             document.querySelectorAll(sel).forEach(node => {
                 if (!btns.includes(node)) btns.push(node)
             })
