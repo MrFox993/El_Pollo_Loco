@@ -26,7 +26,7 @@ class DrawableObject {
      * @param {CanvasRenderingContext2D} ctx - The rendering context.
      */
     draw(ctx) {
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.img, Math.round(this.x), Math.round(this.y), this.width, this.height);
     }
     getBounds() {
         const off = this.offset || { top:0, bottom:0, left:0, right:0 };
