@@ -52,6 +52,17 @@ canvas {
     justify-content: center;
 }
 
+.in-game-controls {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.in-game-mute-btn {
+    border-radius: 90px;
+    min-width: fit-content !important;
+    height:fit-content
+}
+
 .show-screen {
     display: flex;
 }
