@@ -121,18 +121,37 @@ class CollisionManager {
     }
 
     /**
-   * Checks collisions between character and collectible coins.
-   */
+     * Checks and collects all coin collisions for the character.
+     */
     collisionWithCoin() {
         const { world } = this;
         world.level.coins.forEach((coin, index) => {
-        if (world.character.isColliding(coin)) {
-            world.character.coins++;
-            world.level.coins.splice(index, 1);
-            world.coinStatusBar.setCoinBarPercentage(world.character.coins);
-            window.audioManager.play('coin');
-        }
+            if (this.checkCoinCollision(coin)) {
+                this.collectCoin(index);
+            }
         });
+    }
+
+    /**
+     * Returns true if character collides with coin.
+     * @param {MovableObject} coin
+     * @returns {boolean}
+     */
+    checkCoinCollision(coin) {
+        const { world } = this;
+        return world.character.isColliding(coin);
+    }
+
+    /**
+     * Handles collecting coin at specified index.
+     * @param {number} index
+     */
+    collectCoin(index) {
+        const { world } = this;
+        world.character.coins++;
+        world.level.coins.splice(index, 1);
+        world.coinStatusBar.setCoinBarPercentage(world.character.coins);
+        window.audioManager.play('coin');
     }
 
     /**
