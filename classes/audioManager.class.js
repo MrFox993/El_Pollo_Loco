@@ -264,45 +264,21 @@ class AudioManager {
      *
      * @private
      */
+Apply
+/**
+     * Attaches DOM event handlers:
+     * - click on mute button
+     * - keyboard shortcut for mute
+     *
+     * @private
+     */
     _wireDom() {
-        let btns = [];
-
-        this.muteButtonRefs.forEach(ref => {
-            if (typeof ref === 'string') {
-                document.querySelectorAll(ref).forEach(node => btns.push(node));
-            } else if (ref instanceof HTMLElement) {
-                btns.push(ref);
-            }
-        });
-        // Additionally: always find by #muteBtn and #muteBtnInGame for robustness
-        ['#muteBtn', '#muteBtnInGame', '.mobileMuteBtn'].forEach(sel => {
-            document.querySelectorAll(sel).forEach(node => {
-                if (!btns.includes(node)) btns.push(node)
-            })
-        });
-        this.muteBtns = btns;
-
-        // UI-Sync (Icon/ARIA/Title) 
+        this._collectMuteButtons();
         this._syncMuteButtonUI();
-
-        this.muteBtns.forEach(btn => {
-            btn.addEventListener('click', ev => {
-                ev.preventDefault();
-                this.toggleMute();
-            });
-        });
-
-        // Shortcut (Taste 'm'),ignore auto-repeat
-        window.addEventListener('keydown', (ev) => {
-            const key = (ev.key || '').toLowerCase();
-            if (key === this.shortcutKey) {
-            if (ev.repeat) return;
-            ev.preventDefault();
-            this.toggleMute();
-            }
-        }, false);
+        this._addMuteBtnClickHandlers();
+        this._addMuteShortcutHandler();
     }
-
+    
     /**
      * Finds all mute button elements and stores references.
      * @private
