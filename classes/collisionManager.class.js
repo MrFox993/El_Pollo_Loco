@@ -213,19 +213,51 @@ class CollisionManager {
     }
 
     /**
-     * Handles bottle collisions with normal enemies.
+     * Checks for collisions between bottles and the endboss.
      */
-    collisionBottleWithEnemies() {
+    collisionBottleWithEndboss() {
         const { world } = this;
-    if (!world.throwableObjects.length) return;
-        world.throwableObjects.forEach(bottle=>{
-            if (bottle.markForRemoval || bottle.hasSplashed) return;
-            world.level.enemies.forEach(enemy=>{
-                if (!world.isEnemyValid(enemy)) return;
-                if (bottle.isColliding(enemy)) world.handleBottleHit(bottle, enemy);
-            });
+        if (!world.level.endboss || world.throwableObjects.length === 0) return;
+        world.throwableObjects.forEach((bottle, index) => {
+            if (this.isBottleHitEndboss(bottle)) {
+                this.handleBottleHitEndboss(bottle);
+            }
         });
-        world.throwableObjects = world.throwableObjects.filter(b=>!b.markForRemoval);
+    }
+
+    /**
+     * Returns true if bottle collides with endboss and not already handled.
+     * @param {ThrowableObject} bottle
+     * @returns {boolean}
+     */
+    isBottleHitEndboss(bottle) {
+        const { world } = this;
+        const endboss = world.level.endboss;
+        return (
+            bottle.isColliding(endboss) &&
+            !bottle.markForRemoval
+        );
+    }
+
+    /**
+     * Applies endboss hit logic on collision with bottle.
+     * @param {ThrowableObject} bottle
+     */
+    handleBottleHitEndboss(bottle) {
+        const { world } = this;
+        world.level.endboss.hit();
+        world.level.endboss.hitCount++;
+        if (world.endbossStatusBar) {
+            world.endbossStatusBar.setEndbossHealthBarPercentage(world.level.endboss.hp);
+        }
+        bottle.stopThrow();
+        bottle.stopGravity();
+        if (!bottle.hasSfxPlayed) {
+            window.audioManager.play('bottleShatter');
+            bottle.hasSfxPlayed = true;
+        }
+        window.audioManager.play('endbossHit');
+        bottle.playSplashAnimation();
     }
 
     /**
