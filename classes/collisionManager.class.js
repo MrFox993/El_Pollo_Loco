@@ -187,29 +187,39 @@ class CollisionManager {
     }
 
     /**
-     * Handles collision between thrown bottles and endboss.
+     * Checks and resolves all bottle-to-enemy collisions.
      */
-    collisionBottleWithEndboss() {
+    collisionBottleWithEnemies() {
         const { world } = this;
-        if (world.level.endboss && world.throwableObjects.length > 0) {
-            world.throwableObjects.forEach((bottle, index) => {
-                if (bottle.isColliding(world.level.endboss) && !bottle.markForRemoval) {
-                    world.level.endboss.hit();
-                    world.level.endboss.hitCount ++;
-                    if (world.endbossStatusBar) {
-                        world.endbossStatusBar.setEndbossHealthBarPercentage(world.level.endboss.hp);
-                    }
-                    bottle.stopThrow();
-                    bottle.stopGravity();
-                    if (!bottle.hasSfxPlayed) {
-                            window.audioManager.play('bottleShatter');
-                            bottle.hasSfxPlayed = true;
-                        }
-                    window.audioManager.play('endbossHit');
-                    bottle.playSplashAnimation();
-                }
-            });
-        }
+        if (!world.throwableObjects.length) return;
+        world.throwableObjects.forEach(bottle => {
+            if (this.shouldCheckBottleEnemyCollision(bottle)) {
+                this.checkBottleEnemyHits(bottle);
+            }
+        });
+        world.throwableObjects = world.throwableObjects.filter(b => !b.markForRemoval);
+    }
+
+    /**
+     * Determines if a bottle can be checked for collisions.
+     * @param {ThrowableObject} bottle
+     * @returns {boolean}
+     */
+    shouldCheckBottleEnemyCollision(bottle) {
+        return !bottle.markForRemoval && !bottle.hasSplashed;
+    }
+
+    /**
+     * Checks this bottle against all active enemies and handles collisions.
+     * @param {ThrowableObject} bottle
+     */
+    checkBottleEnemyHits(bottle) {
+        const { world } = this;
+        world.level.enemies.forEach(enemy => {
+            if (world.isEnemyValid(enemy) && bottle.isColliding(enemy)) {
+                world.handleBottleHit(bottle, enemy);
+            }
+        });
     }
 
     /**
