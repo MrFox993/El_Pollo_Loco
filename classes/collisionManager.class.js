@@ -85,19 +85,39 @@ class CollisionManager {
         world.character.hit();
         world.healthStatusBar.setHealthBarPercentage(world.character.hp);
     }
+    
     /**
-   * Checks collisions between character and collectible bottles.
-   */
+     * Checks and collects all bottle collisions for the character.
+     */
     collisionWithBottle() {
         const { world } = this;
         world.level.bottles.forEach((bottle, index) => {
-        if (world.character.isColliding(bottle)) {
-            world.character.bottles++;
-            world.level.bottles.splice(index, 1);
-            world.bottleStatusBar.setBottleBarPercentage(world.character.bottles);
-            window.audioManager.play('bottleCollect');
-        }
+            if (this.checkBottleCollision(bottle)) {
+                this.collectBottle(index);
+            }
         });
+    }
+
+    /**
+     * Returns true if character collides with bottle.
+     * @param {MovableObject} bottle
+     * @returns {boolean}
+     */
+    checkBottleCollision(bottle) {
+        const { world } = this;
+        return world.character.isColliding(bottle);
+    }
+
+    /**
+     * Handles collecting bottle at specified index.
+     * @param {number} index
+     */
+    collectBottle(index) {
+        const { world } = this;
+        world.character.bottles++;
+        world.level.bottles.splice(index, 1);
+        world.bottleStatusBar.setBottleBarPercentage(world.character.bottles);
+        window.audioManager.play('bottleCollect');
     }
 
     /**
