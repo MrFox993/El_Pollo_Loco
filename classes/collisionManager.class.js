@@ -261,30 +261,23 @@ class CollisionManager {
     }
 
     /**
-   * Plays bottle splash animation when it hits the ground.
-   */
+     * Triggers splash animation for bottles hitting the ground.
+     */
     bottleSplashAnimation() {
         const { world } = this;
         world.throwableObjects.forEach((bottle) => {
-            let splashTriggered = false;
-
-            if (bottle.hasSplashed || bottle.markForRemoval) {
-                return;
+            if (this.isBottleSplashTriggered(bottle)) {
+                this.handleBottleSplash(bottle);
             }
+        });
+        world.throwableObjects = world.throwableObjects.filter(bottle => !bottle.markForRemoval);
+    }
 
-            splashTriggered= bottle.y >= 350;
-
-            if (splashTriggered && !bottle.markForRemoval) {
-                bottle.stopThrow();
-                bottle.stopGravity();
-                if (!bottle.hasSfxPlayed) {
-                window.audioManager.play('bottleShatter');
-                bottle.hasSfxPlayed = true;
-                }
-                bottle.playSplashAnimation();
-            }
-                });
-
-            world.throwableObjects = world.throwableObjects.filter(bottle => !bottle.markForRemoval);
+    /**
+     * Returns true if bottle should play splash.
+     * @param {ThrowableObject} bottle
+     */
+    isBottleSplashTriggered(bottle) {
+        return !bottle.hasSplashed && !bottle.markForRemoval && bottle.y >= 350;
     }
 }
