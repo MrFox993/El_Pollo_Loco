@@ -155,18 +155,35 @@ class CollisionManager {
     }
 
     /**
-     * Handles the collision between character and endboss
-     * Reduces the characters health bar
+     * Checks and applies collision with endboss.
      */
     collisionCharacterWithEndboss() {
         const { world } = this;
         const endboss = world.level?.endboss;
-        if (!endboss) return
-        if (world.character.isColliding(endboss)) {
+        if (!endboss) return;
+        if (this.checkEndbossCollision(endboss)) {
+            this.applyEndbossDamage(endboss);
+        }
+    }
+
+    /**
+     * True if character collides with endboss.
+     * @param {MovableObject} endboss
+     */
+    checkEndbossCollision(endboss) {
+        const { world } = this;
+        return world.character.isColliding(endboss);
+    }
+
+    /**
+     * Applies endboss damage to character and updates health.
+     * @param {MovableObject} endboss
+     */
+    applyEndbossDamage(endboss) {
+        const { world } = this;
         const dmg = endboss.defaultHitDamage || 34;
         world.character.hit(dmg);
         world.healthStatusBar.setHealthBarPercentage(world.character.hp);
-        }
     }
 
     /**
