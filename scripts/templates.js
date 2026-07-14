@@ -1,3 +1,7 @@
+/**
+ * Returns the SVG markup for a muted speaker icon.
+ * @returns {string} SVG string for the muted icon.
+ */
 function getSvgMutedicon (){
     return `
         <svg xmlns="http://www.w3.org/2000/svg"
@@ -12,6 +16,10 @@ function getSvgMutedicon (){
     `;
 } 
 
+/**
+ * Returns the SVG markup for a unmuted speaker icon.
+ * @returns {string} SVG string for the muted icon.
+ */
 function getSvgUnmutedIcon () {
     return ` 
         <svg xmlns="http://www.w3.org/2000/svg"
@@ -27,6 +35,10 @@ function getSvgUnmutedIcon () {
     `;
 }
 
+/**
+ * Returns the SVG markup for a pause icon.
+ * @returns {string} SVG string for the muted icon.
+ */
 function getSvgPauseIcon () {
     return `
         data:image/svg+xml;utf8,
