@@ -290,4 +290,18 @@ class CollisionManager {
     isBottleSplashTriggered(bottle) {
         return !bottle.hasSplashed && !bottle.markForRemoval && bottle.y >= 350;
     }
+
+    /**
+     * Handles the splash animation for a bottle.
+     * @param {ThrowableObject} bottle
+     */
+    handleBottleSplash(bottle) {
+        bottle.stopThrow();
+        bottle.stopGravity();
+        if (!bottle.hasSfxPlayed) {
+            window.audioManager.play('bottleShatter');
+            bottle.hasSfxPlayed = true;
+        }
+        bottle.playSplashAnimation();
+    }
 }
