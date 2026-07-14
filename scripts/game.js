@@ -87,18 +87,32 @@ function initializeAudioGameMode() {
 function startLevel(index) {
     stopWorld();
     resetGameState();
-    hideAllScreens();
-    showScreen('.canvas-screen');
-    showScreen('.in-game-controls');
+    setupInGameUI();
 
     const levelFactory = window.LEVELS[index];
     if (!levelFactory) return
 
     initializeWorld(levelFactory());
     initializeAudioGameMode();
+    bindMobileControlsAndUI();
+    updateNextLevelButtonState(); 
+}
+
+/**
+ * Shows the necessary screens and hides others for gameplay.
+ */
+function setupInGameUI() {
+    hideAllScreens();
+    showScreen('.canvas-screen');
+    showScreen('.in-game-controls');
+}
+
+/**
+ * (Re)binds mobile controls and applies mobile UI state.
+ */
+function bindMobileControlsAndUI() {
     window.MobileUI?.bindMobileControls?.(keyboard);
     window.MobileUI?.applyUIState?.();
-    updateNextLevelButtonState(); 
 }
 
 /**
@@ -227,6 +241,7 @@ function resumeGame() {
 
 /**
  * Global key event listeners for game controls and pausing.
+ * @param {KeyboardEvent} e
  */
 window.addEventListener('keydown', e => {
     const key = keyMapDown[e.keyCode];
@@ -236,6 +251,7 @@ window.addEventListener('keydown', e => {
 
 /**
  * Global key event listener for key releases to update keyboard state.
+ * @param {KeyboardEvent} e
  */
 window.addEventListener('keyup', e => {
     const key = keyMapDown[e.keyCode];
