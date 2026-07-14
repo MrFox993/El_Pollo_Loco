@@ -122,6 +122,10 @@
     }
     applyUIState();
 
+/**
+ * Prevents default right-click context menu on mobile controls.
+ * @param {Event} e
+ */
     ['contextmenu'].forEach(evt => {
         mobileControls.addEventListener(evt, e => e.preventDefault(), { passive: false });
     });
