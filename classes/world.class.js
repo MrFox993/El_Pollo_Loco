@@ -162,23 +162,42 @@ class World {
     }
   }
 
-/**
+  /**
    * The main rendering loop. Draws everything and updates world state.
    */
   draw() {
-    if (!window.gameStarted && !window.gameEnding) return;
-
+    if (!this.shouldDrawFrame()) return;
     this.renderer.render();
-
-    if (!window.gamePaused && !window.gameEnding) {
-      this.character.update();
-      this.cameraController.update();
-      this.checkCollisions();
-      this.checkThrowObjects();
-      this.checkEndbossStatusBar();
-      this.gameStateManager.checkGameOver();
-    }
-
+    if (this.shouldUpdateGameLogic()) this.updateGameLogic();
     requestAnimationFrame(() => this.draw());
   }
+
+  /**
+   * Returns true if the scene should be drawn (game in playable state).
+   * @returns {boolean}
+   */
+  shouldDrawFrame() {
+    return window.gameStarted || window.gameEnding;
+  }
+
+  /**
+   * Returns true if the game logic should be updated this frame.
+   * @returns {boolean}
+   */
+  shouldUpdateGameLogic() {
+    return !window.gamePaused && !window.gameEnding;
+  }
+
+  /**
+   * Calls all per-frame game logic updates.
+   */
+  updateGameLogic() {
+    this.character.update();
+    this.cameraController.update();
+    this.checkCollisions();
+    this.checkThrowObjects();
+    this.checkEndbossStatusBar();
+    this.gameStateManager.checkGameOver();
+  }
+
 }
