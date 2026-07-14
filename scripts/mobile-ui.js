@@ -46,6 +46,9 @@
  */
     const isMobileOrEmulated = () => isTouchLike() && isMobileViewport();
 
+/**
+ * Sets flag indicating use of physical keyboard.
+ */
     let keyboardUsed = false;
     window.addEventListener('keydown', () => keyboardUsed = true);
     
