@@ -111,7 +111,7 @@ class WorldRenderer {
         }
     }
 
-    /**
+        /**
      * Draws a semi-transparent overlay and a pause icon centered on the canvas.
      * Intended to be shown only when the game is paused.
      *
@@ -120,16 +120,21 @@ class WorldRenderer {
     drawPauseOverlay() {
         const { world } = this;
         const ctx = world.ctx;
-
         ctx.fillStyle = 'rgba(0,0,0,0.3)';
         ctx.fillRect(0, 0, world.canvas.width, world.canvas.height);
+        this.drawPauseIcon(ctx, world.canvas.width / 2, world.canvas.height / 2);
+    }
 
-        const cx = world.canvas.width / 2;
-        const cy = world.canvas.height / 2;
+    /**
+     * Draws the pause icon at the given center.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} cx - center x
+     * @param {number} cy - center y
+     */
+    drawPauseIcon(ctx, cx, cy) {
         const w = 12;
         const h = 60;
         const gap = 12;
-
         ctx.fillStyle = 'white';
         ctx.fillRect(cx - gap - w, cy - h / 2, w, h);
         ctx.fillRect(cx + gap, cy - h / 2, w, h);

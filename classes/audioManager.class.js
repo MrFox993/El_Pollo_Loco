@@ -264,9 +264,27 @@ class AudioManager {
      *
      * @private
      */
+Apply
+/**
+     * Attaches DOM event handlers:
+     * - click on mute button
+     * - keyboard shortcut for mute
+     *
+     * @private
+     */
     _wireDom() {
+        this._collectMuteButtons();
+        this._syncMuteButtonUI();
+        this._addMuteBtnClickHandlers();
+        this._addMuteShortcutHandler();
+    }
+    
+    /**
+     * Finds all mute button elements and stores references.
+     * @private
+     */
+    _collectMuteButtons() {
         let btns = [];
-
         this.muteButtonRefs.forEach(ref => {
             if (typeof ref === 'string') {
                 document.querySelectorAll(ref).forEach(node => btns.push(node));
@@ -274,31 +292,38 @@ class AudioManager {
                 btns.push(ref);
             }
         });
-        // Additionally: always find by #muteBtn and #muteBtnInGame for robustness
         ['#muteBtn', '#muteBtnInGame', '.mobileMuteBtn'].forEach(sel => {
             document.querySelectorAll(sel).forEach(node => {
                 if (!btns.includes(node)) btns.push(node)
-            })
+            });
         });
         this.muteBtns = btns;
+    }
 
-        // UI-Sync (Icon/ARIA/Title) 
-        this._syncMuteButtonUI();
-
+    /**
+     * Adds click event handlers to all mute buttons.
+     * @private
+     */
+    _addMuteBtnClickHandlers() {
         this.muteBtns.forEach(btn => {
             btn.addEventListener('click', ev => {
                 ev.preventDefault();
                 this.toggleMute();
             });
         });
+    }
 
-        // Shortcut (Taste 'm'),ignore auto-repeat
+    /**
+     * Adds a global keyboard shortcut for muting.
+     * @private
+     */
+    _addMuteShortcutHandler() {
         window.addEventListener('keydown', (ev) => {
             const key = (ev.key || '').toLowerCase();
             if (key === this.shortcutKey) {
-            if (ev.repeat) return;
-            ev.preventDefault();
-            this.toggleMute();
+                if (ev.repeat) return;
+                ev.preventDefault();
+                this.toggleMute();
             }
         }, false);
     }

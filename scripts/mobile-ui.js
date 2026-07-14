@@ -46,6 +46,9 @@
  */
     const isMobileOrEmulated = () => isTouchLike() && isMobileViewport();
 
+/**
+ * Sets flag indicating use of physical keyboard.
+ */
     let keyboardUsed = false;
     window.addEventListener('keydown', () => keyboardUsed = true);
     
@@ -119,6 +122,10 @@
     }
     applyUIState();
 
+/**
+ * Prevents default right-click context menu on mobile controls.
+ * @param {Event} e
+ */
     ['contextmenu'].forEach(evt => {
         mobileControls.addEventListener(evt, e => e.preventDefault(), { passive: false });
     });

@@ -53,9 +53,7 @@ canvas {
 }
 
 .in-game-controls {
-    display: flex;
-    justify-content: flex-end;
-    width: 935px;
+    width: 100vw;
 }
 
 .in-game-mute-btn {
@@ -63,6 +61,8 @@ canvas {
     min-width: fit-content !important;
     height:fit-content;
     min-height: 50px !important;
+    position: sticky;
+    left: calc((100vw + 720px) / 2);
 }
 
 .show-screen {
@@ -157,7 +157,7 @@ button:disabled:active {
 
         th, td {
             padding: 8px 12px;
-            font-size: 48px;
+            font-size: 36px;
             color: #3E2723;
         }
     }
