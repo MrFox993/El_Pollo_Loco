@@ -304,6 +304,55 @@ class AudioManager {
     }
 
     /**
+     * Finds all mute button elements and stores references.
+     * @private
+     */
+    _collectMuteButtons() {
+        let btns = [];
+        this.muteButtonRefs.forEach(ref => {
+            if (typeof ref === 'string') {
+                document.querySelectorAll(ref).forEach(node => btns.push(node));
+            } else if (ref instanceof HTMLElement) {
+                btns.push(ref);
+            }
+        });
+        ['#muteBtn', '#muteBtnInGame', '.mobileMuteBtn'].forEach(sel => {
+            document.querySelectorAll(sel).forEach(node => {
+                if (!btns.includes(node)) btns.push(node)
+            });
+        });
+        this.muteBtns = btns;
+    }
+
+    /**
+     * Adds click event handlers to all mute buttons.
+     * @private
+     */
+    _addMuteBtnClickHandlers() {
+        this.muteBtns.forEach(btn => {
+            btn.addEventListener('click', ev => {
+                ev.preventDefault();
+                this.toggleMute();
+            });
+        });
+    }
+
+    /**
+     * Adds a global keyboard shortcut for muting.
+     * @private
+     */
+    _addMuteShortcutHandler() {
+        window.addEventListener('keydown', (ev) => {
+            const key = (ev.key || '').toLowerCase();
+            if (key === this.shortcutKey) {
+                if (ev.repeat) return;
+                ev.preventDefault();
+                this.toggleMute();
+            }
+        }, false);
+    }
+
+    /**
      * Updates button UI to reflect mute state:
      * - aria attributes
      * - tooltip text
