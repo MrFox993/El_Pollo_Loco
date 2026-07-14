@@ -21,37 +21,70 @@ class CollisionManager {
     }
 
     /**
-   * Checks collisions between character and enemies (jump kill or damage).
-   */
+     * Handles enemy collision checks for all enemies.
+     */
     collisionWithEnemy() {
         const { world } = this;
-        for (let i = 0; i < world.level.enemies.length; i++) {
-        const enemy = world.level.enemies[i];
-    
-        if (enemy.isDeadFlag) continue;
-    
-        if (world.character.isCollidingFromTop(enemy)) {
-            enemy.isDeadFlag = true;
-            enemy.hp = 0;
-    
-            enemy.playDeadAnimation(enemy.imagesDead, () => {
-            const idx = world.level.enemies.indexOf(enemy);
-            if (idx >= 0) world.level.enemies.splice(idx, 1);
-            });
-    
-            window.audioManager.play('enemyHit');
-            world.character.jump();
-            return;
-        }
-    
-        if (world.character.isColliding(enemy)) {
-            world.character.hit();
-            world.healthStatusBar.setHealthBarPercentage(world.character.hp);
-            return;
-        }
-        }
+        world.level.enemies.forEach(enemy => {
+            if (!enemy.isDeadFlag) {
+                if (this.isTopCollision(enemy)) return;
+                if (this.isSideCollision(enemy)) return;
+            }
+        });
     }
 
+    /**
+     * Handles collision when the character jumps on top of an enemy.
+     * @param {MovableObject} enemy
+     * @returns {boolean} True if collision handled, else false.
+     */
+    isTopCollision(enemy) {
+        const { world } = this;
+        if (world.character.isCollidingFromTop(enemy)) {
+            this.handleEnemyStomp(enemy);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handles collision when the character hits an enemy from the side.
+     * @param {MovableObject} enemy
+     * @returns {boolean} True if collision handled, else false.
+     */
+    isSideCollision(enemy) {
+        const { world } = this;
+        if (world.character.isColliding(enemy)) {
+            this.handleCharacterHit();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handles the logic when the character jumps on top of an enemy.
+     * @param {MovableObject} enemy
+     */
+    handleEnemyStomp(enemy) {
+        const { world } = this;
+        enemy.isDeadFlag = true;
+        enemy.hp = 0;
+        enemy.playDeadAnimation(enemy.imagesDead, () => {
+            const idx = world.level.enemies.indexOf(enemy);
+            if (idx >= 0) world.level.enemies.splice(idx, 1);
+        });
+        window.audioManager.play('enemyHit');
+        world.character.jump();
+    }
+
+    /**
+     * Handles the logic when the character is hit by an enemy from the side.
+     */
+    handleCharacterHit() {
+        const { world } = this;
+        world.character.hit();
+        world.healthStatusBar.setHealthBarPercentage(world.character.hp);
+    }
     /**
    * Checks collisions between character and collectible bottles.
    */
