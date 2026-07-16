@@ -204,8 +204,15 @@ class Endboss extends MovableObject {
     this.startWalkingSound();
   }
 
-  /**
+    /**
+   * Determines and applies the direction the endboss should walk based on the character's current position.
    * 
+   * If the character is significantly to the right (character.x > endboss.x + directionOffset),
+   * the endboss turns to the right (`otherDirection = true`) and moves right.
+   * If the character is to the left of the endboss, it turns left (`otherDirection = false`) and moves left.
+   * Falls back to boundary patrolling if character is not available.
+   *
+   * @returns {void}
    */
   handleWalkingDirection() {
     if (this.world && this.world.character) {
@@ -215,10 +222,10 @@ class Endboss extends MovableObject {
       this.otherDirection = false; // Face/move left
     }
     this.applyWalkingDirection();
-  } else {
-    // fallback to patrol logic
-    this.walkBetweenBoundaries();
-  }
+    } else {
+      // fallback to patrol logic
+      this.walkBetweenBoundaries();
+    }
   }
 
   /**
