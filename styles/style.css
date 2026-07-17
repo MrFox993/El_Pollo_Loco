@@ -57,12 +57,13 @@ canvas {
 }
 
 .in-game-mute-btn {
-    border-radius: 90px;
     min-width: fit-content !important;
     height:fit-content;
     min-height: 50px !important;
     position: sticky;
     left: calc((100vw + 720px) / 2);
+    font-size: 1.5rem !important;
+    margin-bottom: 4px;
 }
 
 .show-screen {
