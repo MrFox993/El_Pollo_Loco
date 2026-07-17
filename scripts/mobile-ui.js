@@ -1,5 +1,6 @@
 (function () {
-    const mobileControls = document.getElementById('mobileControls');
+    const mobileControlsLeft = document.getElementById('mobileControlsLeft');
+    const mobileControlsRight = document.getElementById('mobileControlsRight');
     const mobileGameControls = document.getElementById('mobileGameControls');
     const rotateOverlay  = document.getElementById('rotateOverlay');
     const canvasScreen   = document.querySelector('.canvas-screen');
@@ -85,7 +86,8 @@
  * @param {Object} flags - UI state flags from computeUIFlags().
  */
 function setMobileControlsDisplay(flags) {
-    mobileControls.style.display = (flags.showMobile && !flags.hideMobile) ? 'flex' : 'none';
+    mobileControlsLeft.style.display = (flags.showMobile && !flags.hideMobile) ? 'flex' : 'none';
+    mobileControlsRight.style.display = (flags.showMobile && !flags.hideMobile) ? 'flex' : 'none';
     mobileGameControls.style.display = (flags.showMobile && !flags.hideMobile) ? 'flex' : 'none';
 }
 
@@ -106,7 +108,8 @@ function setMobileInGameControlsDisplay(flags) {
  * @param {Object} flags - UI state flags from computeUIFlags().
  */
 function setMobileControlsAria(flags) {
-    mobileControls.setAttribute('aria-hidden', String(!flags.showMobile));
+    mobileControlsLeft.setAttribute('aria-hidden', String(!flags.showMobile));
+    mobileControlsRight.setAttribute('aria-hidden', String(!flags.showMobile));
     mobileGameControls.setAttribute('aria-hidden', String(!flags.showMobile));
 }
 
@@ -153,7 +156,8 @@ function setMobileControlsAria(flags) {
  * @param {Event} e
  */
     ['contextmenu'].forEach(evt => {
-        mobileControls.addEventListener(evt, e => e.preventDefault(), { passive: false });
+        mobileControlsLeft.addEventListener(evt, e => e.preventDefault(), { passive: false });
+        mobileControlsRight.addEventListener(evt, e => e.preventDefault(), { passive: false });
     });
     
 /**
