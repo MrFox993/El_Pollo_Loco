@@ -10,7 +10,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    background-image: url('../assets/img/5_background/main_background_image_ai.png');
+    background-image: url('../assets/img/5_background/main_background_image_ai.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
