@@ -176,18 +176,20 @@
           <img src="./assets/img/rotate_device.png" alt="Please rotate your device">
         </div>
       </div>
+
+      <div id="mobileGameControls" class="mobile-controls" oncontextmenu="return false" aria-label="Mobile Spiel Steuerung" aria-hidden="truea">
+        <button id="btnPause" class="control-btn" aria-label="Pause" title="Pause">⏸</button>
+        <button type="button" id="mobileMuteBtn" class="control-btn" aria-pressed="false" title="Mute/Unmute (Key M)">
+          <img id="muteIcon" src="./assets/icons/volume_off.svg" alt="mute">
+          <span class="visually-hidden">Sound</span>
+        </button>
+      </div>
       
       <div id="mobileControls" class="mobile-controls" oncontextmenu="return false" aria-label="Mobile Steuerung" aria-hidden="true">
         <button id="btnLeft"  class="control-btn" aria-label="Nach links" title="Links">⟵</button>
         <button id="btnRight" class="control-btn" aria-label="Nach rechts" title="Rechts">⟶</button>
         <button id="btnJump"  class="control-btn" aria-label="Springen" title="Springen">⤴︎</button>
         <button id="btnThrow" class="control-btn" aria-label="Werfen"  title="Werfen"><img src="./assets/img/6_salsa_bottle/salsa_bottle.png" alt="salsa_bottle" class="mobile-btn-bottle"></button>
-        <button id="btnPause" class="control-btn" aria-label="Pause" title="Pause">⏸</button>
-        <button type="button" id="mobileMuteBtn" class="control-btn" aria-pressed="false" title="Mute/Unmute (Key M)">
-          <img id="muteIcon" src="./assets/icons/volume_off.svg" alt="mute">
-          <span class="visually-hidden">Sound</span>
-        </button>
-
       </div>
 
     </main>
