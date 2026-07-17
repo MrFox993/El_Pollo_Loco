@@ -57,12 +57,13 @@ canvas {
 }
 
 .in-game-mute-btn {
-    border-radius: 90px;
     min-width: fit-content !important;
     height:fit-content;
     min-height: 50px !important;
     position: sticky;
     left: calc((100vw + 720px) / 2);
+    font-size: 1.5rem !important;
+    margin-bottom: 4px;
 }
 
 .show-screen {
@@ -480,12 +481,17 @@ h3 {
 
 /* mobile devices --> (hover: none) and (pointer: coarse) */
 @media (hover: none) and (pointer: coarse) {
+    main {
+        overflow: hidden;
+    }
+
     canvas {
         display: block;
         width: 100dvw;
         height: 100dvh;
         max-width: max-content;
         aspect-ratio: unset;
+        position: relative;
     }
 
     .canvas-screen {
@@ -600,5 +606,64 @@ h3 {
         font-size: 1rem;
         border-radius: 30px;
         margin-left: 2px;
+    }
+
+    #mobileGameControls {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 950;
+        background: none;
+        width: auto;
+        pointer-events: none;
+    }
+
+    #mobileGameControls .control-btn {
+        pointer-events: auto;
+        margin: 6px 0;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: unset;
+    }
+
+    .mobile-thumb-controls {
+    position: fixed;
+    bottom: 2.5dvh; 
+    z-index: 950;
+    display: flex;
+    flex-direction: row;
+    gap: 0.1rem;
+    width: auto; 
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom, 8px);
+    pointer-events: none; 
+    }
+
+    #mobileControlsLeft {
+        left: 1.5dvw;
+        align-items: flex-start;
+    }
+
+    #mobileControlsRight {
+        right: 1.5dvw;
+        align-items: flex-end;
+    }
+
+    .mobile-thumb-controls .control-btn {
+        width: 64px;
+        height: 25px;
+        min-width: 64px;
+        max-width: 90px;
+        font-size: 1rem;
+        border-radius: 18px;
+        pointer-events: auto;
+        box-sizing: border-box;
+        flex: unset;
     }
 }

@@ -105,6 +105,19 @@ function setupInGameUI() {
     hideAllScreens();
     showScreen('.canvas-screen');
     showScreen('.in-game-controls');
+    setupDesktopPauseButton();
+}
+
+/**
+ * Attaches the pause/resume handler to the desktop in-game pause button.
+ */
+function setupDesktopPauseButton() {
+    const btn = document.getElementById('btnPauseDesktop');
+    if (!btn) return;
+    btn.onclick = function(e) {
+        e.preventDefault();
+        window.gamePaused ? window.resumeGame() : window.pauseGame();
+    }
 }
 
 /**

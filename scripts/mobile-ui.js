@@ -1,5 +1,7 @@
 (function () {
-    const mobileControls = document.getElementById('mobileControls');
+    const mobileControlsLeft = document.getElementById('mobileControlsLeft');
+    const mobileControlsRight = document.getElementById('mobileControlsRight');
+    const mobileGameControls = document.getElementById('mobileGameControls');
     const rotateOverlay  = document.getElementById('rotateOverlay');
     const canvasScreen   = document.querySelector('.canvas-screen');
     const inGameControls = document.querySelector('.in-game-controls');
@@ -74,15 +76,42 @@
  * @param {Object} flags - State flags from computeUIFlags().
  */
     function updateMobileVisibility(flags) {
-        mobileControls.style.display = flags.showMobile ? 'flex' : 'none';
-        if (flags.showMobile) {
-                inGameControls.classList.add('hide-screen');
-            } else {
-                inGameControls.classList.remove('show-screen');
-            }        
-        if (flags.hideMobile) mobileControls.style.display = 'none';
-        mobileControls.setAttribute('aria-hidden', String(!flags.showMobile));
+        setMobileControlsDisplay(flags);
+        setMobileInGameControlsDisplay(flags);
+        setMobileControlsAria(flags);
     }
+
+/**
+ * Shows or hides the general on-screen mobile controls.
+ * @param {Object} flags - UI state flags from computeUIFlags().
+ */
+function setMobileControlsDisplay(flags) {
+    mobileControlsLeft.style.display = (flags.showMobile && !flags.hideMobile) ? 'flex' : 'none';
+    mobileControlsRight.style.display = (flags.showMobile && !flags.hideMobile) ? 'flex' : 'none';
+    mobileGameControls.style.display = (flags.showMobile && !flags.hideMobile) ? 'flex' : 'none';
+}
+
+/**
+ * Shows or hides the mobile game controls (pause/mute overlay).
+ * @param {Object} flags - UI state flags from computeUIFlags().
+ */
+function setMobileInGameControlsDisplay(flags) {
+    if (flags.showMobile) {
+        inGameControls.classList.add('hide-screen');
+    } else {
+        inGameControls.classList.remove('show-screen');
+    }
+}
+
+/**
+ * Sets appropriate aria-hidden attributes for mobile UI controls.
+ * @param {Object} flags - UI state flags from computeUIFlags().
+ */
+function setMobileControlsAria(flags) {
+    mobileControlsLeft.setAttribute('aria-hidden', String(!flags.showMobile));
+    mobileControlsRight.setAttribute('aria-hidden', String(!flags.showMobile));
+    mobileGameControls.setAttribute('aria-hidden', String(!flags.showMobile));
+}
 
 /**
  * Shows or hides the rotation warning overlay.
@@ -127,14 +156,15 @@
  * @param {Event} e
  */
     ['contextmenu'].forEach(evt => {
-        mobileControls.addEventListener(evt, e => e.preventDefault(), { passive: false });
+        mobileControlsLeft.addEventListener(evt, e => e.preventDefault(), { passive: false });
+        mobileControlsRight.addEventListener(evt, e => e.preventDefault(), { passive: false });
     });
     
 /**
  * Attaches pause button behavior to mobile pause UI.
  */
     function setupPauseButton() {
-        const pauseBtn = document.querySelector('#btnPause');
+        const pauseBtn = document.querySelector('#btnPauseMobile');
         if (!pauseBtn) return;
         pauseBtn.addEventListener('pointerdown', e => {
             e.preventDefault();
