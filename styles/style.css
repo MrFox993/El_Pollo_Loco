@@ -483,13 +483,14 @@ h3 {
     main {
         overflow: hidden;
     }
-    
+
     canvas {
         display: block;
         width: 100dvw;
         height: 100dvh;
         max-width: max-content;
         aspect-ratio: unset;
+        position: relative;
     }
 
     .canvas-screen {
@@ -604,5 +605,29 @@ h3 {
         font-size: 1rem;
         border-radius: 30px;
         margin-left: 2px;
+    }
+
+    #mobileGameControls {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 950;
+        background: none;
+        width: auto;
+        pointer-events: none;
+    }
+
+    #mobileGameControls .control-btn {
+        pointer-events: auto;
+        margin: 6px 0;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: unset;
     }
 }
