@@ -75,18 +75,40 @@
  * @param {Object} flags - State flags from computeUIFlags().
  */
     function updateMobileVisibility(flags) {
-        mobileControls.style.display = flags.showMobile ? 'flex' : 'none';
-        mobileGameControls.style.display = flags.showMobile ? 'flex' : 'none';
-        if (flags.showMobile) {
-                inGameControls.classList.add('hide-screen');
-            } else {
-                inGameControls.classList.remove('show-screen');
-            }        
-        if (flags.hideMobile) mobileControls.style.display = 'none';
-        if (flags.hideMobile) mobileGameControls.style.display = 'none';
-        mobileControls.setAttribute('aria-hidden', String(!flags.showMobile));
-        mobileGameControls.setAttribute('aria-hidden', String(!flags.showMobile));
+        setMobileControlsDisplay(flags);
+        setMobileInGameControlsDisplay(flags);
+        setMobileControlsAria(flags);
     }
+
+/**
+ * Shows or hides the general on-screen mobile controls.
+ * @param {Object} flags - UI state flags from computeUIFlags().
+ */
+function setMobileControlsDisplay(flags) {
+    mobileControls.style.display = (flags.showMobile && !flags.hideMobile) ? 'flex' : 'none';
+    mobileGameControls.style.display = (flags.showMobile && !flags.hideMobile) ? 'flex' : 'none';
+}
+
+/**
+ * Shows or hides the mobile game controls (pause/mute overlay).
+ * @param {Object} flags - UI state flags from computeUIFlags().
+ */
+function setMobileInGameControlsDisplay(flags) {
+    if (flags.showMobile) {
+        inGameControls.classList.add('hide-screen');
+    } else {
+        inGameControls.classList.remove('show-screen');
+    }
+}
+
+/**
+ * Sets appropriate aria-hidden attributes for mobile UI controls.
+ * @param {Object} flags - UI state flags from computeUIFlags().
+ */
+function setMobileControlsAria(flags) {
+    mobileControls.setAttribute('aria-hidden', String(!flags.showMobile));
+    mobileGameControls.setAttribute('aria-hidden', String(!flags.showMobile));
+}
 
 /**
  * Shows or hides the rotation warning overlay.
