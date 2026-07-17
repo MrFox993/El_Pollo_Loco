@@ -608,7 +608,7 @@ h3 {
     }
 
     #mobileGameControls {
-        display: flex !important;
+        display: none;
         flex-direction: column;
         align-items: center;
         position: absolute;
