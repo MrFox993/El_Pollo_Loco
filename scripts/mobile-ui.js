@@ -164,7 +164,7 @@ function setMobileControlsAria(flags) {
  * Attaches pause button behavior to mobile pause UI.
  */
     function setupPauseButton() {
-        const pauseBtn = document.querySelector('#btnPause');
+        const pauseBtn = document.querySelector('#btnPauseMobile');
         if (!pauseBtn) return;
         pauseBtn.addEventListener('pointerdown', e => {
             e.preventDefault();
